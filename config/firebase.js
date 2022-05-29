@@ -18,4 +18,13 @@ const app = initializeApp(firebaseConfig)
 export const database= getFirestore(app)
 export const auth = getAuth(app)
 
+export async function registrarUsuario (data){
+    
+    
+    const docuRef = doc(database,`usuarios/${infoUsuario.user.uid}`)
+    setDoc(docuRef,{correo:email,rol:rol,museo:museo})
+    
+
+}
+
 

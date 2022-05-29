@@ -1,4 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit'
+import {database} from '../../config/firebase'
+import {addDoc, collection,deleteDoc,doc,getDocs,updateDoc,docs,setDoc} from 'firebase/firestore'
+
 
 
 const authSlice = createSlice({

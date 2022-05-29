@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import {Formik, Form, Field, ErrorMessage} from 'formik'
 import {signInWithEmailAndPassword, signInWithPopup, GithubAuthProvider, FacebookAuthProvider, GoogleAuthProvider,createUserWithEmailAndPassword,updateProfile} from 'firebase/auth'
-import { auth } from '../config/firebase'
+import {addDoc, collection,deleteDoc,doc,getDocs,updateDoc,docs,setDoc} from 'firebase/firestore'
+import { auth,database } from '../config/firebase'
 import {useRouter} from 'next/router'
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook ,FaGithub} from 'react-icons/fa';
@@ -17,7 +18,11 @@ export default function Login() {
     const [isLogin,setIsLogin] = useState(true)
     
     const router = useRouter()
+    
     const dispatch = useDispatch()
+    const crear =()=>{
+
+    }
     const login = (values,{setSubmitting,setErrors}) =>{
         console.log(values)
         if(isLogin){
@@ -33,7 +38,15 @@ export default function Login() {
             })
         })
     }else{createUserWithEmailAndPassword(auth,values.email,values.password)
-        .then(result=>{
+        .then(async(result)=>{
+            
+            const user1={
+                name:values.name,
+                email:result.user.email,
+                profilePic:values.profilePic,
+                id:result.user.uid}
+        await setDoc(doc(database,`usuarios/${result.user.uid}`),user1)
+          
           updateProfile(result.user,{
             displayName:values.name,
             photoURL:values.profilePic
@@ -43,6 +56,8 @@ export default function Login() {
               name:values.name,
               profilePic:values.profilePic
             }))
+            
+            
             router.replace("/")
           })
           
@@ -50,11 +65,17 @@ export default function Login() {
           console.log(error)
         })}
 }
-
+    
     const googleLogin = ()=>{
         signInWithPopup(auth,googleProvider)
-        .then(result=>{
-            router.replace("/")
+        .then(async(result)=>{
+            
+            const user1={name:result.user.displayName,
+                email:result.user.email,
+                profilePic:result.user.photoURL,
+                id:result.user.uid}
+        await setDoc(doc(database,`usuarios/${result.user.uid}`),user1)
+        router.replace("/")
         })
         .catch(error=>{
             console.log(error)
@@ -72,7 +93,12 @@ export default function Login() {
     }
     const githubLogin = ()=>{
         signInWithPopup(auth,githubProvider)
-        .then(result=>{
+        .then(async(result)=>{
+            const user1={name:result.user.displayName,
+                email:result.user.email,
+                profilePic:result.user.photoURL,
+                id:result.user.uid}
+            await setDoc(doc(database,`usuarios/${result.user.uid}`),user1)
             router.replace("/")
         })
         .catch(error=>{
@@ -84,7 +110,7 @@ export default function Login() {
     // Extra: Añadir icono a los botones
 
   return (
-    <section className='  '>
+    <section className=' max-w-6xl m-auto relative pt-4 '>
         
         <Formik 
             initialValues={{
@@ -118,7 +144,7 @@ export default function Login() {
                         </div>}
 
                     </Form>
-                    {errors&&<p>{errors.credentials}</p>}
+                    {errors&&<div className='absolute top-0  transition ease-in-out delay-150 bg-color4-comentarios p-2 rounded  '>{errors.credentials}</div>}
                     {isLogin&&<div className=' bg-color1-nav  w-11/12 md:w-1/2  md:p-10 mx-auto shadow-xl shadow-black rounded-b-lg'>
                     <p className='text-center pb-4'>O inicia sesión con redes</p>
                     <div className='flex justify-center gap-10 '>
