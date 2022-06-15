@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateData } from '../features/auth'
 const googleProvider = new GoogleAuthProvider()
-
+googleProvider.addScope('https://red-social-chatapp.vercel.app/');
 const facebookProvider = new FacebookAuthProvider()
 const githubProvider = new GithubAuthProvider()
 
