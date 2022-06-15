@@ -5,18 +5,38 @@ import {addDoc, collection,deleteDoc,doc,getDocs,updateDoc,docs} from 'firebase/
 
 
 
+
 export const getUsers = createAsyncThunk("users/obtenerUsers",async (data,thunkAPI)=>{
+    const state = thunkAPI.getState()
+    
+    
     
     const col = collection(database,"usuarios")
     const snapshot = await getDocs(col)
-    const users = []
-
-    snapshot.forEach(doc=>{
-      users.push({...doc.data(),id:doc.id})
-    })
     
-    return users
+    
+    const users = []
+    snapshot.forEach(doc=>{
+        users.push({...doc.data(),id:doc.id})
+      })
+    
+    const users2 = Object.assign([],users)
+    const aaa = []
+    
+    console.log(aaa)
+    const friends=Object.assign([],state.friends.friends)
+    for(let i=0;i<friends.length;i++){
+        const a=friends[i]
+        
+        let index = users2.findIndex( e => e.id===a.id );
+        console.log(index)
+        users2.splice(index,1)
+
+    }
+
+    return users2
 })
+
 
 
 

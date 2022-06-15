@@ -13,7 +13,8 @@ const authSlice = createSlice({
             name:"",
             email:"",
             id:"",
-            profilePic:""
+            profilePic:"",
+           
         }
     },
     reducers:{
@@ -24,6 +25,8 @@ const authSlice = createSlice({
             state.user.name = action.payload.name
             state.user.email = action.payload.email
             state.user.profilePic = action.payload.profilePic
+            
+            
         },
         logout(state,action){
             state.logged = false

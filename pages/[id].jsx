@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AiOutlineLike } from 'react-icons/ai';
 import { FaComment,FaRegComment } from 'react-icons/fa'; 
 import {GiCancel  } from 'react-icons/gi'; 
+import Link from 'next/link';
+import { getPosts } from '../features/posts';
 
 export async function getStaticPaths(){
     const col = collection(database,"usuarios")
@@ -49,11 +51,15 @@ export async function getStaticProps({params}){
 }
 
 export default function Perfil({usuario,posts}) {
-    console.log(posts)
+    
     const [comentario,setComentario]= useState(false)
     const auth = useSelector(state=>state.auth)
+    const friends = useSelector(state=>state.friends.friends)
+    // const posts = useSelector(state=>state.posts.items)
+    console.log(friends)
     const dispatch = useDispatch()
-    const agregarComentario =(id,e) =>{
+
+    const agregarComentario =(id,idUser,e) =>{
     
         if(e.key === "Enter"){
           
@@ -75,19 +81,17 @@ export default function Perfil({usuario,posts}) {
             
     
           })
-          
-          // console.log(comentarios)
-          // console.log(comentarios)
-          // const col = collection(database,`usuarios/${auth.user.id}/posts/`)
-          // addDoc(col,comentario)
+
     
-          const docRef = doc(database,`usuarios/${auth.user.id}/posts/${id}` )
+          const docRef = doc(database,`usuarios/${idUser}/posts/${id}` )
           updateDoc(docRef,{
             comments:comentarios
             
           })
+          dispatch(getPosts(idUser))
           
           e.target.value=""
+          location.reload()
         }
         
       }
@@ -110,6 +114,7 @@ export default function Perfil({usuario,posts}) {
                         </div>
                     </article>)}
                 </article>
+                
                 
             </article>
             
@@ -162,7 +167,7 @@ export default function Perfil({usuario,posts}) {
               <article className='flex items-center gap-2 py-2'>
                   <input className='bg-color3-publicacion my-auto py-1 rounded-md w-full' name="comentario" type="text" placeholder='Deja tu comentario' 
                   
-                  onKeyDown={(event)=>{agregarComentario(post.id,event)}}
+                  onKeyDown={(event)=>{agregarComentario(post.id,post.idUser,event)}}
                   
                   />
                   
