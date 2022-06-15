@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { database } from '../config/firebase' 
+import { database } from '../../config/firebase' 
 import {collection,doc,getDocs,getDoc,updateDoc} from 'firebase/firestore'
 import { useDispatch, useSelector } from 'react-redux'
 import { AiOutlineLike } from 'react-icons/ai';
 import { FaComment,FaRegComment } from 'react-icons/fa'; 
 import {GiCancel  } from 'react-icons/gi'; 
 import Link from 'next/link';
-import { getPosts } from '../features/posts';
+import { getPosts } from '../../features/posts';
 
 export async function getStaticPaths(){
     const col = collection(database,"usuarios")

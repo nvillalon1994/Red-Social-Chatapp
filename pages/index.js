@@ -136,7 +136,7 @@ export default function Home() {
     dispatch(getFriends(auth.user.id))
     dispatch(getSolicitud(auth.user.id))
     dispatch(getAllPosts())
-    hola()
+    
   }
  
   const hola=()=>{
@@ -281,7 +281,7 @@ useEffect(()=>{
             
             <div className='flex items-center gap-2 mb-3'>
               <div className='w-12 h-12 overflow-hidden rounded-full flex items-center'>
-                <Link href={"/"+post.idUser}  className='w-10 h-10 overflow-hidden rounded-full flex items-center'>
+                <Link href={"/profile/"+post.idUser}  className='w-10 h-10 overflow-hidden rounded-full flex items-center'>
                       <a><img className='w-16 h-16 ' src={post.profilePic} alt="" /></a>
                       
                       
@@ -305,7 +305,7 @@ useEffect(()=>{
             {post.comments?.map((comment)=>
               <article className='bg-color4-comentarios rounded-md p-2 mb-2'>
                 <article className='flex items-center gap-2 mb-2'>
-                    <Link href={"/" + comment.id} className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
+                    <Link href={"/profile/" + comment.id} className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
                     
                       <img className='w-10 h-12' src={comment.profilePic} alt="" />
                       
@@ -350,7 +350,7 @@ useEffect(()=>{
             if(user.id!==auth.user.id){
               return <article  className='bg-white mb-2 p-1 flex flex-col rounded-md shadow-xl'>
             
-                <Link href={"/" + user.id} className='h-full   flex gap-3  items-center w-full  p-1 rounded-md   '>
+                <Link href={"/profile/" + user.id} className='h-full   flex gap-3  items-center w-full  p-1 rounded-md   '>
                   <a>
                         <div className='w-10 h-10 overflow-hidden bg-black rounded-full flex items-center'>
                           
