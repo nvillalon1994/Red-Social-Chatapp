@@ -32,6 +32,27 @@ export const getUsers = createAsyncThunk("users/obtenerUsers",async (data,thunkA
 
     return users2
 })
+export const getAllUsers = createAsyncThunk("users/obtenerAllUsers",async (data,thunkAPI)=>{
+    const state = thunkAPI.getState()
+    console.log("estas")
+    const col = collection(database,"usuarios")
+    const snapshot = await getDocs(col)
+    
+    
+    const users = []
+    snapshot.forEach(doc=>{
+        users.push({...doc.data(),id:doc.id})
+      })
+    console.log(users)
+    let usuario 
+    users.map((user)=>{
+        if(user.id=data){
+            usuario=user
+        }
+    })
+    console.log(usuario)
+    return usuario
+})
 
 
 
@@ -39,7 +60,7 @@ const usersSlice = createSlice({
     name:"users",
     initialState:{
         usuarios:[],
-        
+        usuario:[],
         loading:false
         
     
@@ -60,6 +81,17 @@ const usersSlice = createSlice({
             state.usuarios=action.payload
         })
         builder.addCase(getUsers.rejected,(state,action)=>{
+            state.loading = false
+        })
+
+        builder.addCase(getAllUsers.pending,(state,action)=>{
+            state.loading = true
+        })
+        builder.addCase(getAllUsers.fulfilled,(state,action)=>{
+            state.loading= false
+            state.usuario=action.payload
+        })
+        builder.addCase(getAllUsers.rejected,(state,action)=>{
             state.loading = false
         })
 

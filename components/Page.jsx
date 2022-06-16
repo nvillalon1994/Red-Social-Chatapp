@@ -25,27 +25,38 @@ export default function Page({children}) {
                     name:authResult.displayName,
                     profilePic:authResult.photoURL
                 }))
-                dispatch(getPosts(authResult.uid))
-                setTimeout(()=>{
-                    dispatch(getUsers())
-                },900) 
-                setTimeout(()=>{
-                    dispatch(getAllPosts())
-                },900) 
+                // dispatch(getPosts(authResult.uid))
+                // setTimeout(()=>{
+                //     dispatch(getUsers())
+                // },900) 
+                // setTimeout(()=>{
+                //     dispatch(getAllPosts())
+                // },900) 
+
                 onSnapshot(collection(database,"usuarios/"+authResult.uid+"/solicitudes"),(snapshot)=>{
                     const solicitudes =[]
                     snapshot.docs.map((doc)=>solicitudes.push({...doc.data(),id:doc.id}))
                    console.log(solicitudes)
                     dispatch(getSolicitud(solicitudes))
                 })
+
+                onSnapshot(collection(database,"usuarios/"+authResult.uid+"/friends"),(snapshot)=>{
+                    const friends =[]
+                    snapshot.docs.map((doc)=>friends.push({...doc.data(),id:doc.id}))
+                   console.log(friends)
+                    dispatch(getFriends(friends))
+                    dispatch(getUsers())
+                })
+                dispatch(getUsers())
                 // dispatch(getSolicitud(authResult.uid))
-                dispatch(getFriends(authResult.uid))
+                // dispatch(getFriends(authResult.uid))
                 
                 
             }else{
                 dispatch(logout())
             }
         })
+        dispatch(getUsers())
     },[])
   return (
     <main className='bg-color2-backg min-h-screen h-full'>

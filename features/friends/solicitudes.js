@@ -20,16 +20,17 @@ export const getSolicitud = createAsyncThunk("solicitud/obtenerSolicitud",async 
     return solicitudes
 })
 export const getFriends = createAsyncThunk("friends/obtenerAmigos",async (data,thunkAPI)=>{
-    const idUser=data
-    const col = collection(database,"usuarios",idUser,"friends")
-    const snapshot = await getDocs(col)
-    const amigos = []
+    const friends=data
+    // const col = collection(database,"usuarios",idUser,"friends")
+    // const snapshot = await getDocs(col)
+    // const amigos = []
 
-    snapshot.forEach(doc=>{
-      amigos.push({...doc.data(),id:doc.id})
-    })
+    // snapshot.forEach(doc=>{
+    //   amigos.push({...doc.data(),id:doc.id})
+    // })
+    // console.log(data)
     
-    return amigos
+    return friends
 })
 
 export const addFriend = createAsyncThunk("friends/addFriends",async (data,thunkAPI)=>{
@@ -193,6 +194,7 @@ const friendsSlice = createSlice({
         builder.addCase(getSolicitud.rejected,(state,action)=>{
             state.loading = false
         })
+        
         builder.addCase(getFriends.pending,(state,action)=>{
             state.loading = true
         })

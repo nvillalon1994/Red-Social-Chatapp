@@ -14,6 +14,7 @@ import Link from 'next/link'
 import { acceptFriend, addFriend, declineFriend, getFriends, getSolicitud,getUsersSolicitud } from '../features/friends/solicitudes';
 import { getUsers  } from '../features/users';
 
+
 export default function Home() {
   const [solicitudes2,setSolicitudes2]=useState([])
   const [showComments, setShowComments]=useState(false)
@@ -33,7 +34,7 @@ export default function Home() {
   
   // console.log(usuarios)
   const [publicacion,setPublicacion]= useState(false)
-  const [respuesta,setRespuesta]= useState(false)
+ 
   const [openpost,setopenPost]= useState(false)
   // const [comentario,setComentario]= useState(false)
   const [post,setPost]=useState({})
@@ -132,7 +133,7 @@ export default function Home() {
     // console.log(idFriend)
     dispatch(addFriend(idFriend))
     // dispatch(getSolicitud(auth.user.id))
-    dispatch(getFriends(auth.user.id))
+    // dispatch(getFriends(auth.user.id))
     // dispatch(getUsersSolicitud(idFriend))
     setTimeout(()=>{
       dispatch(getUsers())
@@ -141,7 +142,7 @@ export default function Home() {
   const aceptarSolicitud=(idFriend,idSolicitud,name,profilePic)=>{
     // console.log(idFriend,idSolicitud,name,profilePic)
     dispatch(acceptFriend({idUser:auth.user.id,idFriend:idFriend,idFriend,idSolicitud,name,profilePic}))
-    dispatch(getFriends(auth.user.id))
+    // dispatch(getFriends(auth.user.id))
     // dispatch(getSolicitud(auth.user.id))
      setTimeout(()=>{dispatch(getUsers())},400)  
     
@@ -149,7 +150,7 @@ export default function Home() {
   const eliminarSolicitud=(idFriend,idSolicitud)=>{
     // console.log(idFriend,idSolicitud,name,profilePic)
     dispatch(declineFriend({idFriend,idSolicitud}))
-    dispatch(getFriends(auth.user.id))
+    // dispatch(getFriends(auth.user.id))
     // dispatch(getSolicitud(auth.user.id))
     dispatch(getAllPosts())
     
@@ -212,6 +213,7 @@ useEffect(()=>{
   setTimeout(hola,1000)
   setTimeout(u,800)
   dispatch(getUsers())
+  // dispatch(getFriends())
   
   
    
@@ -219,9 +221,7 @@ useEffect(()=>{
 
   return (
     <main className=' max-w-6xl m-auto '>
-      {friends?.map((friend)=><div>
-        <p>{friend?.name}</p>
-      </div>)}
+      
        {publicacion&&<div className='z-30'>
                 <div className='absolute left-0 top-0 h-screen w-full bg-black bg-opacity-50 z-10' onClick={()=>{setPublicacion(false)}}></div>
                 <div className="bg-color3-publicacion w-[500px] p-10 absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
@@ -263,12 +263,12 @@ useEffect(()=>{
             
       <section className='flex justify-between'>
         
-        <section className='w-2/6  h-fit'>
-          <p className='text-xl text-white text-shadow-xl my-5'>Solicitudes de amistad</p>
-          
-          {solicitudes?.map((e)=>{
+        <section className='w-2/6    '>
+          <p className='text-xl text-gray-600 text-shadow-xl my-5'>Solicitudes de amistad</p>
+          <article className='max-h-[250px] overflow-auto'>
+            {solicitudes?.map((e)=>{
             if(e.solicitud==="recibida"){
-              return <div className='bg-color1-nav p-3 flex flex-col justify-center items-center'>
+              return <div className='bg-color1-nav p-2 flex flex-col justify-center items-center'>
               <div className='flex '>
                 <img className='h-14' src={e.profilePic}/>
                 <p>{e.name}</p>
@@ -282,6 +282,21 @@ useEffect(()=>{
               
             </div>
             }})}
+          </article>
+          
+          <article>
+          <p className='text-xl text-gray-600 text-shadow-xl shadow-red-500 my-5'>Amigos</p>
+            {friends?.map((friend)=><div className='flex my-4'>
+            <div className='w-10 h-10 overflow-hidden bg-black rounded-full flex items-center'>
+                          
+              <img className='w-10 h-auto m-auto ' src={friend?.profilePic} alt="" />
+                          
+            </div>
+                       
+            <p className=' h-fit'>{friend?.name}</p>
+                  
+            </div>)}
+          </article>
           
           
         </section>
@@ -303,14 +318,14 @@ useEffect(()=>{
             </div>}
             
             <div className='flex items-center gap-2 mb-3'>
-              <div className='w-12 h-12 overflow-hidden rounded-full flex items-center'>
+              <div className='w-12 h-12 overflow-hidden bg-black rounded-full flex items-center'>
                 <Link href={"/profile/"+post.idUser}  className='w-10 h-10 overflow-hidden rounded-full flex items-center'>
-                      <a><img className='w-16 h-16 ' src={post.profilePic} alt="" /></a>
+                      <a><img className='w-12 h-auto ' src={post.profilePic} alt="" /></a>
                       
                       
                 </Link>
               </div>
-            
+              
               <p className='text-sm'>{post.name}</p>
               
               
@@ -367,7 +382,7 @@ useEffect(()=>{
           
         </section>
         <section className='w-2/6 my-6 h-fit bg-color4-comentarios  p-2 rounded-lg shadow-xl'>
-          <h2 className='my-4 text-sm'>Personas que quizás conozcas</h2>
+          <h2 className='text-ms text-gray-600 text-shadow-xl my-4'>Personas que quizás conozcas</h2>
           {users?.map((user)=>{
     
             if(user.id!==auth.user.id){
