@@ -25,8 +25,8 @@ export default function Navbar() {
                 <div className='flex gap-3 items-center'>
                   
                   < AiFillBell className='text-2xl'/>
-                  <div className='flex gap-3 items-center w-8 h-8 rounded-full overflow-hidden'>
-                  <Link href={"/profile/" + auth2.user.id}><img className='h-8' src={auth2.user.profilePic} alt="" /></Link>
+                  <div className='flex gap-3 items-center w-8 h-8 rounded-full overflow-hidden bg-black'>
+                  <Link href={"/profile/" + auth2.user.id}><img className='w-8  rounded-full' src={auth2.user.profilePic} alt="" /></Link>
                         
                   </div>
                   {/* <div className='w-8 h-8 overflow-hidden rounded-full flex items-center'>

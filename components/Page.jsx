@@ -32,7 +32,13 @@ export default function Page({children}) {
                 setTimeout(()=>{
                     dispatch(getAllPosts())
                 },900) 
-                dispatch(getSolicitud(authResult.uid))
+                onSnapshot(collection(database,"usuarios/"+authResult.uid+"/solicitudes"),(snapshot)=>{
+                    const solicitudes =[]
+                    snapshot.docs.map((doc)=>solicitudes.push({...doc.data(),id:doc.id}))
+                   console.log(solicitudes)
+                    dispatch(getSolicitud(solicitudes))
+                })
+                // dispatch(getSolicitud(authResult.uid))
                 dispatch(getFriends(authResult.uid))
                 
                 
@@ -44,11 +50,7 @@ export default function Page({children}) {
   return (
     <main className='bg-color2-backg min-h-screen h-full'>
         <NavBar/>
-        {usuarios.map((user)=><div>
-            <p>{user.name}</p>
-            <p>{user.text}</p>
-            <p></p>
-        </div>)}
+        
         {children}
         
     </main>

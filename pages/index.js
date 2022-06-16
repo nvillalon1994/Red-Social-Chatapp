@@ -11,21 +11,23 @@ import {addDoc, collection,deleteDoc,doc,getDocs,updateDoc,docs,setDoc, onSnapsh
 import { database } from '../config/firebase'
 import { agregarPost, deletePost, editePost, getAllPosts, getPosts } from '../features/posts';
 import Link from 'next/link'
-import { acceptFriend, addFriend, getFriends, getSolicitud } from '../features/friends/solicitudes';
-import { getUsers } from '../features/users';
+import { acceptFriend, addFriend, declineFriend, getFriends, getSolicitud,getUsersSolicitud } from '../features/friends/solicitudes';
+import { getUsers  } from '../features/users';
 
 export default function Home() {
-  const [comment,setComment]=useState({})
+  const [solicitudes2,setSolicitudes2]=useState([])
   const [showComments, setShowComments]=useState(false)
   const auth = useSelector(state=>state.auth)
   const posts = useSelector(state=>state.posts.items)
   
   const allposts = useSelector(state=>state.posts.allposts)
+  const pending = useSelector(state=>state.friends.pendingFriends)
   
   
   const users = useSelector(state=>state.users.usuarios)
   
   const solicitudes = useSelector(state=>state.friends.solicitudes)
+  console.log(solicitudes)
   const friends = useSelector(state=>state.friends.friends)
   
   
@@ -129,12 +131,26 @@ export default function Home() {
   const agregarAmigo=(idFriend)=>{
     // console.log(idFriend)
     dispatch(addFriend(idFriend))
+    // dispatch(getSolicitud(auth.user.id))
+    dispatch(getFriends(auth.user.id))
+    // dispatch(getUsersSolicitud(idFriend))
+    setTimeout(()=>{
+      dispatch(getUsers())
+  },900) 
   }
   const aceptarSolicitud=(idFriend,idSolicitud,name,profilePic)=>{
     // console.log(idFriend,idSolicitud,name,profilePic)
     dispatch(acceptFriend({idUser:auth.user.id,idFriend:idFriend,idFriend,idSolicitud,name,profilePic}))
     dispatch(getFriends(auth.user.id))
-    dispatch(getSolicitud(auth.user.id))
+    // dispatch(getSolicitud(auth.user.id))
+     setTimeout(()=>{dispatch(getUsers())},400)  
+    
+  }
+  const eliminarSolicitud=(idFriend,idSolicitud)=>{
+    // console.log(idFriend,idSolicitud,name,profilePic)
+    dispatch(declineFriend({idFriend,idSolicitud}))
+    dispatch(getFriends(auth.user.id))
+    // dispatch(getSolicitud(auth.user.id))
     dispatch(getAllPosts())
     
   }
@@ -189,16 +205,23 @@ export default function Home() {
     setopenPost(false)
   }
 
-
+console.log(solicitudes)
 useEffect(()=>{
   // dispatch(getFriends(auth.user.id))
+
   setTimeout(hola,1000)
   setTimeout(u,800)
+  dispatch(getUsers())
+  
+  
+   
 },[])
 
   return (
     <main className=' max-w-6xl m-auto '>
-      
+      {friends?.map((friend)=><div>
+        <p>{friend?.name}</p>
+      </div>)}
        {publicacion&&<div className='z-30'>
                 <div className='absolute left-0 top-0 h-screen w-full bg-black bg-opacity-50 z-10' onClick={()=>{setPublicacion(false)}}></div>
                 <div className="bg-color3-publicacion w-[500px] p-10 absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
@@ -254,7 +277,7 @@ useEffect(()=>{
               
               <div className='flex gap-2'>
                 <button className='bg-cyan-400 p-2 rounded-md m-auto ' onClick={()=>{aceptarSolicitud(e.idFriend,e.id,e.name,e.profilePic)}}>Aceptar</button>
-                <button className='bg-red-300 p-2 rounded-md m-auto'>Rechazar</button>
+                <button className='bg-red-300 p-2 rounded-md m-auto'onClick={()=>{eliminarSolicitud(e.idFriend,e.id)}}>Rechazar</button>
               </div>
               
             </div>

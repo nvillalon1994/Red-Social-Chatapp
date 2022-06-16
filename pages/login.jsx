@@ -9,8 +9,8 @@ import { FaFacebook ,FaGithub} from 'react-icons/fa';
 import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateData } from '../features/auth'
+import { providerLogin, signInMethods } from '../libs/auth'
 const googleProvider = new GoogleAuthProvider()
-
 const facebookProvider = new FacebookAuthProvider()
 const githubProvider = new GithubAuthProvider()
 
@@ -24,7 +24,7 @@ export default function Login() {
 
     }
     const login = (values,{setSubmitting,setErrors}) =>{
-        console.log(values)
+        
         if(isLogin){
         signInWithEmailAndPassword(auth,values.email,values.password)
         .then(result=>{
@@ -64,47 +64,60 @@ export default function Login() {
         }).catch(error=>{
           console.log(error)
         })}
-}
-    
-    const googleLogin = ()=>{
-        signInWithPopup(auth,googleProvider)
+    }
+    const loginWithProvider = (id)=>{
+        providerLogin(id)
         .then(async(result)=>{
-            
             const user1={name:result.user.displayName,
                 email:result.user.email,
                 profilePic:result.user.photoURL,
                 id:result.user.uid}
         await setDoc(doc(database,`usuarios/${result.user.uid}`),user1)
-        router.replace("/")
-        })
-        .catch(error=>{
-            console.log(error)
-        })
-    }
-    const facebookLogin = ()=>{
-        signInWithPopup(auth,facebookProvider)
-        .then(result=>{
             router.replace("/")
+
+        })
+        .catch(error=>console.log("Error",error))
+    }
+
+    // const googleLogin = ()=>{
+    //     signInWithPopup(auth,googleProvider)
+    //     .then(async(result)=>{
             
-        })
-        .catch(error=>{
-            console.log(error)
-        })
-    }
-    const githubLogin = ()=>{
-        signInWithPopup(auth,githubProvider)
-        .then(async(result)=>{
-            const user1={name:result.user.displayName,
-                email:result.user.email,
-                profilePic:result.user.photoURL,
-                id:result.user.uid}
-            await setDoc(doc(database,`usuarios/${result.user.uid}`),user1)
-            router.replace("/")
-        })
-        .catch(error=>{
-            console.log(error)
-        })
-    }
+    //         const user1={name:result.user.displayName,
+    //             email:result.user.email,
+    //             profilePic:result.user.photoURL,
+    //             id:result.user.uid}
+    //     await setDoc(doc(database,`usuarios/${result.user.uid}`),user1)
+    //     router.replace("/")
+    //     })
+    //     .catch(error=>{
+    //         console.log(error)
+    //     })
+    // }
+    // const facebookLogin = ()=>{
+    //     signInWithPopup(auth,facebookProvider)
+    //     .then(result=>{
+    //         router.replace("/")
+            
+    //     })
+    //     .catch(error=>{
+    //         console.log(error)
+    //     })
+    // }
+    // const githubLogin = ()=>{
+    //     signInWithPopup(auth,githubProvider)
+    //     .then(async(result)=>{
+    //         const user1={name:result.user.displayName,
+    //             email:result.user.email,
+    //             profilePic:result.user.photoURL,
+    //             id:result.user.uid}
+    //         await setDoc(doc(database,`usuarios/${result.user.uid}`),user1)
+    //         router.replace("/")
+    //     })
+    //     .catch(error=>{
+    //         console.log(error)
+    //     })
+    // }
 
     // Reto: Completar el login con los demás providers
     // Extra: Añadir icono a los botones
@@ -148,9 +161,10 @@ export default function Login() {
                     {isLogin&&<div className=' bg-color1-nav  w-11/12 md:w-1/2  md:p-10 mx-auto shadow-xl shadow-black rounded-b-lg'>
                     <p className='text-center pb-4'>O inicia sesión con redes</p>
                     <div className='flex justify-center gap-10 '>
-                        <button onClick={googleLogin}><FcGoogle className='text-3xl hover:bg-white rounded-full' /></button>
-                        <button onClick={facebookLogin}><FaFacebook className='text-3xl text-blue-800 hover:bg-white rounded-full'/></button>
-                        <button onClick={githubLogin}><FaGithub className='text-3xl hover:bg-white rounded-full'/></button>
+                        
+                        <button onClick={()=>{loginWithProvider(signInMethods.google)}}><FcGoogle className='text-3xl hover:bg-white rounded-full' /></button>
+                        <button onClick={()=>{loginWithProvider(signInMethods.facebook)}}><FaFacebook className='text-3xl text-blue-800 hover:bg-white rounded-full'/></button>
+                        <button onClick={()=>{loginWithProvider(signInMethods.github)}}><FaGithub className='text-3xl hover:bg-white rounded-full'/></button>
                     </div>
                     </div>}
 
