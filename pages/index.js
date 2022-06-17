@@ -401,7 +401,7 @@ useEffect(()=>{
           
           <article className=''>
           <p className='text-xl text-gray-600 text-shadow-xl  my-5'>Amigos</p>
-            {friends?.map((friend)=><Link href={"/otherProfile/"+friend.id} className=''>
+            {friends?.map((friend)=><Link href={"/otherProfile/"+friend?.id} className=''>
               <a className='flex my-4 items-center gap-2'>
               <div className='w-10 h-10 overflow-hidden bg-black rounded-full flex items-center'>
               {allUsers.map((user)=>{

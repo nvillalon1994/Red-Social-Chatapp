@@ -90,12 +90,12 @@ export default function Login() {
 
             const user1={name:result.user.displayName,
                 email:result.user.email,
-                profilePic:usuario.profilePic,
+                profilePic:result.user.photoURL,
                 id:result.user.uid,
                 portadaPic:"https://images.unsplash.com/photo-1616039407041-5ce631b57879?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"   }
                 console.log(user1)
-        // await setDoc(doc(database,`usuarios/${result.user.uid}`),user1)
-        //         dispatch(login(user1))
+        await setDoc(doc(database,`usuarios/${result.user.uid}`),user1)
+                dispatch(login(user1))
             router.replace("/")
 
         })

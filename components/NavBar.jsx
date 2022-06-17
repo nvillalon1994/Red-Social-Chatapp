@@ -10,15 +10,17 @@ import { useState } from 'react'
 import { acceptFriend, declineFriend } from '../features/friends/solicitudes'
 import { getUsers } from '../features/users'
 import { getAllPosts } from '../features/posts'
-
+import { logout } from '../features/auth'
 export default function Navbar() {
     const auth2 = useSelector(state=>state.auth)
     const solicitudes = useSelector(state=>state.friends.solicitudes)
     const allUsers = useSelector(state=>state.users.allUsers)
     const [open,setOpen]=useState(false)
     const router = useRouter()
-    const logout=()=>{
+    const logout2=()=>{
+      dispatch(logout())
       signOut(auth)
+      
       router.replace("/login")
     }
     
@@ -44,7 +46,7 @@ export default function Navbar() {
         <nav className='bg-color1-nav p-5  shadow-lg  min-h-16 h-16'>
             
             <ul className='flex items-center gap-5 text-white justify-between max-w-6xl m-auto'>
-                <li className='logo'><Link href="/" >aplication</Link></li>
+                <li className='logo'><Link href="/" >Insta-book</Link></li>
                 {!auth2.logged&&<li><Link href="/login">Login</Link></li>}
                 {auth2.logged&&
                 <div className='flex gap-3 items-center '>
@@ -81,7 +83,7 @@ export default function Navbar() {
                   
                   
                   
-                  < BiLogOutCircle onClick={logout} className='text-2xl'/>
+                  < BiLogOutCircle onClick={logout2} className='text-2xl'/>
                   
                   
                   
