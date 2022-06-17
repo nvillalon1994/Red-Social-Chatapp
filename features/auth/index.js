@@ -14,6 +14,7 @@ const authSlice = createSlice({
             email:"",
             id:"",
             profilePic:"",
+            id:undefined
            
         }
     },

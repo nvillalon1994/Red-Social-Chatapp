@@ -13,6 +13,7 @@ import { agregarPost, deletePost, editePost, getAllPosts, getPosts } from '../fe
 import Link from 'next/link'
 import { acceptFriend, addFriend, declineFriend, getFriends, getSolicitud,getUsersSolicitud } from '../features/friends/solicitudes';
 import { getUsers  } from '../features/users';
+import { useRouter } from 'next/router';
 
 
 export default function Home() {
@@ -252,6 +253,9 @@ export default function Home() {
   }
 
 console.log(solicitudes)
+const router = useRouter()
+
+  
 useEffect(()=>{
   // dispatch(getFriends(auth.user.id))
 
@@ -259,8 +263,11 @@ useEffect(()=>{
   setTimeout(u,800)
   dispatch(getUsers())
   // dispatch(getFriends())
-  
-  
+  const a = auth.logged
+  console.log(a)
+  if(a===false){
+    router.replace("/login")
+  }
    
 },[])
 
