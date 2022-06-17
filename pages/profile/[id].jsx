@@ -83,7 +83,50 @@ export default function Perfil() {
       const dispatch = useDispatch()
 
 
-
+      const like=(idPost,idUser)=>{
+        const like={
+          idPost:idPost,
+          name:auth.user.name,
+          id:auth.user.id
+        }
+        const likes =[]
+        posts.map((post)=>{
+          if(post.id===idPost){
+            post.likes.forEach(element => {
+              likes.push(element)
+            });
+          }
+        })
+        // likes.push(like)
+        
+        const a = likes.find((e)=>e.id===like.id)
+        console.log(a)
+        if(a===undefined){
+          likes.push(like)
+          console.log(likes)
+          const docRef = doc(database,`usuarios/${idUser}/posts/${idPost}` )
+            updateDoc(docRef,{
+              likes:likes
+              
+            })
+          console.log("no esta lo creo")
+          dispatch(getUserPosts(id))
+          
+          
+        }else{
+          const newLikes=likes.filter((e)=>e.id!==like.id)
+          console.log(newLikes)
+          const docRef = doc(database,`usuarios/${idUser}/posts/${idPost}` )
+            updateDoc(docRef,{
+              likes:newLikes
+              
+            })
+          console.log("esta lo quito")
+          dispatch(getUserPosts(id))
+          
+        }
+        
+      }
       const agregarComentario =(id2,idUser,e) =>{
           // e.preventDefault()
           if(e.key === "Enter"){
@@ -164,6 +207,7 @@ export default function Perfil() {
       }
       const eliminarAmigo=(idFriend)=>{
         dispatch(deleteFriend(idFriend))
+        dispatch(getUserFriends(id))
         // location.reload()
       }
 
@@ -296,14 +340,15 @@ export default function Perfil() {
               <p className='text-sm'>{post.name}</p>
               
               
-              <p className='text-gray-500 text-sm'>9h</p>
+              {/* <p className='text-gray-500 text-sm'>9h</p> */}
               
             </div>
             <p className='mb-2'>{post.text}</p>
-            
-            <img className='rounded-md min-w-full m-auto ' src={post.img}/>
+            <div className='bg-black bg-opacity-10'>
+              <img className='rounded-md  m-auto max-h-96 ' src={post.img}/>
+            </div>
             <article className='flex gap-4 m-2'>
-              <div><AiOutlineLike className='text-2xl'/></div>
+              <div className='flex'><AiOutlineLike className='text-2xl text-red-500'onClick={()=>{like(post.id,post.idUser)}}/>{post.likes.length}</div>
               <button onClick={()=>{setShowComments(!showComments)}}><FaRegComment className='text-2xl'/></button>
             </article>
             
@@ -320,9 +365,9 @@ export default function Perfil() {
                       <p className='ml-2 '>{comment.comentario}</p>
                       
                       
-                      {/* {comment.id===auth.user.id&& */}
+                      {comment.id===auth.user.id&&
                       <button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarComentario(post.id,comment.date,post.idUser)}}>X</button>
-                      {/* } */}
+                      } 
                     </div>
                 </article>
             </article>

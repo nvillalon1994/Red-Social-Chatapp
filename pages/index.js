@@ -50,7 +50,8 @@ export default function Home() {
       name:event.target.name.value,
       profilePic:event.target.profilePic.value,
       comments:[],
-      idUser:event.target.id.value
+      idUser:event.target.id.value,
+      likes:[]
       
     }
     const col = collection(database,`usuarios/${auth.user.id}/posts/`)
@@ -59,6 +60,50 @@ export default function Home() {
     dispatch(getPosts(auth.user.id))
   }
   
+  const like=(idPost,idUser)=>{
+    const like={
+      idPost:idPost,
+      name:auth.user.name,
+      id:auth.user.id
+    }
+    const likes =[]
+    allposts.map((post)=>{
+      if(post.id===idPost){
+        post.likes.forEach(element => {
+          likes.push(element)
+        });
+      }
+    })
+    // likes.push(like)
+    
+    const a = likes.find((e)=>e.id===like.id)
+    console.log(a)
+    if(a===undefined){
+      likes.push(like)
+      console.log(likes)
+      const docRef = doc(database,`usuarios/${idUser}/posts/${idPost}` )
+        updateDoc(docRef,{
+          likes:likes
+          
+        })
+      console.log("no esta lo creo")
+      dispatch(getAllPosts())
+      
+      
+    }else{
+      const newLikes=likes.filter((e)=>e.id!==like.id)
+      console.log(newLikes)
+      const docRef = doc(database,`usuarios/${idUser}/posts/${idPost}` )
+        updateDoc(docRef,{
+          likes:newLikes
+          
+        })
+      console.log("esta lo quito")
+      dispatch(getAllPosts())
+      
+    }
+    
+  }
   const agregarComentario =async(id,idUser,e) =>{
     
     if(e.key === "Enter"){
@@ -272,7 +317,7 @@ useEffect(()=>{
               <div className='flex '>
                 <img className='h-14' src={e.profilePic}/>
                 <p>{e.name}</p>
-                {/* <p>{e.id}</p> */}
+                
               </div>
               
               <div className='flex gap-2'>
@@ -333,10 +378,21 @@ useEffect(()=>{
               
             </div>
             <p className='mb-2'>{post.text}</p>
+            <div className='bg-black bg-opacity-10'>
+              <img className='rounded-md  m-auto h-96 ' src={post.img}/>
+            </div>
             
-            <img className='rounded-md min-w-full m-auto ' src={post.img}/>
             <article className='flex gap-4 m-2'>
-              <div><AiOutlineLike className='text-2xl'/></div>
+              
+              {/* <div className='flex'><AiOutlineLike className='text-2xl' onClick={()=>{like(post.id,post.idUser)}}/>{post.likes.length}</div> */}
+              {/* <div><AiOutlineLike className='text-2xl text-red-500'/></div> */}
+              <div className='flex'>
+                <AiOutlineLike className='text-2xl text-red-500 ' onClick={()=>{like(post.id,post.idUser)}}/>
+                <p>{post.likes.length}</p>
+              </div> 
+                 
+              
+              {/* <div className='flex'><AiOutlineLike className='text-2xl ' onClick={()=>{like(post.id,post.idUser)}}/>{post.likes.length}</div>  */}
               <button onClick={()=>{setShowComments(!showComments)}}><FaRegComment className='text-2xl'/></button>
             </article>
             
@@ -351,6 +407,7 @@ useEffect(()=>{
                     <div className='w-full relative'>
                       <p className='text-xs '>{comment.name}</p>
                       <p className='ml-2 '>{comment.comentario}</p>
+                      {/* <p className='ml-2 '>{Date(comment.date)}</p> */}
                       {/* <button className='ml-2 text-xs text-shadow-sm   text-white w-16 rounded-sm' onClick={()=>{setRespuesta(!respuesta)}}>Responder</button>
                       {respuesta&&
                         <div className="">
@@ -389,17 +446,17 @@ useEffect(()=>{
               return <article  className='bg-white mb-2 p-1 flex flex-col rounded-md shadow-xl'>
             
                 <Link href={"/profile/" + user.id} className='h-full   flex gap-3  items-center w-full  p-1 rounded-md   '>
-                  <a>
-                        <div className='w-10 h-10 overflow-hidden bg-black rounded-full flex items-center'>
+                  <a className='flex  items-center gap-4  w-full '>
+                        <div className='w-14 h-14 overflow-hidden bg-black rounded-full flex items-center m-2'>
                           
-                          <img className='w-10 h-auto m-auto ' src={user.profilePic} alt="" />
+                          <img className='w-14 h-auto  ' src={user.profilePic} alt="" />
                           
                         </div>
                        
-                         <p className=' h-fit'>{user.name}</p>
+                         <p className=' h-fit w-24  '>{user.name}</p>
                   </a>
               </Link>
-               <button className='bg-cyan-400 p-1 rounded-md m-auto my-2 shadow-lg' onClick={()=>{agregarAmigo(user.id)}}>Agregar a mis amigos</button>
+               <button className='bg-cyan-400  rounded-md m-auto my-2 text-white p-3 text-shadow shadow-lg' onClick={()=>{agregarAmigo(user.id)}}>Agregar a mis amigos</button>
               </article>
            }
   
