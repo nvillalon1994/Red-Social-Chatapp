@@ -64,63 +64,72 @@ export async function getStaticProps({params}){
 }
 
 export default function Perfil() {
-    const friends = useSelector(state=>state.users.usuario.friends)
-    const usuario = useSelector(state=>state.users.usuario.usuario)
-    const posts = useSelector(state=>state.users.usuario.posts)
-    const [publicacion,setPublicacion]= useState(false)
-    const [openpost,setopenPost]= useState(false)
-    const [post,setPost]= useState({})
-    console.log(friends)
-    console.log(usuario)
-    console.log(posts)
-    const router = useRouter()
-    const { id } = router.query
-    console.log(id)
-    const [comentario,setComentario]= useState(false)
-    const auth = useSelector(state=>state.auth)
-    
-    
-    const dispatch = useDispatch()
+      const friends = useSelector(state=>state.users.usuario.friends)
+      const usuario = useSelector(state=>state.users.usuario.usuario)
+      const posts = useSelector(state=>state.users.usuario.posts)
+      const [publicacion,setPublicacion]= useState(false)
+      const [openpost,setopenPost]= useState(false)
+      const [post,setPost]= useState({})
+      console.log(friends)
+      console.log(usuario)
+      console.log(posts)
+      const router = useRouter()
+      const { id } = router.query
+      console.log(id)
+      const [comentario,setComentario]= useState(false)
+      const auth = useSelector(state=>state.auth)
+      
+      
+      const dispatch = useDispatch()
 
-    const agregarComentario =(id2,idUser,e) =>{
-        // e.preventDefault()
-        if(e.key === "Enter"){
-          
-          const comentario = {
-            comentario:e.target.value,
-            name:auth.user.name,
-            profilePic:auth.user.profilePic,
-            id:auth.user.id
-          }
-          const comentarios = []
-          posts.map((post)=>{
-            if(post.id===id2){
-              
-              post.comments.forEach(element => {
-                comentarios.push(element)
-              });
-              comentarios.push(comentario)
+
+
+      const agregarComentario =(id2,idUser,e) =>{
+          // e.preventDefault()
+          if(e.key === "Enter"){
+            
+            const comentario = {
+              comentario:e.target.value,
+              name:auth.user.name,
+              profilePic:auth.user.profilePic,
+              date:Date.now(),
+              id:auth.user.id
+
             }
-            
-    
-          })
+            const comentarios = []
+            posts.map((post)=>{
+              if(post.id===id2){
+                
+                post.comments.forEach(element => {
+                  comentarios.push(element)
+                });
+                comentarios.push(comentario)
+              }
+              
+      
+            })
 
-    
-          const docRef = doc(database,`usuarios/${idUser}/posts/${id2}` )
-          updateDoc(docRef,{
-            comments:comentarios
+      
+            const docRef = doc(database,`usuarios/${idUser}/posts/${id2}` )
+            updateDoc(docRef,{
+              comments:comentarios
+              
+            })
             
-          })
-          
-          dispatch(getUserPosts(id))
+            dispatch(getUserPosts(id))
 
-          e.target.value=""
+            e.target.value=""
+            
+            // location.reload()
+          }
           
-          // location.reload()
         }
-        
-      }
+
+
+
       const eliminarComentario =(idPost,idCom,idUser)=>{
+
+        console.log(idCom)
         const comentarios =[]
         posts.map((post)=>{
           if(post.id===idPost){
@@ -129,7 +138,7 @@ export default function Perfil() {
             });
           }
         })
-        // console.log(commentario)
+        console.log(comentarios)
         const newComments=[]
         comentarios.map((com)=>{
           if(com.date!==idCom){
@@ -145,6 +154,9 @@ export default function Perfil() {
           
           dispatch(getUserPosts(id))
       }  
+
+
+
       const eliminarPost=(idPost)=>{
         dispatch(deletePost({idUser:auth.user.id,idPost:idPost}))
         dispatch(getUserPosts(id))
@@ -232,7 +244,7 @@ export default function Perfil() {
                     </form>
                 </div>
             </div>}
-        <section className='my-6 flex flex-col bg-color3-publicacion shadow-xl shadow-black rounded-lg w-1/4 gap-2 pt-5 '>
+        <section className='my-6 flex flex-col bg-color3-publicacion shadow-xl shadow-black rounded-lg w-1/4 gap-2 pt-5 h-fit '>
             <article>
                 <div className='w-40 h-40 overflow-hidden bg-black flex items-center rounded-full shadow-xl border-2 border-black m-auto'>
                     <img className='max-w-40 w-40  ' src={usuario?.profilePic}  alt="profilePic" />
@@ -306,12 +318,11 @@ export default function Perfil() {
                     <div className='w-full relative'>
                       <p className='text-xs '>{comment.name}</p>
                       <p className='ml-2 '>{comment.comentario}</p>
-                      {/* <button className='ml-2 text-xs text-shadow-sm   text-white w-16 rounded-sm' onClick={()=>{setRespuesta(!respuesta)}}>Responder</button>
-                      {respuesta&&
-                        <div className="">
-                          <input  className='w-2/3 ml-5 ' type="text" placeholder='Escribe tu respuesta'/>
-                        </div>} */}
-                      {comment.id===auth.user.id&&<button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarComentario(post.id,comment.date,post.idUser)}}>X</button>}
+                      
+                      
+                      {/* {comment.id===auth.user.id&& */}
+                      <button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarComentario(post.id,comment.date,post.idUser)}}>X</button>
+                      {/* } */}
                     </div>
                 </article>
             </article>
