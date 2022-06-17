@@ -32,7 +32,8 @@ export const getUsers = createAsyncThunk("users/obtenerUsers",async (data,thunkA
 
     return users2
 })
-export const getAllUsers = createAsyncThunk("users/obtenerAllUsers",async (data,thunkAPI)=>{
+export const getUserProfile = createAsyncThunk("users/obtenerAllUsers",async (data,thunkAPI)=>{
+    console.log(data)
     const state = thunkAPI.getState()
     console.log("estas")
     const col = collection(database,"usuarios")
@@ -46,21 +47,46 @@ export const getAllUsers = createAsyncThunk("users/obtenerAllUsers",async (data,
     console.log(users)
     let usuario 
     users.map((user)=>{
-        if(user.id=data){
+        if(user.id===data){
             usuario=user
         }
     })
     console.log(usuario)
     return usuario
 })
+export const getUserPosts = createAsyncThunk("users/obtenerUsersFriendPost",async (data,thunkAPI)=>{
+    const col3 = collection(database,"usuarios",data,"posts")
+    const posts =[]
+    const snapshot3 = await getDocs(col3)
+    
+    snapshot3.forEach(doc=>{
+      posts.push({...doc.data(),id:doc.id})
+    })
+    return posts
+    console.log(posts)
+})
+export const getUserFriends = createAsyncThunk("users/obtenerUserFriends",async (data,thunkAPI)=>{
+    const col2 = collection(database,"usuarios",data,"friends")
+    const snapshot2 = await getDocs(col2)
+    const amigos = []
 
+    snapshot2.forEach(doc=>{
+      amigos.push({...doc.data(),id:doc.id})
+    })
+    return amigos
+    console.log(console.log())
+})
 
 
 const usersSlice = createSlice({
     name:"users",
     initialState:{
         usuarios:[],
-        usuario:[],
+        usuario:{
+            usuario:{},
+            friends:[],
+            posts:[]
+        },
         loading:false
         
     
@@ -84,14 +110,40 @@ const usersSlice = createSlice({
             state.loading = false
         })
 
-        builder.addCase(getAllUsers.pending,(state,action)=>{
+        builder.addCase(getUserProfile.pending,(state,action)=>{
             state.loading = true
         })
-        builder.addCase(getAllUsers.fulfilled,(state,action)=>{
+        builder.addCase(getUserProfile.fulfilled,(state,action)=>{
             state.loading= false
-            state.usuario=action.payload
+            
+            state.usuario.usuario=action.payload
+            
         })
-        builder.addCase(getAllUsers.rejected,(state,action)=>{
+        builder.addCase(getUserProfile.rejected,(state,action)=>{
+            state.loading = false
+        })
+
+        builder.addCase(getUserPosts.pending,(state,action)=>{
+            state.loading = true
+        })
+        builder.addCase(getUserPosts.fulfilled,(state,action)=>{
+            state.loading= false
+            
+            state.usuario.posts=action.payload
+        })
+        builder.addCase(getUserPosts.rejected,(state,action)=>{
+            state.loading = false
+        })
+
+        builder.addCase(getUserFriends.pending,(state,action)=>{
+            state.loading = true
+        })
+        builder.addCase(getUserFriends.fulfilled,(state,action)=>{
+            state.loading= false
+            state.usuario.friends=action.payload
+            
+        })
+        builder.addCase(getUserFriends.rejected,(state,action)=>{
             state.loading = false
         })
 

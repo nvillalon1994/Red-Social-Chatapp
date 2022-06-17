@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { database } from '../../config/firebase' 
 import {collection,doc,getDocs,getDoc,updateDoc} from 'firebase/firestore'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,6 +8,8 @@ import {GiCancel  } from 'react-icons/gi';
 import Link from 'next/link';
 import { deletePost, editePost, getPosts } from '../../features/posts';
 import { deleteFriend } from '../../features/friends/solicitudes';
+import { useRouter } from 'next/router';
+import { getUserFriends, getUserPosts, getUserProfile } from '../../features/users';
 
 export async function getStaticPaths(){
     const col = collection(database,"usuarios")
@@ -56,23 +58,32 @@ export async function getStaticProps({params}){
             posts,
             friends
         },
+        revalidate: 10
         
     }
 }
 
-export default function Perfil({usuario,posts,friends}) {
+export default function Perfil() {
+    const friends = useSelector(state=>state.users.usuario.friends)
+    const usuario = useSelector(state=>state.users.usuario.usuario)
+    const posts = useSelector(state=>state.users.usuario.posts)
     const [publicacion,setPublicacion]= useState(false)
     const [openpost,setopenPost]= useState(false)
     const [post,setPost]= useState({})
+    console.log(friends)
+    console.log(usuario)
+    console.log(posts)
+    const router = useRouter()
+    const { id } = router.query
+    console.log(id)
     const [comentario,setComentario]= useState(false)
     const auth = useSelector(state=>state.auth)
-    // const friends = useSelector(state=>state.friends.friends)
-    // const posts = useSelector(state=>state.posts.items)
+    
     
     const dispatch = useDispatch()
 
-    const agregarComentario =(id,idUser,e) =>{
-    
+    const agregarComentario =(id2,idUser,e) =>{
+        // e.preventDefault()
         if(e.key === "Enter"){
           
           const comentario = {
@@ -83,7 +94,7 @@ export default function Perfil({usuario,posts,friends}) {
           }
           const comentarios = []
           posts.map((post)=>{
-            if(post.id===id){
+            if(post.id===id2){
               
               post.comments.forEach(element => {
                 comentarios.push(element)
@@ -95,23 +106,55 @@ export default function Perfil({usuario,posts,friends}) {
           })
 
     
-          const docRef = doc(database,`usuarios/${idUser}/posts/${id}` )
+          const docRef = doc(database,`usuarios/${idUser}/posts/${id2}` )
           updateDoc(docRef,{
             comments:comentarios
             
           })
-          dispatch(getPosts(idUser))
           
+          dispatch(getUserPosts(id))
+
           e.target.value=""
-          location.reload()
+          
+          // location.reload()
         }
         
       }
+      const eliminarComentario =(idPost,idCom,idUser)=>{
+        const comentarios =[]
+        posts.map((post)=>{
+          if(post.id===idPost){
+            post.comments.forEach(element => {
+              comentarios.push(element)
+            });
+          }
+        })
+        // console.log(commentario)
+        const newComments=[]
+        comentarios.map((com)=>{
+          if(com.date!==idCom){
+            newComments.push(com)
+          }
+        })
+        console.log(comentarios,newComments)
+        const docRef = doc(database,`usuarios/${id}/posts/${idPost}` )
+          updateDoc(docRef,{
+            comments:newComments
+            
+          })
+          
+          dispatch(getUserPosts(id))
+      }  
       const eliminarPost=(idPost)=>{
         dispatch(deletePost({idUser:auth.user.id,idPost:idPost}))
-        dispatch(getPosts(auth.user.id))
-        location.reload()
+        dispatch(getUserPosts(id))
+        
       }
+      const eliminarAmigo=(idFriend)=>{
+        dispatch(deleteFriend(idFriend))
+        // location.reload()
+      }
+
       const tomarPost=(idPost)=>{
         setopenPost(true)
         console.log(idPost)
@@ -138,18 +181,20 @@ export default function Perfil({usuario,posts,friends}) {
         const idPost=event.target.idPost.value
         
         
-        dispatch(editePost({idUser:auth.user.id,idPost:idPost,post:posteditado}))
-        dispatch(getPosts(auth.user.id))
+        dispatch(editePost({idUser:id,idPost:idPost,post:posteditado}))
+        dispatch(getUserPosts(id))
         setopenPost(false)
-        location.reload()
       }
-      const eliminarAmigo=(idFriend)=>{
-        dispatch(deleteFriend(idFriend))
-        // location.reload()
-      }
+      useEffect(()=>{
+        dispatch(getUserProfile(id))
+        dispatch(getUserPosts(id))
+        dispatch(getUserFriends(id))
+        
+
+      },[])
   return (
     <section className='max-w-6xl m-auto flex   '>
-      {publicacion&&<div className='z-30'>
+             {publicacion&&<div className='z-30'>
                 <div className='absolute left-0 top-0 h-screen w-full bg-black bg-opacity-50 z-10' onClick={()=>{setPublicacion(false)}}></div>
                 <div className="bg-color3-publicacion w-[500px] p-10 absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
                     <button className='absolute right-2 top-2 text-red-300 p-1 h-6 w-6 flex items-center justify-center rounded-md' onClick={()=>{setPublicacion(false)}}><GiCancel/></button>
@@ -190,10 +235,10 @@ export default function Perfil({usuario,posts,friends}) {
         <section className='my-6 flex flex-col bg-color3-publicacion shadow-xl shadow-black rounded-lg w-1/4 gap-2 pt-5 '>
             <article>
                 <div className='w-40 h-40 overflow-hidden bg-black flex items-center rounded-full shadow-xl border-2 border-black m-auto'>
-                    <img className='max-w-40 w-40  ' src={usuario.profilePic}  alt="profilePic" />
+                    <img className='max-w-40 w-40  ' src={usuario?.profilePic}  alt="profilePic" />
                 </div>
-                <h1 className='m-auto  text-xl text-center mt-2 font-semibold w-40'>{usuario.name}</h1>
-                <p className='m-auto  text-md text-center mt-2  w-40  overflow-hidden hover:overflow-visible'>{usuario.email}</p>
+                <h1 className='m-auto  text-xl text-center mt-2 font-semibold w-40'>{usuario?.name}</h1>
+                <p className='m-auto  text-md text-center mt-2  w-40  overflow-hidden hover:overflow-visible'>{usuario?.email}</p>
             </article>
             <h3 className='mx-3  text-xl text-left  font-semibold w-40'>Fotos</h3>
             <article className='mx-3'>
@@ -212,7 +257,7 @@ export default function Perfil({usuario,posts,friends}) {
             <article className='grid grid-cols-3 m-3'>
               
               {friends.map((friend)=><div href={"/profile/"+friend.id} className='w-20 h-20 overflow-hidden relative'>
-                <Link href={"/profile/"+friend.id}><img className='h-20 w-20 '  src={friend.profilePic} alt="" /></Link>
+                <a href={"/profile/"+friend.id}><img className='h-20 w-20 '  src={friend.profilePic} alt="" /></a>
                 <p className='absolute bottom-0 text-[11px] w-20 text-white text-center bg-black bg-opacity-50'>{friend.name}</p>
                 {usuario.id===auth.user.id&&<button className='absolute top-0 right-0 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarAmigo(friend.id)}}>X</button>}
               </div>)}
@@ -220,8 +265,7 @@ export default function Perfil({usuario,posts,friends}) {
             
         </section>
         <section className='w-2/3'>
-            
-          {posts.map((post)=>
+        {posts.map((post)=>
           <article className='max-w-xl m-auto bg-color3-publicacion p-5 rounded-lg shadow-xl shadow-black my-6 relative'>
             {post.idUser===auth.user.id&&<div>
               <button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarPost(post.id)}}>X</button>
