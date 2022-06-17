@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux'
 import { login, logout } from '../features/auth'
 import NavBar from './NavBar'
 import {getAllPosts, getPosts } from '../features/posts'
-import { getUsers } from '../features/users'
+import { getAllUsers, getUsers } from '../features/users'
 import { getFriends, getSolicitud } from '../features/friends/solicitudes'
 import { collection, onSnapshot } from 'firebase/firestore'
 import { useState } from 'react'
@@ -23,7 +23,7 @@ export default function Page({children}) {
                     id:authResult.uid,
                     email:authResult.email,
                     name:authResult.displayName,
-                    profilePic:authResult.photoURL
+                    // profilePic:authResult.photoURL
                 }))
                 // dispatch(getPosts(authResult.uid))
                 // setTimeout(()=>{
@@ -48,6 +48,7 @@ export default function Page({children}) {
                     dispatch(getUsers())
                 })
                 dispatch(getUsers())
+                dispatch(getAllUsers())
                 // dispatch(getSolicitud(authResult.uid))
                 // dispatch(getFriends(authResult.uid))
                 

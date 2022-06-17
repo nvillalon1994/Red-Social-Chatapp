@@ -14,6 +14,7 @@ import { getAllPosts } from '../features/posts'
 export default function Navbar() {
     const auth2 = useSelector(state=>state.auth)
     const solicitudes = useSelector(state=>state.friends.solicitudes)
+    const allUsers = useSelector(state=>state.users.allUsers)
     const [open,setOpen]=useState(false)
     const router = useRouter()
     const logout=()=>{
@@ -23,9 +24,9 @@ export default function Navbar() {
     
     console.log(auth2.user.name)
     const dispatch= useDispatch()
-    const aceptarSolicitud=(idFriend,idSolicitud,name,profilePic)=>{
+    const aceptarSolicitud=(idFriend,idSolicitud,name)=>{
       // console.log(idFriend,idSolicitud,name,profilePic)
-      dispatch(acceptFriend({idUser:auth2.user.id,idFriend:idFriend,idFriend,idSolicitud,name,profilePic}))
+      dispatch(acceptFriend({idUser:auth2.user.id,idFriend:idFriend,idFriend,idSolicitud,name}))
       // dispatch(getFriends(auth.user.id))
       // dispatch(getSolicitud(auth.user.id))
        setTimeout(()=>{dispatch(getUsers())},400)  
@@ -57,9 +58,19 @@ export default function Navbar() {
                   </div>
                   
                   <div className='flex gap-3 items-center w-8 h-8 rounded-full overflow-hidden bg-black'>
-                  <Link href={"/profile/" + auth2.user.id}><img className='w-8  rounded-full' src={auth2.user.profilePic} alt="" /></Link>
+                 
+                      
+                    {/* <img className='w-8  rounded-full' src={auth2.user.profilePic} alt="" /> */}
+                    
+                    {allUsers.map((user)=>{
+                        if(user.id===auth2.user.id){
+                          return  <Link href={"/profile/" + auth2.user.id} className="flex  relative w-40 h-40 overflow-hidden rounded-full bg-black"><img className='w-full h-auto m-auto' src={user.profilePic} alt="" /></Link>
+                        }
+                      })}
                         
                   </div>
+                  {/* <p>{auth2.user.name}</p> */}
+                  
                   {/* <div className='w-8 h-8 overflow-hidden rounded-full flex items-center'>
                     
                     <Link href={"/" + auth2.user.id}><img className='h-8  rounded-full' src={auth2.user.profilePic} alt="" /></Link>
@@ -78,14 +89,24 @@ export default function Navbar() {
                 </div>}
 
             </ul>
-            {open&&<div className='absolute top-16 right-24 z-10 bg-red-500 w-60 text-center'>
+            {open&&<div className='absolute top-16 right-24 z-10  w-60 text-center'>
               {solicitudes?.map((e)=>{
               if(e.solicitud==="recibida"){
-                return <div className='bg-color1-nav p-3 flex flex-col justify-center items-center'>
+                return <div className='bg-color4-comentarios p-3 flex flex-col justify-center items-center'>
                 <div className='flex '>
-                  <img className='h-14' src={e.profilePic}/>
-                  <p>{e.name}</p>
-                  {/* <p>{e.id}</p> */}
+                    <div className='flex gap-2 justify-between items-center mb-2 '>
+                    {allUsers.map((user)=>{
+                      if(user.id===e.idFriend){
+                        return <div className='h-20 w-20 overflow-hidden rounded-md'>
+                          <img className='h-28 w-full ' src={user.profilePic}/>
+                          </div>
+                      }
+                    })}
+                    <p className='text-white text-shadow-lg'>{e.name}</p>
+                    
+                    </div>
+                  
+                  
                 </div>
                 
                 <div className='flex gap-2'>

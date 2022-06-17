@@ -14,20 +14,24 @@ import Link from 'next/link'
 import { acceptFriend, addFriend, declineFriend, getFriends, getSolicitud,getUsersSolicitud } from '../features/friends/solicitudes';
 import { getUsers  } from '../features/users';
 import { useRouter } from 'next/router';
-
+import { getDownloadURL, ref , uploadBytesResumable } from 'firebase/storage'
+import { storage } from '../config/firebase';
 
 export default function Home() {
   const [solicitudes2,setSolicitudes2]=useState([])
   const [showComments, setShowComments]=useState(false)
   const auth = useSelector(state=>state.auth)
   const posts = useSelector(state=>state.posts.items)
-  
+  const [imgpost,setimgpost]= useState()
+  const [progress,setProgress]= useState(0)
   const allposts = useSelector(state=>state.posts.allposts)
   const pending = useSelector(state=>state.friends.pendingFriends)
   
   
   const users = useSelector(state=>state.users.usuarios)
-  
+  const allUsers = useSelector(state=>state.users.allUsers)
+  console.log(allUsers)
+  console.log(auth.user)
   const solicitudes = useSelector(state=>state.friends.solicitudes)
   console.log(solicitudes)
   const friends = useSelector(state=>state.friends.friends)
@@ -61,6 +65,47 @@ export default function Home() {
     dispatch(getPosts(auth.user.id))
   }
   
+  const subir =(e)=>{
+    e.preventDefault()
+    console.log("estas en subir",e.target.files[0])
+    const file = e.target.files[0]
+    // console.log(file)
+    uploadFiles(file)
+    
+    
+  }
+  
+  const uploadFiles =(file)=>{
+    console.log("entraste a uploadfile")
+    if(!file)return
+        
+        const storageRef =ref(storage,`/files/${auth.user.id}/images/"${file.name}`)
+        console.log("entraste a uploadfile2")
+        const uploadTask= uploadBytesResumable(storageRef ,file)
+        console.log("entraste a uploadfile3")
+        uploadTask.on("state_changed",(snapshot)=>{
+            const prog = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) *100)
+            setProgress(prog)
+        },(err)=>console.log(err),
+        ()=>{
+            getDownloadURL(uploadTask.snapshot.ref)
+            .then((url)=>{
+              console.log("la url es", url)
+              setimgpost(url)
+              
+                     
+              
+              
+            })
+        }
+        )
+        
+        
+    
+  }
+
+
+
   const like=(idPost,idUser)=>{
     const like={
       idPost:idPost,
@@ -112,7 +157,7 @@ export default function Home() {
       const comentario = {
         comentario:e.target.value,
         name:auth.user.name,
-        profilePic:auth.user.profilePic,
+        // profilePic:auth.user.profilePic,
         id:auth.user.id,
         date:Date.now()
 
@@ -185,9 +230,9 @@ export default function Home() {
       dispatch(getUsers())
   },900) 
   }
-  const aceptarSolicitud=(idFriend,idSolicitud,name,profilePic)=>{
+  const aceptarSolicitud=(idFriend,idSolicitud,name)=>{
     // console.log(idFriend,idSolicitud,name,profilePic)
-    dispatch(acceptFriend({idUser:auth.user.id,idFriend:idFriend,idFriend,idSolicitud,name,profilePic}))
+    dispatch(acceptFriend({idUser:auth.user.id,idFriend:idFriend,idFriend,idSolicitud,name}))
     // dispatch(getFriends(auth.user.id))
     // dispatch(getSolicitud(auth.user.id))
      setTimeout(()=>{dispatch(getUsers())},400)  
@@ -255,7 +300,14 @@ export default function Home() {
 console.log(solicitudes)
 const router = useRouter()
 
-  
+const [mostrarProg,setMostrarProg]=useState(false)
+      
+const cerrarPublicacion=()=>{
+  setPublicacion(false)
+  setimgpost()
+  setProgress(0)
+  setMostrarProg(false)
+} 
 useEffect(()=>{
   // dispatch(getFriends(auth.user.id))
 
@@ -263,11 +315,11 @@ useEffect(()=>{
   setTimeout(u,800)
   dispatch(getUsers())
   // dispatch(getFriends())
-  const a = auth.logged
-  console.log(a)
-  if(a===false){
-    router.replace("/login")
-  }
+  // const a = auth.logged
+  // console.log(a)
+  // if(a===false){
+  //   router.replace("/login")
+  // }
    
 },[])
 
@@ -275,18 +327,23 @@ useEffect(()=>{
     <main className=' max-w-6xl m-auto '>
       
        {publicacion&&<div className='z-30'>
-                <div className='absolute left-0 top-0 h-screen w-full bg-black bg-opacity-50 z-10' onClick={()=>{setPublicacion(false)}}></div>
-                <div className="bg-color3-publicacion w-[500px] p-10 absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
-                    <button className='absolute right-2 top-2 text-red-300 p-1 h-6 w-6 flex items-center justify-center rounded-md' onClick={()=>{setPublicacion(false)}}><GiCancel/></button>
+                <div className='fixed left-0 top-0 h-screen w-full bg-black bg-opacity-50 z-10' onClick={()=>{setPublicacion(false)}}></div>
+                <div className="bg-color3-publicacion w-[500px] p-10 fixed left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
+                    <button className='absolute right-2 top-2 text-red-300 p-1 h-6 w-6 flex items-center justify-center rounded-md' onClick={cerrarPublicacion}><GiCancel/></button>
                     <form className='flex flex-col p-5' onSubmit={publicar} >
                         <input autoComplete="off" className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='publicacion' placeholder='Tu publicación' type="text" />
                         
                         
-                        <input className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='imagen' placeholder='Image...' type="text" />
+                        {!mostrarProg?<input className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='imagen' placeholder='Image...' type="text" defaultValue={imgpost} />:<input hidden className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='imagen' placeholder='Image...' type="text" defaultValue={imgpost} />}
                         <input hidden className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='name' value={auth.user.name} placeholder='Image...' type="text" />
                         <input hidden className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='profilePic' value={auth.user.profilePic}placeholder='Image...' type="text" />
                         <input hidden className='' name='id' value={auth.user.id} placeholder='' type="text" />
-                        
+                        <img src={imgpost}/>
+                        <div className="relative h-5">
+                            <div className="absolute z-[0] top-[1px] left-[0px] bg-cyan-400 bg-opacity-70 px-2 py-[2px] text-white">Seleccionar archivo</div>
+                            {mostrarProg&&<p className='absolute top-0 left-40'>Cargando Imagen:{progress}%</p>}
+                            <input className=" absolute z-[1] top-[1px] left-[0px] w-40 opacity-0" type="file" onChange={subir} onClick={()=>{setMostrarProg(true)}} />
+                        </div>
                        
                         <button type='submit' className='bg-color4-comentarios mt-5 py-4 text-xl font-bold text-lavender-100 rounded-md'>Publicar</button>
                     </form>
@@ -316,14 +373,20 @@ useEffect(()=>{
       <section className='flex justify-between'>
         
         <section className='w-2/6    '>
-          <p className='text-xl text-gray-600 text-shadow-xl my-5'>Solicitudes de amistad</p>
-          <article className='max-h-[250px] overflow-auto'>
+          <p className='text-xl text-gray-600 text-shadow-xl mt-1 '>Solicitudes de amistad</p>
+          <article className='max-h-[250px] h-[250px] overflow-auto'>
             {solicitudes?.map((e)=>{
             if(e.solicitud==="recibida"){
-              return <div className='bg-color1-nav p-2 flex flex-col justify-center items-center'>
-              <div className='flex '>
-                <img className='h-14' src={e.profilePic}/>
-                <p>{e.name}</p>
+              return <div className='bg-color1-nav p-2 flex flex-col justify-center items-center '>
+              <div className='flex gap-2 justify-between items-center mb-2 '>
+                {allUsers.map((user)=>{
+                  if(user.id===e.idFriend){
+                    return <div className='h-20 w-20 overflow-hidden rounded-md'>
+                      <img className='h-28 w-full ' src={user.profilePic}/>
+                      </div>
+                  }
+                })}
+                <p className='text-white text-shadow-lg'>{e.name}</p>
                 
               </div>
               
@@ -336,18 +399,25 @@ useEffect(()=>{
             }})}
           </article>
           
-          <article>
-          <p className='text-xl text-gray-600 text-shadow-xl shadow-red-500 my-5'>Amigos</p>
-            {friends?.map((friend)=><div className='flex my-4'>
-            <div className='w-10 h-10 overflow-hidden bg-black rounded-full flex items-center'>
+          <article className=''>
+          <p className='text-xl text-gray-600 text-shadow-xl  my-5'>Amigos</p>
+            {friends?.map((friend)=><Link href={"/otherProfile/"+friend.id} className=''>
+              <a className='flex my-4 items-center gap-2'>
+              <div className='w-10 h-10 overflow-hidden bg-black rounded-full flex items-center'>
+              {allUsers.map((user)=>{
+                if(user.id===friend?.id){
+                  return <img className='w-10 h-auto m-auto ' src={user.profilePic} alt="" />
+                }
+              })}        
+              
                           
-              <img className='w-10 h-auto m-auto ' src={friend?.profilePic} alt="" />
-                          
-            </div>
+              </div>
                        
-            <p className=' h-fit'>{friend?.name}</p>
+              <p className=' h-fit text-gray-500 text-shadow-lg'>{friend?.name}</p>
+              </a>
+            
                   
-            </div>)}
+            </Link>)}
           </article>
           
           
@@ -370,12 +440,13 @@ useEffect(()=>{
             </div>}
             
             <div className='flex items-center gap-2 mb-3'>
-              <div className='w-12 h-12 overflow-hidden bg-black rounded-full flex items-center'>
-                <Link href={"/profile/"+post.idUser}  className='w-10 h-10 overflow-hidden rounded-full flex items-center'>
-                      <a><img className='w-12 h-auto ' src={post.profilePic} alt="" /></a>
-                      
-                      
-                </Link>
+              <div className='w-14 h-14 flex  relative overflow-hidden rounded-full bg-black'>
+                
+                {allUsers.map((user)=>{
+                    if(user.id===post.idUser){
+                      return <Link href={"/otherProfile/"+user.id}><img className='w-full m-auto h-auto' src={user.profilePic}/></Link>
+                    }
+                  })}
               </div>
               
               <p className='text-sm'>{post.name}</p>
@@ -406,11 +477,17 @@ useEffect(()=>{
             {post.comments?.map((comment)=>
               <article className='bg-color4-comentarios rounded-md p-2 mb-2'>
                 <article className='flex items-center gap-2 mb-2'>
-                    <Link href={"/profile/" + comment.id} className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
                     
-                      <img className='w-10 h-12' src={comment.profilePic} alt="" />
+                      {allUsers.map((user)=>{
+                        if(user.id===comment.id){
+                          return <Link href={"/otherProfile/" + comment.id} className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
+                            <img className='w-10 h-12' src={user.profilePic} alt="" /> 
+                             </Link>
+                        }
+                      })}
                       
-                    </Link>
+                      
+                   
                     <div className='w-full relative'>
                       <p className='text-xs '>{comment.name}</p>
                       <p className='ml-2 '>{comment.comentario}</p>
@@ -452,7 +529,7 @@ useEffect(()=>{
             if(user.id!==auth.user.id){
               return <article  className='bg-white mb-2 p-1 flex flex-col rounded-md shadow-xl'>
             
-                <Link href={"/profile/" + user.id} className='h-full   flex gap-3  items-center w-full  p-1 rounded-md   '>
+                <Link href={"/otherProfile/"+user.id} className='h-full   flex gap-3  items-center w-full  p-1 rounded-md   '>
                   <a className='flex  items-center gap-4  w-full '>
                         <div className='w-14 h-14 overflow-hidden bg-black rounded-full flex items-center m-2'>
                           

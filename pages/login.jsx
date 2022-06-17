@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import {Formik, Form, Field, ErrorMessage} from 'formik'
 import {signInWithEmailAndPassword, signInWithPopup, GithubAuthProvider, FacebookAuthProvider, GoogleAuthProvider,createUserWithEmailAndPassword,updateProfile} from 'firebase/auth'
-import {addDoc, collection,deleteDoc,doc,getDocs,updateDoc,docs,setDoc} from 'firebase/firestore'
+import {addDoc, collection,deleteDoc,doc,getDocs,updateDoc,docs,setDoc, getDoc} from 'firebase/firestore'
 import { auth,database } from '../config/firebase'
 import {useRouter} from 'next/router'
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook ,FaGithub} from 'react-icons/fa';
 import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateData } from '../features/auth'
+import { updateData,login } from '../features/auth'
 import { providerLogin, signInMethods } from '../libs/auth'
 const googleProvider = new GoogleAuthProvider()
 const facebookProvider = new FacebookAuthProvider()
@@ -23,7 +23,7 @@ export default function Login() {
     const crear =()=>{
 
     }
-    const login = (values,{setSubmitting,setErrors}) =>{
+    const login2 = (values,{setSubmitting,setErrors}) =>{
         
         if(isLogin){
         signInWithEmailAndPassword(auth,values.email,values.password)
@@ -44,7 +44,9 @@ export default function Login() {
                 name:values.name,
                 email:result.user.email,
                 profilePic:values.profilePic,
-                id:result.user.uid}
+                id:result.user.uid,
+                portadaPic:"https://images.unsplash.com/photo-1616039407041-5ce631b57879?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"    
+            }
         await setDoc(doc(database,`usuarios/${result.user.uid}`),user1)
           
           updateProfile(result.user,{
@@ -68,11 +70,32 @@ export default function Login() {
     const loginWithProvider = (id)=>{
         providerLogin(id)
         .then(async(result)=>{
+            console.log(result.user.uid)
+            const col = collection(database,"usuarios")
+            const snapshot = await getDocs(col)
+            
+            
+            const users = []
+            snapshot.forEach(doc=>{
+                users.push({...doc.data(),id:doc.id})
+            })
+            console.log(users)
+            let usuario 
+            users.map((user)=>{
+                if(user.id===result.user.uid){
+                    usuario=user
+                }
+            })
+            
+
             const user1={name:result.user.displayName,
                 email:result.user.email,
-                profilePic:result.user.photoURL,
-                id:result.user.uid}
-        await setDoc(doc(database,`usuarios/${result.user.uid}`),user1)
+                profilePic:usuario.profilePic,
+                id:result.user.uid,
+                portadaPic:"https://images.unsplash.com/photo-1616039407041-5ce631b57879?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"   }
+                console.log(user1)
+        // await setDoc(doc(database,`usuarios/${result.user.uid}`),user1)
+        //         dispatch(login(user1))
             router.replace("/")
 
         })
@@ -131,7 +154,7 @@ export default function Login() {
                 password:""
             }}
 
-            onSubmit={login}
+            onSubmit={login2}
         >
             {({errors,isSubmitting})=>{
                 return <section >

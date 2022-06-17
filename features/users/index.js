@@ -1,11 +1,22 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import {database} from '../../config/firebase'
 import {addDoc, collection,deleteDoc,doc,getDocs,updateDoc,docs} from 'firebase/firestore'
+import { async } from "@firebase/util";
 
 
 
 
-
+export const getAllUsers =createAsyncThunk("users/obtenerTodosLosUsuario", async(data,thunkAPI)=>{
+    const col = collection(database,"usuarios")
+    const snapshot = await getDocs(col)
+    
+    
+    const users = []
+    snapshot.forEach(doc=>{
+        users.push({...doc.data(),id:doc.id})
+      })
+      return users
+})
 export const getUsers = createAsyncThunk("users/obtenerUsers",async (data,thunkAPI)=>{
     const state = thunkAPI.getState()
     
@@ -82,6 +93,7 @@ const usersSlice = createSlice({
     name:"users",
     initialState:{
         usuarios:[],
+        allUsers:[],
         usuario:{
             usuario:{},
             friends:[],
@@ -98,7 +110,7 @@ const usersSlice = createSlice({
         
         
 
-        //OBTENER PUBLICACIONES
+        
         builder.addCase(getUsers.pending,(state,action)=>{
             state.loading = true
         })
@@ -144,6 +156,18 @@ const usersSlice = createSlice({
             
         })
         builder.addCase(getUserFriends.rejected,(state,action)=>{
+            state.loading = false
+        })
+
+        builder.addCase(getAllUsers.pending,(state,action)=>{
+            state.loading = true
+        })
+        builder.addCase(getAllUsers.fulfilled,(state,action)=>{
+            state.loading= false
+            state.allUsers=action.payload
+            
+        })
+        builder.addCase(getAllUsers.rejected,(state,action)=>{
             state.loading = false
         })
 

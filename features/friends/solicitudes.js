@@ -52,7 +52,7 @@ export const addFriend = createAsyncThunk("friends/addFriends",async (data,thunk
             estado:"pendiente",
             solicitud:"recibida",
             name:state.auth.user.name,
-            profilePic:state.auth.user.profilePic,
+            // profilePic:state.auth.user.profilePic,
             idFriend:state.auth.user.id
         })
   
@@ -105,6 +105,7 @@ export const addFriend = createAsyncThunk("friends/addFriends",async (data,thunk
     
     
 })
+
 export const acceptFriend = createAsyncThunk("friends/acceptFriends",async (data,thunkAPI)=>{
     
     const state = thunkAPI.getState()
@@ -112,13 +113,13 @@ export const acceptFriend = createAsyncThunk("friends/acceptFriends",async (data
     
     setDoc(doc(database,`usuarios/${state.auth.user.id}/friends`,data.idFriend),{
         name:data.name,
-        profilePic:data.profilePic
+        
     })
     deleteDoc(doc(database,"usuarios/"+state.auth.user.id+"/solicitudes",data.idSolicitud))
 
     setDoc(doc(database,`usuarios/${data.idFriend}/friends`,state.auth.user.id),{
         name:state.auth.user.name,
-        profilePic:state.auth.user.profilePic
+        
     })
     deleteDoc(doc(database,"usuarios/"+data.idFriend+"/solicitudes",data.idSolicitud))
 

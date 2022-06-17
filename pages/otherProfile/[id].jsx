@@ -367,7 +367,7 @@ export default function Perfil() {
                   {friends.map((friend)=><div href={"/profile/"+friend.id} className='flex items-center w-20 h-20 overflow-hidden relative rounded-md bg-black'>
                     {allUsers.map((user)=>{
                       if(user.id===friend.id){
-                        return <Link href={"/otherProfile/"+friend.id} className=""><img className='w-full h-auto '  src={user.profilePic} alt="" /></Link>
+                        return <Link href={"/profile/"+friend.id} className=""><img className='w-full h-auto '  src={user.profilePic} alt="" /></Link>
                       }
                     })}
                     
