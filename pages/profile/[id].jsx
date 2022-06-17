@@ -11,57 +11,57 @@ import { deleteFriend } from '../../features/friends/solicitudes';
 import { useRouter } from 'next/router';
 import { getUserFriends, getUserPosts, getUserProfile } from '../../features/users';
 
-export async function getStaticPaths(){
-    const col = collection(database,"usuarios")
-    const docs = await getDocs(col)
+// export async function getStaticPaths(){
+//     const col = collection(database,"usuarios")
+//     const docs = await getDocs(col)
 
-    const usuarios=[]
+//     const usuarios=[]
 
-    docs.forEach(doc=>{
-        usuarios.push({...doc.data(),id:doc.id})
-    })
+//     docs.forEach(doc=>{
+//         usuarios.push({...doc.data(),id:doc.id})
+//     })
 
-    const paths = usuarios.map(usuario=>({
-        params:{
-            id:usuario.id
-        }
-    }))
-    return {
-        paths,
-        fallback:false
-    }
-}
-export async function getStaticProps({params}){
-    const document = doc(database,"usuarios",params.id)
-    const usuarioDocument = await getDoc(document)
+//     const paths = usuarios.map(usuario=>({
+//         params:{
+//             id:usuario.id
+//         }
+//     }))
+//     return {
+//         paths,
+//         fallback:false
+//     }
+// }
+// export async function getStaticProps({params}){
+//     const document = doc(database,"usuarios",params.id)
+//     const usuarioDocument = await getDoc(document)
     
-    const col = collection(database,"usuarios",params.id,"posts")
-    const snapshot = await getDocs(col)
-    const posts = []
+//     const col = collection(database,"usuarios",params.id,"posts")
+//     const snapshot = await getDocs(col)
+//     const posts2 = []
 
-    snapshot.forEach(doc=>{
-      posts.push({...doc.data(),id:doc.id})
-    })
-    const col2 = collection(database,"usuarios",params.id,"friends")
-    const snapshot2 = await getDocs(col2)
-    const friends = []
+//     snapshot.forEach(doc=>{
+//       posts2.push({...doc.data(),id:doc.id})
+//     })
+//     const col2 = collection(database,"usuarios",params.id,"friends")
+//     const snapshot2 = await getDocs(col2)
+//     const friends2 = []
 
-    snapshot2.forEach(doc=>{
-      friends.push({...doc.data(),id:doc.id})
-    })
-    const usuario = usuarioDocument.data()
+//     snapshot2.forEach(doc=>{
+//       friends2.push({...doc.data(),id:doc.id})
+//     })
+//     const usuario2 = usuarioDocument.data()
     
 
-    return {
-        props:{
-            usuario,
-            posts,
-            friends
-        },
-        revalidate: 10
+//     return {
+//         props:{
+//             usuario2,
+//             posts2,
+//             friends2
+//         },
+//         revalidate: 10
         
-    }
-}
+//     }
+// }
 
 export default function Perfil() {
       const friends = useSelector(state=>state.users.usuario.friends)
@@ -76,7 +76,7 @@ export default function Perfil() {
       const router = useRouter()
       const { id } = router.query
       console.log(id)
-      const [comentario,setComentario]= useState(false)
+      
       const auth = useSelector(state=>state.auth)
       
       
@@ -241,13 +241,21 @@ export default function Perfil() {
         dispatch(getUserPosts(id))
         setopenPost(false)
       }
+      const h=()=>{
+        console.log("id:",id)
+          dispatch(getUserProfile(id))
+          dispatch(getUserPosts(id))
+          dispatch(getUserFriends(id))
+      }
       useEffect(()=>{
-        dispatch(getUserProfile(id))
-        dispatch(getUserPosts(id))
-        dispatch(getUserFriends(id))
         
+        if(router.isReady){
+          dispatch(getUserProfile(id))
+          dispatch(getUserPosts(id))
+          dispatch(getUserFriends(id))
+        }
 
-      },[])
+      },[router.isReady])
   return (
     <section className='max-w-6xl m-auto flex   '>
              {publicacion&&<div className='z-30'>
