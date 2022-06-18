@@ -265,6 +265,9 @@ export default function Perfil() {
         setimgpost()
         setProgress(0)
       }
+      posts.map((post)=>{
+        console.log(post.img)
+      })
       useEffect(()=>{
         
         if(router.isReady){
@@ -430,12 +433,14 @@ export default function Perfil() {
                   
                 </div>
                 <p className='mb-2'>{post.text}</p>
-                <div className='bg-black bg-opacity-10'>
-                  <img className='rounded-md  m-auto max-h-96 ' src={post.img}/>
-                </div>
-                <div className='bg-black bg-opacity-10'>
-                  <video className='rounded-md  m-auto max-h-96 ' src={post.img}/>
-                </div>
+                
+                {(post.img.includes("mp4"))?<div className='bg-black bg-opacity-10'>
+                  <video className='rounded-md  m-auto max-h-96 'controls>
+                    <source src={post.img}/>
+                  </video>
+                </div>:<div className='bg-black bg-opacity-10'>
+                  <img className='rounded-md  m-auto max-h-96 ' src={post.img} alt/>
+                </div>}
                 <article className='flex gap-4 m-2'>
                   <div className='flex'><AiOutlineLike className='text-2xl text-red-500'onClick={()=>{like(post.id,post.idUser)}}/>{post.likes.length}</div>
                   <button onClick={()=>{setShowComments(!showComments)}}><FaRegComment className='text-2xl'/></button>
