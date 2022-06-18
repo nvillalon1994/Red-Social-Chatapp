@@ -378,26 +378,7 @@ export default function Perfil() {
                     <p className='absolute bottom-0 text-[11px] w-20 text-white text-center bg-black bg-opacity-50'>{friend.name}</p>
                     {usuario.id===auth.user.id&&<button className='absolute top-0 right-0 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarAmigo(friend.id)}}>X</button>}
                   </div>)}
-                  {friends.map((friend)=><div href={"/profile/"+friend.id} className='flex items-center xl:w-20 xl:h-20 lg:w-16 lg:h-16 overflow-hidden relative rounded-md bg-black'>
-                    {allUsers.map((user)=>{
-                      if(user.id===friend.id){
-                        return <Link href={"/otherProfile/"+friend.id} className=""><img className='w-full h-auto '  src={user.profilePic} alt="" /></Link>
-                      }
-                    })}
-                    
-                    <p className='absolute bottom-0 text-[11px] w-20 text-white text-center bg-black bg-opacity-50'>{friend.name}</p>
-                    {usuario.id===auth.user.id&&<button className='absolute top-0 right-0 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarAmigo(friend.id)}}>X</button>}
-                  </div>)}
-                  {friends.map((friend)=><div href={"/profile/"+friend.id} className='flex items-center xl:w-20 xl:h-20 lg:w-16 lg:h-16 overflow-hidden relative rounded-md bg-black'>
-                    {allUsers.map((user)=>{
-                      if(user.id===friend.id){
-                        return <Link href={"/otherProfile/"+friend.id} className=""><img className='w-full h-auto '  src={user.profilePic} alt="" /></Link>
-                      }
-                    })}
-                    
-                    <p className='absolute bottom-0 text-[11px] w-20 text-white text-center bg-black bg-opacity-50'>{friend.name}</p>
-                    {usuario.id===auth.user.id&&<button className='absolute top-0 right-0 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarAmigo(friend.id)}}>X</button>}
-                  </div>)}
+                  
                   
                   
                   

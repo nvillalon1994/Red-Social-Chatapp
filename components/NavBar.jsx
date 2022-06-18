@@ -85,7 +85,7 @@ export default function Navbar() {
                     
                     {allUsers.map((user)=>{
                         if(user.id===auth2.user.id){
-                          return  <Link href={"/profile/" + auth2.user.id} className="flex  relative w-40 h-40 overflow-hidden rounded-full bg-black"><img className='w-full h-auto m-auto' src={user.profilePic} alt="" /></Link>
+                          return  <Link href={"/profile/" + auth2.user.id} className="flex  relative w-40 h-40 overflow-hidden rounded-full bg-black" ><img className='w-full h-auto m-auto' src={user.profilePic} alt=""onClick={()=>{setOpenFriends(false)}}/></Link>
                         }
                       })}
                         
