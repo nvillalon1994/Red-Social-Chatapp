@@ -265,6 +265,9 @@ export default function Perfil() {
         setimgpost()
         setProgress(0)
       }
+      posts.map((post)=>{
+        console.log(post.img)
+      })
       useEffect(()=>{
         
         if(router.isReady){
@@ -321,7 +324,7 @@ export default function Perfil() {
                     </form>
                 </div>
             </div>}
-        <section className=' flex flex-col items-center bg-color3-publicacion shadow-xl shadow-black rounded-lg  gap-2 pt-5 min-h-[450px] sm:min-h-fit sm:h-[265px] h-fit relative w-3/4'>
+        <section className=' flex flex-col items-center bg-color3-publicacion shadow-xl shadow-black rounded-lg  gap-2 pt-5 min-h-[450px] sm:min-h-fit sm:h-[265px] h-fit relative w-3/4 sm:w-11/12'>
             <div className='h-80 w-full overflow-hidden '>
               
               {/* <img className='w-full  ' src={"https://images.unsplash.com/photo-1616039407041-5ce631b57879?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"} alt="" /> */}
@@ -344,7 +347,7 @@ export default function Perfil() {
             
             
         </section>
-        <section className='flex gap-7 justify-between  w-3/4   '>
+        <section className='flex gap-7 justify-between  w-3/4 sm:w-11/12  '>
 
             <section className='flex flex-col bg-color3-publicacion  shadow-xl shadow-black rounded-lg  gap-2 mt-6 pt-7 min-h-[450px] w-1/3 h-fit  2xl:w-2/5 sm:hidden'>
               <h3 className='mx-3  text-xl text-left  font-semibold w-40'>Fotos</h3>
@@ -430,9 +433,14 @@ export default function Perfil() {
                   
                 </div>
                 <p className='mb-2'>{post.text}</p>
-                <div className='bg-black bg-opacity-10'>
-                  <img className='rounded-md  m-auto max-h-96 ' src={post.img}/>
-                </div>
+                
+                {(post.img.includes("mp4"))?<div className='bg-black bg-opacity-10'>
+                  <video className='rounded-md  m-auto max-h-96 'controls>
+                    <source src={post.img}/>
+                  </video>
+                </div>:<div className='bg-black bg-opacity-10'>
+                  <img className='rounded-md  m-auto max-h-96 ' src={post.img} alt/>
+                </div>}
                 <article className='flex gap-4 m-2'>
                   <div className='flex'><AiOutlineLike className='text-2xl text-red-500'onClick={()=>{like(post.id,post.idUser)}}/>{post.likes.length}</div>
                   <button onClick={()=>{setShowComments(!showComments)}}><FaRegComment className='text-2xl'/></button>
