@@ -226,9 +226,9 @@ export default function Home() {
     // dispatch(getSolicitud(auth.user.id))
     // dispatch(getFriends(auth.user.id))
     // dispatch(getUsersSolicitud(idFriend))
-    setTimeout(()=>{
-      dispatch(getUsers())
-  },900) 
+  //   setTimeout(()=>{
+  //     dispatch(getUsers())
+  // },900) 
   }
   const aceptarSolicitud=(idFriend,idSolicitud,name)=>{
     // console.log(idFriend,idSolicitud,name,profilePic)
@@ -324,11 +324,11 @@ useEffect(()=>{
 },[])
 
   return (
-    <main className=' max-w-6xl m-auto '>
+    <main className=' max-w-6xl m-auto 2xl:max-w-screen-2xl '>
       
        {publicacion&&<div className='z-30'>
                 <div className='fixed left-0 top-0 h-screen w-full bg-black bg-opacity-50 z-10' onClick={()=>{setPublicacion(false)}}></div>
-                <div className="bg-color3-publicacion w-[500px] p-10 fixed left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
+                <div className="bg-color3-publicacion w-[500px] p-10 fixed left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10 sm:w-[300px]">
                     <button className='absolute right-2 top-2 text-red-300 p-1 h-6 w-6 flex items-center justify-center rounded-md' onClick={cerrarPublicacion}><GiCancel/></button>
                     <form className='flex flex-col p-5' onSubmit={publicar} >
                         <input autoComplete="off" className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='publicacion' placeholder='Tu publicación' type="text" />
@@ -370,14 +370,14 @@ useEffect(()=>{
                 </div>
             </div>}
             
-      <section className='flex justify-between'>
+      <section className='md:flex justify-between  '>
         
-        <section className='w-2/6    '>
-          <p className='text-xl text-gray-600 text-shadow-xl mt-1 '>Solicitudes de amistad</p>
+        <section className='xl:w-3/12  xl:ml-0 lg:w-1/6 lg:ml-5 md:w-2/12 md:ml-5  phone:hidden md:inline-block sm:hidden md2:hidden'>
+          <p className='xl:text-xl lg:text-lg  text-gray-600 text-shadow-xl mt-1 md:text-sm  '>Solicitudes de amistad</p>
           <article className='max-h-[250px] h-[250px] overflow-auto'>
             {solicitudes?.map((e)=>{
             if(e.solicitud==="recibida"){
-              return <div className='bg-color1-nav p-2 flex flex-col justify-center items-center '>
+              return <div className='bg-color1-nav p-2 flex flex-col  items-center rounded-xl shadow-lg py-4'>
               <div className='flex gap-2 justify-between items-center mb-2 '>
                 {allUsers.map((user)=>{
                   if(user.id===e.idFriend){
@@ -391,8 +391,8 @@ useEffect(()=>{
               </div>
               
               <div className='flex gap-2'>
-                <button className='bg-cyan-400 p-2 rounded-md m-auto ' onClick={()=>{aceptarSolicitud(e.idFriend,e.id,e.name,e.profilePic)}}>Aceptar</button>
-                <button className='bg-red-300 p-2 rounded-md m-auto'onClick={()=>{eliminarSolicitud(e.idFriend,e.id)}}>Rechazar</button>
+                <button className='bg-cyan-400 p-2 rounded-md m-auto shadow-lg xl:text-md lg:text-sm md:text-xs ' onClick={()=>{aceptarSolicitud(e.idFriend,e.id,e.name,e.profilePic)}}>Aceptar</button>
+                <button className='bg-red-300 p-2 rounded-md m-auto shadow-lg xl:text-md lg:text-sm md:text-xs'onClick={()=>{eliminarSolicitud(e.idFriend,e.id)}}>Rechazar</button>
               </div>
               
             </div>
@@ -421,132 +421,134 @@ useEffect(()=>{
           </article>
           
           
-        </section>
-        <section className='w-full relative '>
-          <article className='max-w-xl m-auto bg-color3-publicacion p-5 rounded-lg shadow-xl shadow-black my-6'>
+          </section>
+
+          <section className='w-full lg:w-2/4 relative md:w-5/12  bg:w-4/6 sm:px-4 '>
+            <article className='max-w-xl lg:max-w-lg m-auto  bg-color3-publicacion p-5 rounded-lg shadow-xl shadow-black my-6'>
+              
+              <button onClick={()=>{setPublicacion(true)}} className='bg-color4-comentarios w-full text-left  p-2 rounded-lg text-gray-400'> Realiza una publicación</button>
+              
+            </article>
+            <article className='flex justify-center'>
+              <button onClick={hola} className="w-1/2 text-center bg-color4-comentarios text-white text-shadow-lg shadow-lg rounded-lg p-2 m-auto"> Actualizar</button>
+            </article>
             
-            <button onClick={()=>{setPublicacion(true)}} className='bg-color4-comentarios w-full text-left  p-2 rounded-lg text-gray-400'> Realiza una publicación</button>
-            
-          </article>
-          <article className='flex justify-center'>
-            <button onClick={hola} className="w-1/2 text-center bg-color4-comentarios text-white text-shadow-lg shadow-lg rounded-lg p-2 m-auto"> Actualizar</button>
-          </article>
-          
-          {allposts.map((post)=>
-          <article className='max-w-xl m-auto bg-color3-publicacion p-5 rounded-lg shadow-xl shadow-black my-6 relative'>
-            {post.idUser===auth.user.id&&<div>
-              <button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarPost(post.id)}}>X</button>
-              <button className='absolute top-1 right-6 bg-red-300 text-white  px-2 text-xs rounded-full' onClick={()=>{tomarPost(post.id)}}>editar</button>
-            </div>}
-            
-            <div className='flex items-center gap-2 mb-3'>
-              <div className='w-14 h-14 flex  relative overflow-hidden rounded-full bg-black'>
+            {allposts.map((post)=>
+            <article className='max-w-xl lg:max-w-lg m-auto bg-color3-publicacion p-5 rounded-lg shadow-xl shadow-black my-6 relative'>
+              {post.idUser===auth.user.id&&<div>
+                <button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarPost(post.id)}}>X</button>
+                <button className='absolute top-1 right-6 bg-red-300 text-white  px-2 text-xs rounded-full' onClick={()=>{tomarPost(post.id)}}>editar</button>
+              </div>}
+              
+              <div className='flex items-center gap-2 mb-3 '>
+                <div className='w-14 h-14 flex  relative overflow-hidden rounded-full bg-black'>
+                  
+                  {allUsers.map((user)=>{
+                      if(user.id===post.idUser){
+                        return <Link href={"/otherProfile/"+user.id}><img className='w-full m-auto h-auto' src={user.profilePic}/></Link>
+                      }
+                    })}
+                </div>
                 
-                {allUsers.map((user)=>{
-                    if(user.id===post.idUser){
-                      return <Link href={"/otherProfile/"+user.id}><img className='w-full m-auto h-auto' src={user.profilePic}/></Link>
-                    }
-                  })}
+                <p className='text-sm'>{post.name}</p>
+                
+                
+                <p className='text-gray-500 text-sm'>9h</p>
+                
+              </div>
+              <p className='mb-2'>{post.text}</p>
+              <div className='bg-black bg-opacity-10'>
+                <img className='rounded-md  m-auto h-96 md:h-auto sm:h-auto ' src={post.img}/>
               </div>
               
-              <p className='text-sm'>{post.name}</p>
+              <article className='flex gap-4 m-2'>
+                
+                {/* <div className='flex'><AiOutlineLike className='text-2xl' onClick={()=>{like(post.id,post.idUser)}}/>{post.likes.length}</div> */}
+                {/* <div><AiOutlineLike className='text-2xl text-red-500'/></div> */}
+                <div className='flex'>
+                  <AiOutlineLike className='text-2xl text-red-500 ' onClick={()=>{like(post.id,post.idUser)}}/>
+                  <p>{post.likes.length}</p>
+                </div> 
+                  
+                
+                {/* <div className='flex'><AiOutlineLike className='text-2xl ' onClick={()=>{like(post.id,post.idUser)}}/>{post.likes.length}</div>  */}
+                <button onClick={()=>{setShowComments(!showComments)}}><FaRegComment className='text-2xl'/></button>
+              </article>
               
-              
-              <p className='text-gray-500 text-sm'>9h</p>
-              
-            </div>
-            <p className='mb-2'>{post.text}</p>
-            <div className='bg-black bg-opacity-10'>
-              <img className='rounded-md  m-auto h-96 ' src={post.img}/>
-            </div>
-            
-            <article className='flex gap-4 m-2'>
-              
-              {/* <div className='flex'><AiOutlineLike className='text-2xl' onClick={()=>{like(post.id,post.idUser)}}/>{post.likes.length}</div> */}
-              {/* <div><AiOutlineLike className='text-2xl text-red-500'/></div> */}
-              <div className='flex'>
-                <AiOutlineLike className='text-2xl text-red-500 ' onClick={()=>{like(post.id,post.idUser)}}/>
-                <p>{post.likes.length}</p>
-              </div> 
-                 
-              
-              {/* <div className='flex'><AiOutlineLike className='text-2xl ' onClick={()=>{like(post.id,post.idUser)}}/>{post.likes.length}</div>  */}
-              <button onClick={()=>{setShowComments(!showComments)}}><FaRegComment className='text-2xl'/></button>
-            </article>
-            
-            {post.comments?.map((comment)=>
-              <article className='bg-color4-comentarios rounded-md p-2 mb-2'>
-                <article className='flex items-center gap-2 mb-2'>
+              {post.comments?.map((comment)=>
+                <article className='bg-color4-comentarios rounded-md p-2 mb-2'>
+                  <article className='flex items-center gap-2 mb-2'>
+                      
+                        {allUsers.map((user)=>{
+                          if(user.id===comment.id){
+                            return <Link href={"/otherProfile/" + comment.id} className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
+                              <img className='w-10 h-12' src={user.profilePic} alt="" /> 
+                              </Link>
+                          }
+                        })}
+                        
+                        
                     
-                      {allUsers.map((user)=>{
-                        if(user.id===comment.id){
-                          return <Link href={"/otherProfile/" + comment.id} className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
-                            <img className='w-10 h-12' src={user.profilePic} alt="" /> 
-                             </Link>
-                        }
-                      })}
-                      
-                      
-                   
-                    <div className='w-full relative'>
-                      <p className='text-xs '>{comment.name}</p>
-                      <p className='ml-2 '>{comment.comentario}</p>
-                      {/* <p className='ml-2 '>{Date(comment.date)}</p> */}
-                      {/* <button className='ml-2 text-xs text-shadow-sm   text-white w-16 rounded-sm' onClick={()=>{setRespuesta(!respuesta)}}>Responder</button>
-                      {respuesta&&
-                        <div className="">
-                          <input  className='w-2/3 ml-5 ' type="text" placeholder='Escribe tu respuesta'/>
-                        </div>} */}
-                      {comment.id===auth.user.id&&<button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarComentario(post.id,comment.date,post.idUser)}}>X</button>}
-                    </div>
+                      <div className='w-full relative'>
+                        <p className='text-xs '>{comment.name}</p>
+                        <p className='ml-2 '>{comment.comentario}</p>
+                        {/* <p className='ml-2 '>{Date(comment.date)}</p> */}
+                        {/* <button className='ml-2 text-xs text-shadow-sm   text-white w-16 rounded-sm' onClick={()=>{setRespuesta(!respuesta)}}>Responder</button>
+                        {respuesta&&
+                          <div className="">
+                            <input  className='w-2/3 ml-5 ' type="text" placeholder='Escribe tu respuesta'/>
+                          </div>} */}
+                        {comment.id===auth.user.id&&<button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarComentario(post.id,comment.date,post.idUser)}}>X</button>}
+                      </div>
+                  </article>
+              </article>
+              )}
+              
+              {/* {comentario&& */}
+              <article className='bg-color4-comentarios rounded-md p-2 mb-2'>
+                <article className='flex items-center gap-2 py-2'>
+                    <input className='bg-color3-publicacion my-auto py-1 rounded-md w-full' name="comentario" type="text" placeholder='Deja tu comentario' 
+                    
+                    onKeyDown={(event)=>{agregarComentario(post.id,post.idUser,event)}}
+                    
+                    />
+                    
                 </article>
-            </article>
-            )}
-            
-            {/* {comentario&& */}
-            <article className='bg-color4-comentarios rounded-md p-2 mb-2'>
-              <article className='flex items-center gap-2 py-2'>
-                  <input className='bg-color3-publicacion my-auto py-1 rounded-md w-full' name="comentario" type="text" placeholder='Deja tu comentario' 
-                  
-                  onKeyDown={(event)=>{agregarComentario(post.id,post.idUser,event)}}
-                  
-                  />
-                  
               </article>
-            </article>
-          {/* } */}
+            {/* } */}
+              
+            </article>)
+            }
             
-          </article>)
-          }
-          
-          
-          
-        </section>
-        <section className='w-2/6 my-6 h-fit bg-color4-comentarios  p-2 rounded-lg shadow-xl'>
-          <h2 className='text-ms text-gray-600 text-shadow-xl my-4'>Personas que quizás conozcas</h2>
-          {users?.map((user)=>{
+            
+            
+          </section>
+
+          <section className='xl:w-3/12 lg:w-1/6  lg:mr-5 my-6 h-fit md:w-2/12 md:mr-5 bg-color4-comentarios  p-2 rounded-lg shadow-xl md:inline-block sm:hidden phone:hidden '>
+            <h2 className='lg:text-lg md:text-md  text-gray-600 text-shadow-xl mb-4'>Personas que quizás conozcas</h2>
+            {users?.map((user)=>{
+      
+              if(user.id!==auth.user.id){
+                return <article  className='bg-white mb-2 p-1 flex flex-col rounded-md shadow-xl'>
+              
+                  <Link href={"/otherProfile/"+user.id} className='h-full   flex gap-3  items-center w-full  p-1 rounded-md   '>
+                    <a className='flex  items-center gap-4  w-full '>
+                          <div className='w-14 h-14 overflow-hidden bg-black rounded-full flex items-center m-2'>
+                            
+                            <img className='w-14 h-auto  ' src={user.profilePic} alt="" />
+                            
+                          </div>
+                        
+                          <p className=' h-fit w-24  '>{user.name}</p>
+                    </a>
+                </Link>
+                <button className='bg-cyan-400 xl:text-md  rounded-md m-auto my-2 text-white p-3 text-shadow shadow-lg lg:text-sm md:text-xs' onClick={()=>{agregarAmigo(user.id)}}>Agregar a mis amigos</button>
+                </article>
+            }
     
-            if(user.id!==auth.user.id){
-              return <article  className='bg-white mb-2 p-1 flex flex-col rounded-md shadow-xl'>
+            })}
             
-                <Link href={"/otherProfile/"+user.id} className='h-full   flex gap-3  items-center w-full  p-1 rounded-md   '>
-                  <a className='flex  items-center gap-4  w-full '>
-                        <div className='w-14 h-14 overflow-hidden bg-black rounded-full flex items-center m-2'>
-                          
-                          <img className='w-14 h-auto  ' src={user.profilePic} alt="" />
-                          
-                        </div>
-                       
-                         <p className=' h-fit w-24  '>{user.name}</p>
-                  </a>
-              </Link>
-               <button className='bg-cyan-400  rounded-md m-auto my-2 text-white p-3 text-shadow shadow-lg' onClick={()=>{agregarAmigo(user.id)}}>Agregar a mis amigos</button>
-              </article>
-           }
-  
-          })}
-          
-        </section>
+          </section>
       </section>
     </main>
   )

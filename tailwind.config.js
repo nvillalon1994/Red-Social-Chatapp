@@ -13,6 +13,16 @@ module.exports = {
 
       }
     },
+    screens:{
+      '2xl':{'min':'1536px'},
+      'xl':{'min':'1280px'},
+      'lg':{'min':'1024px'},
+      'md':{'min':'760px'},
+      'md2':{'max':'760px'},
+      'sm2':{'min':'640px'},
+      'sm':{'max':'640px'},
+      'phone': {'max':'360px'}
+    }
   },
   plugins: [
     require('tailwindcss-textshadow')

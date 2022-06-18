@@ -276,10 +276,10 @@ export default function Perfil() {
       },[router.isReady])
       const profilePic = usuario.profilePic
   return (
-    <section className='max-w-6xl m-auto flex flex-col justify-center items-center   '>
+    <section className='xl:max-w-6xl 2xl:max-w-screen-2xl m-auto flex flex-col justify-center items-center   '>
              {publicacion&&<div className='z-30'>
                 <div className='fixed left-0 top-0 h-screen w-full bg-black bg-opacity-50 z-10' onClick={()=>{setPublicacion(false)}}></div>
-                <div className="bg-color3-publicacion w-[500px] p-10 fixed left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
+                <div className="bg-color3-publicacion w-[500px] sm:w-[300px] p-10 fixed left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
                     <button className='absolute right-2 top-2 text-red-300 p-1 h-6 w-6 flex items-center justify-center rounded-md' onClick={cerrarPublicacion}><GiCancel/></button>
                     <form className='flex flex-col p-5' onSubmit={publicar} >
                         <input autoComplete="off" className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='publicacion' placeholder='Tu publicación' type="text" />
@@ -321,31 +321,32 @@ export default function Perfil() {
                     </form>
                 </div>
             </div>}
-        <section className=' flex flex-col items-center bg-color3-publicacion shadow-xl shadow-black rounded-lg  gap-2 pt-5 min-h-[450px] h-fit relative w-3/4'>
-            <div className='h-80 overflow-hidden '>
+        <section className=' flex flex-col items-center bg-color3-publicacion shadow-xl shadow-black rounded-lg  gap-2 pt-5 min-h-[450px] sm:min-h-fit sm:h-[265px] h-fit relative w-3/4'>
+            <div className='h-80 w-full overflow-hidden '>
               
               {/* <img className='w-full  ' src={"https://images.unsplash.com/photo-1616039407041-5ce631b57879?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"} alt="" /> */}
-              <img className='w-full  ' src={usuario.portadaPic} alt="" />
+              <img className='w-full sm:mb-20 ' src={usuario.portadaPic} alt="" />
             </div>
             
-            <article className='flex gap-3 absolute left-2 bottom-2'>
+            <article className='flex gap-3 absolute left-2 bottom-2 2xl:left-4 2xl:bottom-4'>
               
                 {/* <div className='h-40 w-40 rounded-full overflow-hidden bg-black flex justify-center'>
                     <img className=' ' src={usuario?.profilePic}  alt="profilePic" />
                 </div> */}
-                <div  href={"/profile/"+post.idUser}  className="flex  relative w-40 h-40 overflow-hidden rounded-full bg-black ">
+                <div  href={"/profile/"+post.idUser}  className="flex  relative w-40 h-40 sm:w-20 sm:h-20 overflow-hidden rounded-full bg-black ">
                           <img className='w-full h-auto m-auto' src={usuario.profilePic} alt="" />
                           
                           
                 </div>
-                <h1 className='m-auto  text-2xl font-semibold w-fit text-white text-shadow-xl'>{usuario?.name}</h1>
+                <h1 className='m-auto  text-2xl sm:text-sm font-semibold w-fit text-white text-shadow-xl 2xl:text-4xl'>{usuario?.name}</h1>
                 {/* <p className='m-auto  text-md text-center mt-2  w-40  overflow-hidden hover:overflow-visible'>{usuario?.email}</p> */}
             </article>
             
             
         </section>
-        <section className='flex gap-7   pt-5  w-3/4  '>
-            <section className='flex flex-col bg-color3-publicacion shadow-xl shadow-black rounded-lg  gap-2 mt-6 pt-7 min-h-[450px] h-fit w-2/6'>
+        <section className='flex gap-7 justify-between  w-3/4   '>
+
+            <section className='flex flex-col bg-color3-publicacion  shadow-xl shadow-black rounded-lg  gap-2 mt-6 pt-7 min-h-[450px] w-1/3 h-fit  2xl:w-2/5 sm:hidden'>
               <h3 className='mx-3  text-xl text-left  font-semibold w-40'>Fotos</h3>
                 <article className='mx-3'>
                 
@@ -353,7 +354,7 @@ export default function Perfil() {
                         {posts.map((post)=>
                         <article>
                           
-                          {post.img!==""&&<div className='w-20 h-16 overflow-hidden rounded-md flex items-center bg-black  '>
+                          {post.img!==""&&<div className='w-20 h-16 lg:w-16 lg:h-12 mb-2 overflow-hidden rounded-md flex items-center bg-black  '>
                                 <img className='max-h-40 h-20 mx-auto ' src={post.img}  alt="profilePic" />
                                 
                             </div>}
@@ -364,10 +365,30 @@ export default function Perfil() {
                 <h3 className=' text-xl text-left mx-3 font-semibold w-40 bottom-24'>Amigos</h3>
                 <article className='grid grid-cols-3 m-3   h-fit'>
                   
-                  {friends.map((friend)=><div href={"/profile/"+friend.id} className='flex items-center w-20 h-20 overflow-hidden relative rounded-md bg-black'>
+                  {friends.map((friend)=><div href={"/profile/"+friend.id} className='flex items-center xl:w-20 xl:h-20 lg:w-16 lg:h-16 md:h- overflow-hidden relative rounded-md bg-black'>
                     {allUsers.map((user)=>{
                       if(user.id===friend.id){
-                        return <Link href={"/profile/"+friend.id} className=""><img className='w-full h-auto '  src={user.profilePic} alt="" /></Link>
+                        return <Link href={"/otherProfile/"+friend.id} className=""><img className='w-full h-auto '  src={user.profilePic} alt="" /></Link>
+                      }
+                    })}
+                    
+                    <p className='absolute bottom-0 text-[11px] w-20 text-white text-center bg-black bg-opacity-50'>{friend.name}</p>
+                    {usuario.id===auth.user.id&&<button className='absolute top-0 right-0 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarAmigo(friend.id)}}>X</button>}
+                  </div>)}
+                  {friends.map((friend)=><div href={"/profile/"+friend.id} className='flex items-center xl:w-20 xl:h-20 lg:w-16 lg:h-16 overflow-hidden relative rounded-md bg-black'>
+                    {allUsers.map((user)=>{
+                      if(user.id===friend.id){
+                        return <Link href={"/otherProfile/"+friend.id} className=""><img className='w-full h-auto '  src={user.profilePic} alt="" /></Link>
+                      }
+                    })}
+                    
+                    <p className='absolute bottom-0 text-[11px] w-20 text-white text-center bg-black bg-opacity-50'>{friend.name}</p>
+                    {usuario.id===auth.user.id&&<button className='absolute top-0 right-0 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarAmigo(friend.id)}}>X</button>}
+                  </div>)}
+                  {friends.map((friend)=><div href={"/profile/"+friend.id} className='flex items-center xl:w-20 xl:h-20 lg:w-16 lg:h-16 overflow-hidden relative rounded-md bg-black'>
+                    {allUsers.map((user)=>{
+                      if(user.id===friend.id){
+                        return <Link href={"/otherProfile/"+friend.id} className=""><img className='w-full h-auto '  src={user.profilePic} alt="" /></Link>
                       }
                     })}
                     
@@ -376,9 +397,11 @@ export default function Perfil() {
                   </div>)}
                   
                   
+                  
                 </article> 
             </section>
-            <section className='w-4/6'>
+
+            <section className=''>
               {usuario.id===auth.user.id&&<article className='max-w-xl m-auto bg-color3-publicacion p-5 rounded-lg shadow-xl shadow-black my-6'>
                 
                 <button onClick={()=>{setPublicacion(true)}} className='bg-color4-comentarios w-full text-left  p-2 rounded-lg text-gray-400'> Realiza una publicación</button>
