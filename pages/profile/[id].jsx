@@ -387,20 +387,20 @@ export default function Perfil() {
                 </article> 
             </section>
 
-            <section className=''>
+            <section className='w-full'>
               {usuario.id===auth.user.id&&<article className='max-w-xl m-auto bg-color3-publicacion p-5 rounded-lg shadow-xl shadow-black my-6'>
                 
                 <button onClick={()=>{setPublicacion(true)}} className='bg-color4-comentarios w-full text-left  p-2 rounded-lg text-gray-400'> Realiza una publicación</button>
                 
               </article>}
             {posts.map((post)=>
-              <article className='max-w-xl m-auto bg-color3-publicacion p-5 rounded-lg shadow-xl shadow-black my-6 relative'>
+              <article className='max-w-xl m-auto  bg-color3-publicacion p-5 rounded-lg shadow-xl shadow-black my-6 relative '>
                 {post.idUser===auth.user.id&&<div>
                   <button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarPost(post.id)}}>X</button>
                   <button className='absolute top-1 right-6 bg-red-300 text-white  px-2 text-xs rounded-full' onClick={()=>{tomarPost(post.id)}}>editar</button>
                 </div>}
                 
-                <div className='flex items-center gap-2 mb-3'>
+                <div className='flex items-center gap-2 mb-3  '>
                   <div className='w-14 h-14 flex items-center relative overflow-hidden rounded-full bg-black'>
                     <Link href={"/profile/"+post.idUser}  className=''>
                           {usuario.id===post.idUser?<a><img className='w-full m-auto h-auto ' src={usuario.profilePic} alt="" /></a>:<a><img className='w-full m-auto h-auto' src={post.profilePic} alt="" /></a>}
@@ -415,10 +415,10 @@ export default function Perfil() {
                   {/* <p className='text-gray-500 text-sm'>9h</p> */}
                   
                 </div>
-                <p className='mb-2'>{post.text}</p>
+                <p className='mb-2 '>{post.text}</p>
                 
                 {(post.img.includes("mp4"))?<div className='bg-black bg-opacity-10'>
-                  <video className='rounded-md  m-auto max-h-96 'controls>
+                  <video className='rounded-md  m-auto max-h-96 w-full'controls>
                     <source src={post.img}/>
                   </video>
                 </div>:<div className='bg-black bg-opacity-10'>

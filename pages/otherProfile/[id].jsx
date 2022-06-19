@@ -387,7 +387,7 @@ export default function Perfil() {
                 </article> 
             </section>
 
-            <section className=''>
+            <section className='w-full'>
               {usuario?.id===auth.user.id&&<article className='max-w-xl m-auto bg-color3-publicacion p-5 rounded-lg shadow-xl shadow-black my-6'>
                 
                 <button onClick={()=>{setPublicacion(true)}} className='bg-color4-comentarios w-full text-left  p-2 rounded-lg text-gray-400'> Realiza una publicación</button>
