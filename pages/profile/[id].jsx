@@ -277,7 +277,7 @@ export default function Perfil() {
         }
 
       },[router.isReady])
-      const profilePic = usuario.profilePic
+      // const profilePic = usuario.profilePic
   return (
     <section className='xl:max-w-6xl 2xl:max-w-screen-2xl m-auto flex flex-col justify-center items-center   '>
              {publicacion&&<div className='z-30'>

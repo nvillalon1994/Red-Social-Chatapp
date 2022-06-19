@@ -269,15 +269,17 @@ export default function Perfil() {
         console.log(post.img)
       })
       useEffect(()=>{
-        
+        dispatch(getUserProfile())
+        dispatch(getUserPosts())
+        dispatch(getUserFriends())
         if(router.isReady){
           dispatch(getUserProfile(id))
-          dispatch(getUserPosts(id))
-          dispatch(getUserFriends(id))
+        dispatch(getUserPosts(id))
+        dispatch(getUserFriends(id))
         }
 
       },[router.isReady])
-      const profilePic = usuario.profilePic
+      // const profilePic = usuario.profilePic
   return (
     <section className='xl:max-w-6xl 2xl:max-w-screen-2xl m-auto flex flex-col justify-center items-center   '>
              {publicacion&&<div className='z-30'>
@@ -328,7 +330,7 @@ export default function Perfil() {
             <div className='h-80 w-full overflow-hidden '>
               
               {/* <img className='w-full  ' src={"https://images.unsplash.com/photo-1616039407041-5ce631b57879?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"} alt="" /> */}
-              <img className='w-full sm:mb-20 ' src={usuario.portadaPic} alt="" />
+              <img className='w-full sm:mb-20 ' src={usuario?.portadaPic} alt="" />
             </div>
             
             <article className='flex gap-3 absolute left-2 bottom-2 2xl:left-4 2xl:bottom-4'>
@@ -337,7 +339,7 @@ export default function Perfil() {
                     <img className=' ' src={usuario?.profilePic}  alt="profilePic" />
                 </div> */}
                 <div  href={"/profile/"+post.idUser}  className="flex  relative w-40 h-40 sm:w-20 sm:h-20 overflow-hidden rounded-full bg-black ">
-                          <img className='w-full h-auto m-auto' src={usuario.profilePic} alt="" />
+                          <img className='w-full h-auto m-auto' src={usuario?.profilePic} alt="" />
                           
                           
                 </div>
@@ -376,7 +378,7 @@ export default function Perfil() {
                     })}
                     
                     <p className='absolute bottom-0 text-[11px] w-20 text-white text-center bg-black bg-opacity-50'>{friend.name}</p>
-                    {usuario.id===auth.user.id&&<button className='absolute top-0 right-0 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarAmigo(friend.id)}}>X</button>}
+                    {usuario?.id===auth.user.id&&<button className='absolute top-0 right-0 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarAmigo(friend.id)}}>X</button>}
                   </div>)}
                   
                   
@@ -386,7 +388,7 @@ export default function Perfil() {
             </section>
 
             <section className=''>
-              {usuario.id===auth.user.id&&<article className='max-w-xl m-auto bg-color3-publicacion p-5 rounded-lg shadow-xl shadow-black my-6'>
+              {usuario?.id===auth.user.id&&<article className='max-w-xl m-auto bg-color3-publicacion p-5 rounded-lg shadow-xl shadow-black my-6'>
                 
                 <button onClick={()=>{setPublicacion(true)}} className='bg-color4-comentarios w-full text-left  p-2 rounded-lg text-gray-400'> Realiza una publicación</button>
                 
@@ -401,7 +403,7 @@ export default function Perfil() {
                 <div className='flex items-center gap-2 mb-3'>
                   <div className='w-14 h-14 flex items-center relative overflow-hidden rounded-full bg-black'>
                     <Link href={"/profile/"+post.idUser}  className=''>
-                          {usuario.id===post.idUser?<a><img className='w-full m-auto h-auto ' src={usuario.profilePic} alt="" /></a>:<a><img className='w-full m-auto h-auto' src={post.profilePic} alt="" /></a>}
+                          {usuario?.id===post.idUser?<a><img className='w-full m-auto h-auto ' src={usuario.profilePic} alt="" /></a>:<a><img className='w-full m-auto h-auto' src={post.profilePic} alt="" /></a>}
                           
                           
                     </Link>

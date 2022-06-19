@@ -10,7 +10,7 @@ import { ImEnters } from 'react-icons/im';
 import {useRouter} from 'next/router'
 import { useState } from 'react'
 import { acceptFriend, addFriend, declineFriend } from '../features/friends/solicitudes'
-import { getUserFriends, getUsers } from '../features/users'
+import { getUserFriends, getUserPosts, getUserProfile, getUsers } from '../features/users'
 import { getAllPosts } from '../features/posts'
 import { logout } from '../features/auth'
 export default function Navbar() {
@@ -147,12 +147,11 @@ export default function Navbar() {
                   <article className='border-color1-nav w-1/2 p-2 '>
                   <p className='text-xl text-gray-600 text-shadow-xl  mb-5'>Amigos</p>
                   {friends?.map((friend)=><Link href={"/otherProfile/"+friend?.id} className=''>
-                    <a className='flex my-4 items-center gap-2 ' onClick={()=>{
-                      setOpenFriends(false)
-                      dispatch(getUserProfile(friend?.id))
-                      dispatch(getUserPosts(friend?.id))
-                      dispatch(getUserFriends(friend?.id))
-                      }}>
+                    <a className='flex my-4 items-center gap-2 ' onClick={()=>{setOpenFriends(false)
+                    dispatch(getUserProfile(friend?.id))
+                    dispatch(getUserPosts(friend?.id))
+                    dispatch(getUserFriends(friend?.id))
+                    }}>
                     <div className='w-20 h-20 overflow-hidden bg-black  flex items-center'>
                     {allUsers.map((user)=>{
                       if(user.id===friend?.id){
