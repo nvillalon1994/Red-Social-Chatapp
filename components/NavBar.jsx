@@ -146,8 +146,13 @@ export default function Navbar() {
               <article className='flex justify-around w-full'>
                   <article className='border-color1-nav w-1/2 p-2 '>
                   <p className='text-xl text-gray-600 text-shadow-xl  mb-5'>Amigos</p>
-                  {friends?.map((friend)=><a href={"/otherProfile/"+friend?.id} className=''>
-                    <a className='flex my-4 items-center gap-2 ' onClick={()=>{setOpenFriends(false)}}>
+                  {friends?.map((friend)=><Link href={"/otherProfile/"+friend?.id} className=''>
+                    <a className='flex my-4 items-center gap-2 ' onClick={()=>{
+                      setOpenFriends(false)
+                      dispatch(getUserProfile(friend?.id))
+                      dispatch(getUserPosts(friend?.id))
+                      dispatch(getUserFriends(friend?.id))
+                      }}>
                     <div className='w-20 h-20 overflow-hidden bg-black  flex items-center'>
                     {allUsers.map((user)=>{
                       if(user.id===friend?.id){
@@ -162,7 +167,7 @@ export default function Navbar() {
                     </a>
                   
                         
-                  </a>)}
+                  </Link>)}
                   
                   
                 </article>
