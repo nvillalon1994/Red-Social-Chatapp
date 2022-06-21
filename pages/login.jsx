@@ -180,7 +180,7 @@ export default function Login() {
                         </div>}
 
                     </Form>
-                    {errors&&<div className='absolute top-0  transition ease-in-out delay-150 bg-color4-comentarios p-2 rounded  '>{errors.credentials}</div>}
+                    {errors&&<div className='absolute top-4 m-auto  bg-color2-backg h-fit transition ease-in-out delay-150  p-2 rounded  text-black '>{errors.credentials}</div>}
                     {isLogin&&<div className=' bg-color1-nav  w-11/12 md:w-1/2  md:p-10 mx-auto shadow-xl shadow-black rounded-b-lg'>
                     <p className='text-center pb-4 text-white'>O inicia sesión con redes</p>
                     <div className='flex justify-center gap-10 pb-4 '>

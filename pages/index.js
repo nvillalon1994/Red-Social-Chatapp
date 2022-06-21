@@ -373,7 +373,7 @@ useEffect(()=>{
       <section className='md:flex justify-between  '>
         
         <section className='xl:w-3/12  xl:ml-0 lg:w-1/6 lg:ml-5 md:w-2/12 md:ml-5  phone:hidden md:inline-block sm:hidden md2:hidden'>
-          <p className='xl:text-xl lg:text-lg  text-gray-600 text-shadow-xl mt-1 md:text-sm  '>Solicitudes de amistad</p>
+          <p className='xl:text-xl lg:text-lg  text-gray-600 text-shadow-xl my-5 md:text-sm   '>Solicitudes de amistad</p>
           <article className='max-h-[250px] h-[250px] overflow-auto'>
             {solicitudes?.map((e)=>{
             if(e.solicitud==="recibida"){
@@ -381,18 +381,18 @@ useEffect(()=>{
               <div className='flex gap-2 justify-between items-center mb-2 '>
                 {allUsers.map((user)=>{
                   if(user.id===e.idFriend){
-                    return <div className='h-20 w-20 overflow-hidden rounded-md'>
-                      <img className='h-28 w-full ' src={user.profilePic}/>
+                    return <div className='h-20 w-20 overflow-hidden rounded-full '>
+                      <img className='h-20 w-auto ' src={user.profilePic}/>
                       </div>
                   }
                 })}
-                <p className='text-white text-shadow-lg'>{e.name}</p>
+                <p className='text-white text-shadow-lg w-1/2'>{e.name}</p>
                 
               </div>
               
               <div className='flex gap-2'>
-                <button className='bg-cyan-400 p-2 rounded-md m-auto shadow-lg xl:text-md lg:text-sm md:text-xs ' onClick={()=>{aceptarSolicitud(e.idFriend,e.id,e.name,e.profilePic)}}>Aceptar</button>
-                <button className='bg-red-300 p-2 rounded-md m-auto shadow-lg xl:text-md lg:text-sm md:text-xs'onClick={()=>{eliminarSolicitud(e.idFriend,e.id)}}>Rechazar</button>
+                <button className='bg-cyan-400 p-2 rounded-md m-auto shadow-lg xl:text-md lg:text-sm md:text-xs  text-white' onClick={()=>{aceptarSolicitud(e.idFriend,e.id,e.name,e.profilePic)}}>Aceptar</button>
+                <button className='bg-red-300 p-2 rounded-md m-auto shadow-lg xl:text-md lg:text-sm md:text-xs text-white'onClick={()=>{eliminarSolicitud(e.idFriend,e.id)}}>Rechazar</button>
               </div>
               
             </div>
@@ -549,7 +549,7 @@ useEffect(()=>{
               
                   <div className='h-full   flex gap-3  items-center w-full  p-1 rounded-md   '>
                     
-                          <div className='w-14 h-14 overflow-hidden bg-black rounded-full flex items-center m-2'>
+                          <div className='w-14 h-14 overflow-hidden bg-black rounded-full flex items-center '>
                             
                             <img className='w-14 h-auto  ' src={user.profilePic} alt="" />
                             

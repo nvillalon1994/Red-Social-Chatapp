@@ -85,7 +85,10 @@ export default function Navbar() {
                     
                     {allUsers.map((user)=>{
                         if(user.id===auth2.user.id){
-                          return  <Link href={"/profile/" + auth2.user.id} className="flex  relative w-40 h-40 overflow-hidden rounded-full bg-black" ><img className='w-full h-auto m-auto' src={user.profilePic} alt=""onClick={()=>{setOpenFriends(false)}}/></Link>
+                          return  <Link href={"/profile/" + auth2.user.id} className="flex  relative w-40 h-40 overflow-hidden rounded-full bg-black" ><img className='w-full h-auto m-auto' src={user.profilePic} alt=""onClick={()=>{setOpenFriends(false)
+                            dispatch(getUserProfile(auth2.user.id))
+                            dispatch(getUserPosts(auth2.user.id))
+                            dispatch(getUserFriends(auth2.user.id))}}/></Link>
                         }
                       })}
                         
@@ -122,8 +125,8 @@ export default function Navbar() {
                     <div className='flex gap-2 justify-between items-center mb-2 '>
                     {allUsers.map((user)=>{
                       if(user.id===e.idFriend){
-                        return <div className='h-20 w-20 overflow-hidden rounded-md'>
-                          <img className='h-28 w-full ' src={user.profilePic}/>
+                        return <div className='h-20 w-20 overflow-hidden rounded-full'>
+                          <img className='h-20 w-auto ' src={user.profilePic}/>
                           </div>
                       }
                     })}

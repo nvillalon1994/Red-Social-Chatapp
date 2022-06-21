@@ -371,7 +371,11 @@ export default function Perfil() {
                   {friends.map((friend)=><div href={"/profile/"+friend.id} className='flex items-center xl:w-20 xl:h-20 lg:w-16 lg:h-16 md:h- overflow-hidden relative rounded-md bg-black'>
                     {allUsers.map((user)=>{
                       if(user.id===friend.id){
-                        return <Link href={"/otherProfile/"+friend.id} className=""><img className='w-full h-auto '  src={user.profilePic} alt="" /></Link>
+                        return <Link href={"/profile/"+friend.id} className=""><img onClick={()=>{
+                          dispatch(getUserProfile(friend?.id))
+                          dispatch(getUserPosts(friend?.id))
+                          dispatch(getUserFriends(friend?.id))
+                        }} className='w-full h-auto '  src={user.profilePic} alt="" /></Link>
                       }
                     })}
                     
@@ -432,19 +436,23 @@ export default function Perfil() {
                 {post.comments?.map((comment)=>
                   <article className='bg-color4-comentarios rounded-md p-2 mb-2'>
                     <article className='flex items-center gap-2 mb-2'>
-                      <div className='w-14 h-14 flex items-center relative overflow-hidden rounded-full bg-black'>
+                      
                      
                         
                         {allUsers.map((user)=>{
                           if(user.id===comment.id){
-                            return  <Link href={"/otherProfile/" + comment.id} className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
-                              <img src={user.profilePic}/>
+                            return  <Link href={"/profile/" + comment.id} className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
+                              <img className='w-10 h-auto rounded-full' src={user.profilePic} onClick={()=>{
+                                dispatch(getUserProfile(comment?.id))
+                                dispatch(getUserPosts(comment?.id))
+                                dispatch(getUserFriends(comment?.id))
+                              }}/>
                             </Link>
                           }
                         })}
                         
                       
-                      </div>
+                      
                         
                         <div className='w-full relative'>
                           <p className='text-xs '>{comment.name}</p>
