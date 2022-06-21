@@ -12,7 +12,7 @@ import { database } from '../config/firebase'
 import { agregarPost, deletePost, editePost, getAllPosts, getPosts } from '../features/posts';
 import Link from 'next/link'
 import { acceptFriend, addFriend, declineFriend, getFriends, getSolicitud,getUsersSolicitud } from '../features/friends/solicitudes';
-import { getUsers  } from '../features/users';
+import { getUserFriends, getUserPosts, getUserProfile, getUsers  } from '../features/users';
 import { useRouter } from 'next/router';
 import { getDownloadURL, ref , uploadBytesResumable } from 'firebase/storage'
 import { storage } from '../config/firebase';
@@ -401,8 +401,12 @@ useEffect(()=>{
           
           <article className=''>
           <p className='text-xl text-gray-600 text-shadow-xl  my-5'>Amigos</p>
-            {friends?.map((friend)=><Link href={"/otherProfile/"+friend?.id} className=''>
-              <a className='flex my-4 items-center gap-2'>
+            {friends?.map((friend)=><Link href={"/profile/"+friend?.id} className=''>
+              <a className='flex my-4 items-center gap-2' onClick={()=>{
+                dispatch(getUserProfile(friend?.id))
+                dispatch(getUserPosts(friend?.id))
+                dispatch(getUserFriends(friend?.id))
+              }}>
               <div className='w-10 h-10 overflow-hidden bg-black rounded-full flex items-center'>
               {allUsers.map((user)=>{
                 if(user.id===friend?.id){
@@ -445,7 +449,11 @@ useEffect(()=>{
                   
                   {allUsers.map((user)=>{
                       if(user.id===post.idUser){
-                        return <Link href={"/otherProfile/"+user.id}><img className='w-full m-auto h-auto' src={user.profilePic}/></Link>
+                        return <Link href={"/profile/"+user.id}><img onClick={()=>{
+                          dispatch(getUserProfile(user?.id))
+                          dispatch(getUserPosts(user?.id))
+                          dispatch(getUserFriends(user?.id))
+                        }} className='w-full m-auto h-auto' src={user.profilePic}/></Link>
                       }
                     })}
                 </div>
@@ -457,9 +465,13 @@ useEffect(()=>{
                 
               </div>
               <p className='mb-2'>{post.text}</p>
-              <div className='bg-black bg-opacity-10'>
-                <img className='rounded-md  m-auto h-96 md:h-auto sm:h-auto ' src={post.img}/>
-              </div>
+              {(post.img.includes("mp4"))?<div className='bg-black bg-opacity-10'>
+                  <video className='rounded-md  m-auto max-h-96 w-full'controls>
+                    <source src={post.img}/>
+                  </video>
+                </div>:<div className='bg-black bg-opacity-10'>
+                  <img className='rounded-md  m-auto max-h-96 ' src={post.img} alt/>
+                </div>}
               
               <article className='flex gap-4 m-2'>
                 
@@ -481,8 +493,12 @@ useEffect(()=>{
                       
                         {allUsers.map((user)=>{
                           if(user.id===comment.id){
-                            return <Link href={"/otherProfile/" + comment.id} className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
-                              <img className='w-10 h-12' src={user.profilePic} alt="" /> 
+                            return <Link href={"/profile/" + comment.id} className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
+                              <img onClick={()=>{
+                          dispatch(getUserProfile(user?.id))
+                          dispatch(getUserPosts(user?.id))
+                          dispatch(getUserFriends(user?.id))
+                        }} className='w-10 h-12' src={user.profilePic} alt="" /> 
                               </Link>
                           }
                         })}
@@ -531,8 +547,8 @@ useEffect(()=>{
               if(user.id!==auth.user.id){
                 return <article  className='bg-white mb-2 p-1 flex flex-col rounded-md shadow-xl'>
               
-                  <Link href={"/otherProfile/"+user.id} className='h-full   flex gap-3  items-center w-full  p-1 rounded-md   '>
-                    <a className='flex  items-center gap-4  w-full '>
+                  <div className='h-full   flex gap-3  items-center w-full  p-1 rounded-md   '>
+                    
                           <div className='w-14 h-14 overflow-hidden bg-black rounded-full flex items-center m-2'>
                             
                             <img className='w-14 h-auto  ' src={user.profilePic} alt="" />
@@ -540,8 +556,8 @@ useEffect(()=>{
                           </div>
                         
                           <p className=' h-fit w-24  '>{user.name}</p>
-                    </a>
-                </Link>
+                   
+                </div>
                 <button className='bg-cyan-400 xl:text-md  rounded-md m-auto my-2 text-white p-3 text-shadow shadow-lg lg:text-sm md:text-xs' onClick={()=>{agregarAmigo(user.id)}}>Agregar a mis amigos</button>
                 </article>
             }

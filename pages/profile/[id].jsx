@@ -306,7 +306,7 @@ export default function Perfil() {
             </div>}
             {openpost&&<div className='z-30'>
                 <div className='absolute left-0 top-0 h-screen w-full bg-black bg-opacity-50 z-10' onClick={()=>{setPublicacion(false)}}></div>
-                <div className="bg-color3-publicacion w-[500px] p-10 absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
+                <div className="bg-color3-publicacion w-[500px] sm:w-[300px] p-10 absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
                     <h2 className='text-white text-3xl text-center text-shadow-lg '>Edita tu publicación</h2>
                     <button className='absolute right-2 top-2 text-red-300 p-1 h-6 w-6 flex items-center justify-center rounded-md' onClick={()=>{setopenPost(false)}}><GiCancel/></button>
                     <form className='flex flex-col p-5' onSubmit={editarPost} >

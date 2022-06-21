@@ -145,24 +145,24 @@ export default function Navbar() {
             {openFriends&&<section className='absolute top-32 right-0 z-10  w-screen h-screen text-center bg-color2-backg flex justify-center gap-10 md:hidden sm:flex'>
               <article className='flex justify-around w-full'>
                   <article className='border-color1-nav w-1/2 p-2 '>
-                  <p className='text-xl text-gray-600 text-shadow-xl  mb-5'>Amigos</p>
-                  {friends?.map((friend)=><Link href={"/otherProfile/"+friend?.id} className=''>
+                  <p className='text-xl text-gray-600 text-shadow-xl  mb-5 sm:text-md'>Amigos</p>
+                  {friends?.map((friend)=><Link href={"/profile/"+friend?.id} className=''>
                     <a className='flex my-4 items-center gap-2 ' onClick={()=>{setOpenFriends(false)
                     dispatch(getUserProfile(friend?.id))
                     dispatch(getUserPosts(friend?.id))
                     dispatch(getUserFriends(friend?.id))
                     }}>
-                    <div className='w-20 h-20 overflow-hidden bg-black  flex items-center'>
+                    <div className='w-20 h-20 overflow-hidden bg-black rounded-full  flex items-center'>
                     {allUsers.map((user)=>{
                       if(user.id===friend?.id){
-                        return <img className='w-30 h-auto m-auto ' src={user.profilePic} alt="" />
+                        return <img className='w-20 h-auto  ' src={user.profilePic} alt="" />
                       }
                     })}        
                     
                                 
                     </div>
                             
-                    <p className=' h-fit text-gray-500 text-shadow-lg text-3xl'>{friend?.name}</p>
+                    <p className=' h-fit text-gray-500 text-shadow-lg text-3xl sm:text-xs w-1/3'>{friend?.name}</p>
                     </a>
                   
                         
@@ -171,7 +171,7 @@ export default function Navbar() {
                   
                 </article>
                 <article className='  border-l-2 w-1/2 border-color1-nav p-2   '>
-                      <h2 className='text-xl  text-gray-600 text-shadow-xl mb-5'>Personas que quizás conozcas</h2>
+                      <h2 className='text-xl  text-gray-600 text-shadow-xl mb-5 sm:text-sm'>Personas que quizás conozcas</h2>
                       {users?.map((user)=>{
                 
                         if(user.id!==auth2.user.id){

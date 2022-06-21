@@ -164,7 +164,7 @@ export default function Login() {
                             <Field className="p-3 rounded-md bg-color2-backg" placeholder="Email..." type="email" name="email"/>
                             <Field className="p-3 rounded-md bg-color2-backg" placeholder="Password..." type="password" name="password"/>
                             <button type='submit' className={`bg-color1-nav p-3 rounded-md text-white hover:text-shadow-lg hover:shadow-lg hover:bg-color4-comentarios ${isSubmitting&&"bg-red-500"}`}>Iniciar sesión</button>
-                            <p className='text-center'>¿No tienes cuenta?<button onClick={()=>{setIsLogin(!isLogin)}}>Registrate</button> </p>
+                            <p className='text-center'>¿No tienes cuenta?<button onClick={()=>{setIsLogin(!isLogin)}} className="hover:text-color1-nav">Registrate</button> </p>
                             
 
                         </div>:<div className='flex flex-col md:w-1/2 mx-auto gap-5'>
@@ -173,7 +173,7 @@ export default function Login() {
                             <Field className="p-3 rounded-md bg-color2-backg" placeholder="Nombre..." type="text" name="name"/>
                             <Field className="p-3 rounded-md bg-color2-backg" placeholder="Foto de Perfil..." type="text" name="profilePic"/>
                             <button className={`bg-color1-nav p-3 rounded-md text-indigo-900 hover:bg-indigo-400 ${isSubmitting&&"bg-red-500"}`}>Registrar cuenta!</button>
-                            <p className='text-center'>¿Ya tienes cuenta?<button className='text-' onClick={()=>{setIsLogin(!isLogin)}}>Inicia Sesión</button> </p>
+                            <p className='text-center'>¿Ya tienes cuenta?<button onClick={()=>{setIsLogin(!isLogin)}} className="hover:text-color1-nav">Inicia Sesión</button> </p>
                             
                             
 
@@ -182,8 +182,8 @@ export default function Login() {
                     </Form>
                     {errors&&<div className='absolute top-0  transition ease-in-out delay-150 bg-color4-comentarios p-2 rounded  '>{errors.credentials}</div>}
                     {isLogin&&<div className=' bg-color1-nav  w-11/12 md:w-1/2  md:p-10 mx-auto shadow-xl shadow-black rounded-b-lg'>
-                    <p className='text-center pb-4'>O inicia sesión con redes</p>
-                    <div className='flex justify-center gap-10 '>
+                    <p className='text-center pb-4 text-white'>O inicia sesión con redes</p>
+                    <div className='flex justify-center gap-10 pb-4 '>
                         
                         <button onClick={()=>{loginWithProvider(signInMethods.google)}}><FcGoogle className='text-3xl hover:bg-white rounded-full' /></button>
                         <button onClick={()=>{loginWithProvider(signInMethods.facebook)}}><FaFacebook className='text-3xl text-blue-800 hover:bg-white rounded-full'/></button>
