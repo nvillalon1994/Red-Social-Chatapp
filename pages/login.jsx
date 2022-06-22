@@ -159,7 +159,7 @@ export default function Login() {
             {({errors,isSubmitting})=>{
                 return <section >
                     <Form className=' bg-white w-11/12 md:w-1/2 p-5 md:p-10 mx-auto mt-16 shadow-xl shadow-black rounded-t-lg'>
-                        <h2 className=' text-center font-bold text-4xl mb-10'>Inicia sesión</h2>
+                        {isLogin?<h2 className=' text-center font-bold text-4xl mb-10'>Inicia sesión</h2>:<h2 className=' text-center font-bold text-4xl mb-10'>Registrate</h2>}
                         {isLogin?<div className='flex flex-col md:w-1/2 mx-auto gap-5'>
                             <Field className="p-3 rounded-md bg-color2-backg" placeholder="Email..." type="email" name="email"/>
                             <Field className="p-3 rounded-md bg-color2-backg" placeholder="Password..." type="password" name="password"/>

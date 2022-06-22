@@ -545,7 +545,7 @@ useEffect(()=>{
             {users?.map((user)=>{
       
               if(user.id!==auth.user.id){
-                return <article  className='bg-white mb-2 p-1 flex flex-col rounded-md shadow-xl'>
+                return <article  className='bg-white mb-2 p-1 flex flex-col rounded-full shadow-xl'>
               
                   <div className='h-full   flex gap-3  items-center w-full  p-1 rounded-md   '>
                     
