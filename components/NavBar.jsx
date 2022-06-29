@@ -186,14 +186,14 @@ export default function Navbar() {
               setConfig(false)
             }}
           >
-            <BsFillPersonFill className="bg-emerald-400 shadow-sm shadow-black  rounded-full hover:shadow-md hover:shadow-white h-7 w-7 p-1" />
+            <BsFillPersonFill className="bg-color4-comentarios shadow-sm shadow-black  rounded-full hover:shadow-md hover:shadow-white h-7 w-7 p-1" />
             <Link href={"/profile/" + auth2.user.id}>Ir a tu perfil</Link>
           </div>
           <div
             className="flex items-center gap-4 text-white text-shadow-md text-lg bg-emerald-300 p-2"
             onClick={logout2}
           >
-            <BiLogOutCircle className=" bg-emerald-400 shadow-sm shadow-white  rounded-full hover:shadow-lg hover:shadow-white h-7 w-7 p-1" />
+            <BiLogOutCircle className=" bg-color4-comentarios shadow-sm shadow-white  rounded-full hover:shadow-lg hover:shadow-white h-7 w-7 p-1" />
             Cerrar Sesión
           </div>
         </div>
@@ -209,7 +209,7 @@ export default function Navbar() {
             if (e.solicitud === "recibida") {
               return (
                 <div className=" m-1 ">
-                  <div className="  flex items-center p-1 gap-1 bg-emerald-300  m-2">
+                  <div className="  flex items-center p-1 gap-1 bg-color4-comentarios  m-2">
                     <div className="">
                       {allUsers.map((user) => {
                         if (user.id === e.idFriend) {
