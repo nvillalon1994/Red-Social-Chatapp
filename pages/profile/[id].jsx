@@ -356,7 +356,7 @@ export default function Perfil() {
                 
                     <article className='grid 3xl:grid-cols-4 2xl:grid-cols-3 xl:grid-cols-2 lg:grid-cols-2  px-3'>
                         {posts.map((post)=>
-                        <article className=' w-24  overflow-hidden'>
+                        <article key={post.id} className=' w-24  overflow-hidden'>
                           
                           {post.img!==""&&<div className=' h-24  mb-2 overflow-hidden rounded-md flex items-center bg-black  '>
                                 <img className=' ' src={post.img}  alt="profilePic" />
@@ -369,7 +369,7 @@ export default function Perfil() {
                 <h3 className=' text-xl text-left mx-3 font-semibold w-40 '>Amigos</h3>
                 <article className='grid grid-cols-5 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 m-3   '>
                   
-                  {friends.map((friend)=><div href={"/profile/"+friend.id} className='flex items-center h-20 w-20 overflow-hidden relative rounded-md bg-black'>
+                  {friends.map((friend)=><div key={friend.id} href={"/profile/"+friend.id} className='flex items-center h-20 w-20 overflow-hidden relative rounded-md bg-black'>
                     {allUsers.map((user)=>{
                       if(user.id===friend.id){
                         return <Link href={"/profile/"+friend.id} className=""><img onClick={()=>{
@@ -400,7 +400,7 @@ export default function Perfil() {
               </article>}
               {/* <section className='pt-4 w-1/3 m-auto 2xl:w-2/4 lg:w-4/6 md:w-full md:mx-0 '> */}
               {posts?.map((post)=>
-            <article className='  m-auto bg-color3-publicacion  rounded-md shadow-xl shadow-black my-6 relative border-2 border-color1-nav'>
+            <article key={post.id} className='  m-auto bg-color3-publicacion  rounded-md shadow-xl shadow-black my-6 relative border-2 border-color1-nav'>
               {post.idUser===auth.user.id&&<div>
                 <button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarPost(post.id)}}>X</button>
                 <button className='absolute top-1 right-6 bg-red-300 text-white  px-2 text-xs rounded-full' onClick={()=>{tomarPost(post.id)}}>editar</button>
@@ -459,7 +459,7 @@ export default function Perfil() {
               
               
               {post.comments?.map((comment)=>
-                <article className=' rounded-sm shadow-sm shadow-black p-2 mb-2 m-1'>
+                <article key={comment.id} className=' rounded-sm shadow-sm shadow-black p-2 mb-2 m-1'>
                   <article className='flex items-center gap-2 mb-2'>
                         <div className='h-10 w-10 overflow-hidden rounded-full flex'>
                         {allUsers.map((user)=>{
