@@ -10,7 +10,8 @@ import { database } from '../config/firebase'
 import { getFriends } from '../features/friends/solicitudes'
 import { getUsers } from '../features/users'
 import {RiChat3Fill} from 'react-icons/ri'
-export default function friends() {
+
+export default function Friends() {
   const friends = useSelector(state=>state.friends.friends)
   const auth = useSelector(state=>state.auth)
   const users = useSelector(state=>state.users.allUsers)
@@ -42,7 +43,7 @@ export default function friends() {
         <section className='w-2/12 bg-green-300 h-[94vh] md:hidden'>
         {friends?.map((friend)=>
         
-          <article className=''>
+          <article className='' key={friend.id}>
             <article className='flex justify-between items-center gap-2 p-2  m-2  border-2 border-emerald-800 bg-emerald-400'>
             
               <div className='w-2/3 lg:w-3/4 flex justify-center items-center gap-2 lg:gap-0 lg:m-0  m-2'>
@@ -71,7 +72,7 @@ export default function friends() {
         {friends?.map((friend)=>
         
           
-            <article className='flex justify-between gap-4  bg-emerald-500 m-2 rounded-md p-4'>
+            <article key={friend.id} className='flex justify-between gap-4  bg-emerald-500 m-2 rounded-md p-4'>
               <div className='flex items-center justify-center gap-2 '>
               {users.map((user)=>{
                 if(user.id===friend.id){

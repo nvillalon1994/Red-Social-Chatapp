@@ -107,7 +107,7 @@ export default function Navbar() {
             {mostrarAmigos&&<article className="grid 3xl:grid-cols-6 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-5 md:gap-0  w-full justify-items-center  h-fit">
               
               {friends?.map((friend) => (
-                <Link href={"/profile/" + friend?.id} className="">
+                <Link href={"/profile/" + friend?.id} key={friend.id} className="">
                   <a
                     className="bg-color4-comentarios rounded-md  mt-2 shadow-md shadow-black  h-fit  "
                     onClick={() => {
