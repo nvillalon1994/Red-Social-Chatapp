@@ -3,6 +3,7 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { AiOutlineLike } from 'react-icons/ai';
 import { FaComment,FaRegComment } from 'react-icons/fa'; 
+import { MdArrowForwardIos } from 'react-icons/md'; 
 import {GiCancel  } from 'react-icons/gi'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
@@ -20,12 +21,13 @@ import ChatWindow from '../components/ChatWindow'
 import Navbar from '../components/NavBar';
 import { RiChat3Fill } from 'react-icons/ri';
 import { TiDeleteOutline } from 'react-icons/ti';
+import { useRef } from 'react';
 export default function Home() {
   const [solicitudes2,setSolicitudes2]=useState([])
   const [showComments, setShowComments]=useState(false)
   const [popDelPost,setDelPost]= useState(false)
   const [postDel,setPostDel]= useState({})
-
+  const comentario22 = useRef()
   const auth = useSelector(state=>state.auth)
   console.log(auth)
   // const posts = useSelector(state=>state.posts.items)
@@ -238,47 +240,47 @@ export default function Home() {
       dispatch(getAllPosts(auth.user.id))
       e.target.value=""
     }
-    // else {
-    //   if(e==="Enter"){
-    //   const comentario = {
-    //     comentario:e.target.value,
-    //     name:auth.user.name,
-    //     // profilePic:auth.user.profilePic,
-    //     id:auth.user.id,
-    //     date:Date.now()
+    else {
+      if(e==="Enter"){
+      const comentario = {
+        comentario:comentario22.current.value,
+        name:auth.user.name,
+        // profilePic:auth.user.profilePic,
+        id:auth.user.id,
+        date:Date.now()
 
-    //   }
-     
-    //   const col = collection(database,"usuarios",idUser,"posts")
-    //   const snapshot = await  getDocs(col)
-    //   const posts = []
+      }
+      console.log(comentario)
+      const col = collection(database,"usuarios",idUser,"posts")
+      const snapshot = await  getDocs(col)
+      const posts = []
   
-    //   snapshot.forEach(doc=>{
-    //     posts.push({...doc.data(),id:doc.id})
-    //   })
+      snapshot.forEach(doc=>{
+        posts.push({...doc.data(),id:doc.id})
+      })
 
-    //   const comentarios = []
-    //   posts.map((post)=>{
-    //     if(post.id===id){
+      const comentarios = []
+      posts.map((post)=>{
+        if(post.id===id){
           
-    //       post.comments.forEach(element => {
-    //         comentarios.push(element)
-    //       });
-    //       comentarios.push(comentario)
-    //     }
+          post.comments.forEach(element => {
+            comentarios.push(element)
+          });
+          comentarios.push(comentario)
+        }
 
-    //   })
+      })
 
-    //   const docRef = doc(database,`usuarios/${idUser}/posts/${id}` )
-    //   updateDoc(docRef,{
-    //     comments:comentarios
+      const docRef = doc(database,`usuarios/${idUser}/posts/${id}` )
+      updateDoc(docRef,{
+        comments:comentarios
         
-    //   })
-    //   dispatch(getAllPosts())
-    //   dispatch(getPosts(auth.user.id))
-    //   dispatch(getAllPosts(auth.user.id))
+      })
+      dispatch(getAllPosts())
+      dispatch(getPosts(auth.user.id))
+      dispatch(getAllPosts(auth.user.id))
       
-    // }}
+    }}
     
   }
   const eliminarComentario =(idPost,idCom,idUser)=>{
@@ -705,20 +707,21 @@ allposts.map((a)=>{
               {post.comments?.map((comment)=>
                 <article key={comment.id} className=' rounded-sm shadow-sm shadow-black p-2 mb-2 m-1'>
                   <article className='flex items-center gap-2 mb-2'>
-                        <div className='h-10 w-10 overflow-hidden rounded-full flex'>
-                        {allUsers.map((user)=>{
-                          if(user.id===comment.id){
-                            return <Link key={comment.id} href={"/profile/" + comment.id} className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
-                              <img onClick={()=>{
-                          dispatch(getUserProfile(user?.id))
-                          dispatch(getUserPosts(user?.id))
-                          dispatch(getUserFriends(user?.id))
-                        }} className=' h-10' src={user.profilePic} alt="" /> 
-                              </Link>
-                          }
-                        })}
+                      <div className='w-2/12'>
+                          <div className='h-10 w-10 overflow-hidden rounded-full flex'>
+                          {allUsers.map((user)=>{
+                            if(user.id===comment.id){
+                              return <Link key={comment.id} href={"/profile/" + comment.id} className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
+                                <img onClick={()=>{
+                            dispatch(getUserProfile(user?.id))
+                            dispatch(getUserPosts(user?.id))
+                            dispatch(getUserFriends(user?.id))
+                          }} className=' h-10' src={user.profilePic} alt="" /> 
+                                </Link>
+                            }
+                          })}
+                          </div>
                         </div>
-                        
                     
                       <div className='w-full relative'>
                         <div className='bg-color4-comentarios  shadow-black shadow-sm rounded-sm p-1'>
@@ -741,26 +744,29 @@ allposts.map((a)=>{
               {/* {comentario&& */}
               <article className='bg-color4-comentarios shadow-black shadow-sm rounded-md p-2 m-1'>
                 <article className='flex items-center gap-2 py-2 w-full'>
-                  <div className='h-10 w-10 overflow-hidden rounded-full flex'>
-                          {allUsers.map((user)=>{
-                            if(user.id===auth.user.id){
-                              return <div className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
-                                <img onClick={()=>{
-                            dispatch(getUserProfile(user?.id))
-                            dispatch(getUserPosts(user?.id))
-                            dispatch(getUserFriends(user?.id))
-                          }} className=' h-10' src={user.profilePic} alt="" /> 
-                                </div>
-                            }
-                          })}
+                  <div className="w-1/12 md:w-2/12">
+                    <div className='h-10 w-10 overflow-hidden rounded-full flex'>
+                            {allUsers.map((user)=>{
+                              if(user.id===auth.user.id){
+                                return <div className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
+                                  <img onClick={()=>{
+                              dispatch(getUserProfile(user?.id))
+                              dispatch(getUserPosts(user?.id))
+                              dispatch(getUserFriends(user?.id))
+                            }} className=' h-10' src={user.profilePic} alt="" /> 
+                                  </div>
+                              }
+                            })}
+                      </div>
                     </div>
-                    <input className='bg-color3-publicacion my-auto w-1/3 py-1 text-white rounded-md w-full border-2 border-color6-lineas ' name="comentario" type="text" placeholder='Deja tu comentario' 
+                    <input ref={comentario22} className='bg-color3-publicacion my-auto w-11/12  py-1 text-white rounded-md border-2 border-color6-lineas ' name="comentario" type="text" placeholder='Deja tu comentario' 
                     
                     onKeyDown={(event)=>{agregarComentario(post.id,post.idUser,event)}}
                     
                     />
-                    {/* <button className='text-white bg-color8-inputs p-1 h-8 rounded-full justify-center shadow-sm shadow-emerald-500 hover:shadow-md hover:shadow-emerald-500 w-8 flex items-center' onClick={()=>{agregarComentario(post.id,post.idUser,"Enter")}}> > </button> */}
-                    
+                    <button className='w-1/6 text-white bg-color8-inputs h-9  rounded-md justify-center hover:shadow-md hover:shadow-emerald-500  flex items-center' onClick={()=>{agregarComentario(post.id,post.idUser,"Enter")}}><MdArrowForwardIos/></button>
+                    {/* <button className='text-white bg-color8-inputs p-1 h-8 rounded-full justify-center shadow-sm shadow-emerald-500 hover:shadow-md hover:shadow-emerald-500 w-8 flex items-center' onClick={()=>{agregarComentario(post.id,post.idUser,"Enter")}}> > </button>
+                     */}
                 </article>
               </article>
             {/* } */}
