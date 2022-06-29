@@ -163,11 +163,7 @@ export default function Navbar() {
                         className="w-full h-auto m-auto "
                         src={user.profilePic}
                         alt=""
-                        onClick={() => {
-                          dispatch(getUserProfile(auth2.user.id));
-                          dispatch(getUserPosts(auth2.user.id));
-                          dispatch(getUserFriends(auth2.user.id));
-                        }}
+                        
                       />
                     </div>
                   );
@@ -184,8 +180,10 @@ export default function Navbar() {
           <div
             className="flex items-center gap-4 text-white text-shadow-md text-lg bg-emerald-300 p-2"
             onClick={() => {
-              setConfig(false);
-              
+              dispatch(getUserProfile(auth2.user.id));
+              dispatch(getUserPosts(auth2.user.id));
+              dispatch(getUserFriends(auth2.user.id));
+              setConfig(false)
             }}
           >
             <BsFillPersonFill className="bg-emerald-400 shadow-sm shadow-black  rounded-full hover:shadow-md hover:shadow-white h-7 w-7 p-1" />

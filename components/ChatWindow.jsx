@@ -7,7 +7,7 @@ import { useRef } from 'react'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { realTimeDB } from '../config/firebase'
-
+import {TiDelete, TiDeleteOutline} from 'react-icons/ti'
 export default function ChatWindow({idUser,idFriend}) {
     const [messages,setMessages]= useState({})
     const {user2} = useSelector(state=>state.auth)
@@ -79,7 +79,7 @@ export default function ChatWindow({idUser,idFriend}) {
         <div className='h-96'>
             {users.map((user)=>{
                 if(user.id===idFriend){
-                    return <div className='flex gap-4 items-center p-2 bg-emerald-700 text-white w-full'>
+                    return <div className='flex gap-4 items-center p-2 bg-color1-nav text-white w-full'>
                         <div className='h-9 w-9 overflow-hidden rounded-full flex'>
                             <img className='w-9' src={user.profilePic} alt="" />
                         </div>
@@ -88,8 +88,8 @@ export default function ChatWindow({idUser,idFriend}) {
                     </div>
                 }
             })}
-        <div className="bg-color1-nav   h-80   relative flex flex-col ">
-          <div className='h-4/5 overflow-auto'>
+        <div className="bg-color2-backg   h-80   relative flex flex-col ">
+          <div className='h-4/5 overflow-auto scrollbar-thin scrollbar-thumb-emerald-500 scrollbar-track-blue-300 '>
           {Object.entries(messages).map(([id,data])=>(
               <div key={id} className=" " >
                 
@@ -97,12 +97,12 @@ export default function ChatWindow({idUser,idFriend}) {
                           {users.map((user)=>{
                               if(user.id===idUser){
                                   return <div key={idUser} className='flex  justify-end '>
-                                      <div className='bg-emerald-700 w-fit flex gap-2 text-white p-2 m-2 rounded-md items-center'>
+                                      <div className='bg-color5-recuatros shadow-md shadow-emerald-500 w-fit flex gap-2 text-white p-2 m-2 rounded-md items-center'>
                                           <div className='h-7 w-7 overflow-hidden rounded-full flex'>
                                             <img className='w-7' src={user.profilePic} alt="" />
                                           </div>
                                           <p>{data.content}</p>
-                                          <button className='bg-red-300 h-1 w-1 rounded-full p-2 flex items-center justify-center text-xs'onClick={()=>{deleteMessage(id)}}>x</button>
+                                          <button className='  ml-1 flex items-center justify-center text-xs'onClick={()=>{deleteMessage(id)}}> <TiDeleteOutline className='text-color7-boton hover:text-red-500 hover:bg-white rounded-full flex items-center text-xl'/> </button>
                                       </div>
                                       
                                   </div>
@@ -115,7 +115,7 @@ export default function ChatWindow({idUser,idFriend}) {
                           {users.map((user)=>{
                               if(user.id===data.sended){
                                   return <div key={idFriend} className='flex gap-2 justify-start '>
-                                      <div className='bg-green-500 w-fit flex gap-2 text-white p-2 m-2 rounded-md'>
+                                      <div className='bg-color4-comentarios shadow-md shadow-emerald-500 w-fit flex gap-2 text-white p-2 m-2 rounded-md'>
                                         <div className='h-7 w-7 overflow-hidden rounded-full flex'>
                                             <img className='w-7' src={user.profilePic} alt="" />
                                         </div>
@@ -135,9 +135,9 @@ export default function ChatWindow({idUser,idFriend}) {
           ))}
           </div>
           {/* <div ref={botton}/> */}
-          <div className=' bg-emerald-400 p-2 h-14  '>
-              <input ref={messageInput} type="text" className=" outline-none text-black w-4/5" placeholder='Escribe tu mensaje' />
-              <button  className='p-1 bg-color1-nav text-white w-1/5' onClick={(sendMessage)}>Enviar</button>
+          <div className=' bg-emerald-500 p-2 h-14 fixed bottom-0 w-3/12 xl:w-5/12 lg:w-4/12 md:w-4/12  '>
+              <input ref={messageInput} type="text" className=" outline-none text-black w-4/5 p-1" placeholder='Escribe tu mensaje' />
+              <button  className='p-1 bg-color7-boton text-white w-1/5' onClick={(sendMessage)}>Enviar</button>
           </div>
         </div>
     </div>

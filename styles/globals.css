@@ -6,5 +6,50 @@
     font-family: 'Caesar Dressing', cursive;
     font-size: 25px;
     margin: -7px 0;
-    /* color: #54ffd7; */
+    
+    background: -webkit-linear-gradient(90deg,#00ffc3, #00ffc3,white,#00ffc3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    
+    color: #54ffd7;
 }
+.co{
+    color:#3e4144 ;
+    color: #474b4e;
+    color: #535b61;
+    color: #65727c;
+}
+body::-webkit-scrollbar{
+    width: 10px;
+}
+body::-webkit-scrollbar-thumb{
+    background-color: #00ffc3;
+}
+body::-webkit-scrollbar-thumb{
+    background-color: #00ffc3;
+    border-radius: 10px;
+    border: 1px solid #021d34; 
+}
+body::-webkit-scrollbar-track {
+    background: #153f59;        /* color of the tracking area */
+  }
+    /* 'color1-nav':'#3e4144',
+        'color2-backg':'#65727c',
+          
+        'color3-publicacion':'#535b61',
+        'color4-comentarios':'#474b4e', */
+
+    /* 'color1-nav':'#02253d',
+        'color2-backg':'#021d34',
+          
+        'color3-publicacion':'#02253d',
+        'color4-comentarios':'#0012e46',
+        'color5-recuatros':'#557996',
+        'color6-lineas':'#94b8d7',
+        'color7-boton':'#7498b6',
+        'color8-inputs':'#153f59',
+
+        
+        
+         */

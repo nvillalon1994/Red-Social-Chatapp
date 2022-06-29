@@ -157,23 +157,23 @@ export default function Login() {
             onSubmit={login2}
         >
             {({errors,isSubmitting})=>{
-                return <section >
-                    <Form className=' bg-white 3xl:w-1/4 2xl:w-2/5 xl:w-5/12 lg:w-1/2 md:w-11/12  p-5  md:p-4 mx-auto mt-16 shadow-xl shadow-black rounded-t-lg'>
-                        {isLogin?<h2 className=' text-center font-bold text-4xl mb-10 md:mb-7 md:text-3xl'>Inicia sesión</h2>:<h2 className=' text-center font-bold text-4xl mb-10 md:mb-7 md:text-3xl'>Registrate</h2>}
+                return <section className=''>
+                    <Form className=' bg-color5-recuatros shadow-md shadow-emerald-500 3xl:w-1/4 2xl:w-2/5 xl:w-5/12 lg:w-1/2 md:w-11/12  p-5  md:p-4 mx-auto mt-16  rounded-t-lg'>
+                        {isLogin?<h2 className=' text-center text-white text-shadow-lg font-bold text-4xl mb-10 md:mb-7 md:text-3xl'>Inicia sesión</h2>:<h2 className=' text-center text-white text-shadow-lg  font-bold text-4xl mb-10 md:mb-7 md:text-3xl'>Registrate</h2>}
                         {isLogin?<div className='flex flex-col  mx-auto   gap-5 md:gap-3'>
-                            <Field className="p-3 rounded-md bg-color2-backg" placeholder="Email..." type="email" name="email"/>
-                            <Field className="p-3 rounded-md bg-color2-backg" placeholder="Password..." type="password" name="password"/>
+                            <Field className="p-3 rounded-md bg-color8-inputs text-white" placeholder="Email..." type="email" name="email"/>
+                            <Field className="p-3 rounded-md bg-color8-inputs text-white" placeholder="Password..." type="password" name="password"/>
                             <button type='submit' className={`bg-color1-nav p-3 rounded-md text-white hover:text-shadow-lg hover:shadow-lg hover:bg-color4-comentarios ${isSubmitting&&"bg-red-500"}`}>Iniciar sesión</button>
-                            <p className='text-center '>¿No tienes cuenta?<button onClick={()=>{setIsLogin(!isLogin)}} className="hover:text-color1-nav text-emerald-700">Registrate</button> </p>
+                            <p className='text-center '>¿No tienes cuenta?<button onClick={()=>{setIsLogin(!isLogin)}} className="hover:text-emerald-200 mx-2 text-emerald-400">Registrate</button> </p>
                             
 
                         </div>:<div className='flex flex-col  mx-auto  gap-5 md:gap-3'>
-                            <Field className="p-3 rounded-md bg-color2-backg" placeholder="Email..." type="email" name="email"/>
-                            <Field className="p-3 rounded-md bg-color2-backg" placeholder="Password..." type="password" name="password"/>
-                            <Field className="p-3 rounded-md bg-color2-backg" placeholder="Nombre..." type="text" name="name"/>
-                            <Field className="p-3 rounded-md bg-color2-backg" placeholder="Foto de Perfil..." type="text" name="profilePic"/>
-                            <button className={`bg-color1-nav p-3 rounded-md text-white hover:bg-color1-nav ${isSubmitting&&"bg-red-500"}`}>Registrar cuenta!</button>
-                            <p className='text-center'>¿Ya tienes cuenta?<button onClick={()=>{setIsLogin(!isLogin)}} className="hover:text-color1-nav text-emerald-700">Inicia Sesión</button> </p>
+                            <Field className="p-3 rounded-md bg-color8-inputs text-white" placeholder="Email..." type="email" name="email"/>
+                            <Field className="p-3 rounded-md bg-color8-inputs text-white" placeholder="Password..." type="password" name="password"/>
+                            <Field className="p-3 rounded-md bg-color8-inputs text-white" placeholder="Nombre..." type="text" name="name"/>
+                            <Field className="p-3 rounded-md bg-color8-inputs text-white" placeholder="Foto de Perfil..." type="text" name="profilePic"/>
+                            <button className={`bg-color4-comentarios p-3 rounded-md text-white hover:shadow-md hover:shadow-emerald-500 ${isSubmitting&&"bg-red-500"}`}>Registrar cuenta!</button>
+                            <p className='text-center'>¿Ya tienes cuenta?<button onClick={()=>{setIsLogin(!isLogin)}} className="hover:text-emerald-200 mx-2 text-emerald-400">Inicia Sesión</button> </p>
                             
                             
 
@@ -181,13 +181,13 @@ export default function Login() {
 
                     </Form>
                     {errors&&<div className='absolute top-4 m-auto  bg-color2-backg h-fit transition ease-in-out delay-150  p-2 rounded  text-black '>{errors.credentials}</div>}
-                    {isLogin&&<div className=' bg-color1-nav  3xl:w-1/4 2xl:w-2/5 xl:w-5/12 lg:w-1/2 md:w-11/12  mx-auto shadow-xl shadow-black rounded-b-lg'>
+                    {isLogin&&<div className=' bg-color1-nav  3xl:w-1/4 2xl:w-2/5 xl:w-5/12 lg:w-1/2 md:w-11/12  mx-auto shadow-md shadow-emerald-500 rounded-b-lg'>
                     <p className='text-center pb-4 text-white'>O inicia sesión con redes</p>
                     <div className='flex justify-center gap-10 pb-4 '>
                         
-                        <button onClick={()=>{loginWithProvider(signInMethods.google)}}><FcGoogle className='text-3xl hover:bg-white rounded-full' /></button>
-                        <button onClick={()=>{loginWithProvider(signInMethods.facebook)}}><FaFacebook className='text-3xl text-blue-800 hover:bg-white rounded-full'/></button>
-                        <button onClick={()=>{loginWithProvider(signInMethods.github)}}><FaGithub className='text-3xl hover:bg-white rounded-full'/></button>
+                        <button onClick={()=>{loginWithProvider(signInMethods.google)}}><FcGoogle className='text-3xl hover:shadow-emerald-500  hover:shadow-lg hover:bg-white rounded-full' /></button>
+                        <button onClick={()=>{loginWithProvider(signInMethods.facebook)}}><FaFacebook className='text-3xl text-blue-800 hover:shadow-emerald-500 hover:shadow-lg hover:bg-white rounded-full'/></button>
+                        <button onClick={()=>{loginWithProvider(signInMethods.github)}}><FaGithub className='text-3xl hover:shadow-emerald-500 hover:shadow-lg hover:bg-white rounded-full'/></button>
                     </div>
                     </div>}
 

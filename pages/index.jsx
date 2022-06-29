@@ -19,6 +19,7 @@ import { storage } from '../config/firebase';
 import ChatWindow from '../components/ChatWindow'
 import Navbar from '../components/NavBar';
 import { RiChat3Fill } from 'react-icons/ri';
+import { TiDeleteOutline } from 'react-icons/ti';
 export default function Home() {
   const [solicitudes2,setSolicitudes2]=useState([])
   const [showComments, setShowComments]=useState(false)
@@ -372,8 +373,8 @@ allposts.map((a)=>{
 })
   return (
     <main className=' 3xl:max-w-screen px-5  relative bg-color2-backg md:px-1 '>
-        {chat&&<div className='bg-emerald-400  text-white fixed bottom-0 right-5 z-20 w-3/12 lg:w-4/12 rounded-md overflow-hidden'>
-          <button className='absolute right-1 top-1 w-4 h-5 flex items-center justify-center rounded-full bg-red-300' onClick={()=>{setChat(false)}}>X</button>
+        {chat&&<div className='md:hidden bg-emerald-400  text-white fixed bottom-0 right-5 z-20 w-3/12 lg:w-4/12 xl:w-5/12 rounded-md overflow-hidden'>
+          <button className='absolute right-1 top-1  flex items-center justify-center rounded-full' onClick={()=>{setChat(false)}}>  <TiDeleteOutline className="text-color7-boton hover:text-red-400 text-2xl" /> </button>
         <ChatWindow idUser={idUser} idFriend={idFriend}/>
           </div>}
        {publicacion&&<div className='z-30'>
@@ -424,7 +425,7 @@ allposts.map((a)=>{
         <section className=' justify-between flex  '>
         
         
-         <section className='w-1/6 pt-2 lg:hidden '>
+         <section className='w-1/6 pt-2 lg:hidden fixed left-3  '>
           {/* <p className='xl:text-xl lg:text-lg  text-gray-600 text-shadow-xl my-5 md:text-sm   '>Solicitudes de amistad</p>
           <article className='max-h-[250px] h-[250px]  overflow-auto'>
             {solicitudes?.map((e)=>{
@@ -450,11 +451,11 @@ allposts.map((a)=>{
             </div>
             }})}
           </article> */}
-          <article className='bg-color3-publicacion h-[400px] px-3 xl:px-1 '>
+          <article className='bg-color3-publicacion h-[400px] px-3 xl:px-1 shadow-md shadow-emerald-600 '>
               
-            <p className='text-xl px-2 text-gray-600 py-1 text-shadow-xl border-b-2 border-color1-nav lg:text-sm '>Amigos</p>
+            <p className='text-xl px-2 text-white py-1 text-shadow-xl border-b-2 border-color6-lineas lg:text-sm '>Amigos</p>
               {friends?.map((friend)=><Link href={"/profile/"+friend?.id} key={friend.id} className=''>
-                <a className='flex my-4 items-center gap-2 bg-emerald-300 p-1 rounded-md shadow-sm shadow-black' onClick={()=>{
+                <a className='flex my-4 items-center gap-2 bg-color5-recuatros p-1 rounded-md shadow-sm shadow-black' onClick={()=>{
                   dispatch(getUserProfile(friend?.id))
                   dispatch(getUserPosts(friend?.id))
                   dispatch(getUserFriends(friend?.id))
@@ -482,24 +483,24 @@ allposts.map((a)=>{
           
           </section> 
 
-          <section className='pt-4 w-1/3 m-auto 2xl:w-2/4 lg:w-4/6 md:w-full md:mx-0 '>
-            <article className=' mb-6  flex bg-color3-publicacion p-2 py-4 rounded-lg gap-4  shadow-black shadow-md border-2 border-color1-nav'>
+          <section className='pt-4 w-1/3 m-auto 2xl:w-2/4 lg:w-4/6 lg:m-0 md:w-full md:mx-0 '>
+            <article className=' mb-6  flex bg-color3-publicacion p-2 py-4 rounded-lg gap-4  shadow-md shadow-emerald-600  border-2 border-color1-nav'>
               <div className='h-10 w-10 overflow-hidden rounded-full flex '>
                 <img className='h-10' src={auth.user.profilePic} alt="photo" />
               </div>
               
-              <button onClick={()=>{setPublicacion(true)}} className='bg-color4-comentarios w-full border-2 border-color1-nav text-left  p-3 rounded-lg text-gray-400'> Realiza una publicación</button>
+              <button onClick={()=>{setPublicacion(true)}} className='bg-color8-inputs w-full border-2  border-color1-nav text-left  p-3 rounded-lg text-white'> Realiza una publicación</button>
               
             </article>
-            <article className='flex justify-center  m-auto  border-2 border-color1-nav rounded-md'>
-              <button onClick={hola} className="w-full text-center bg-color4-comentarios shadow-black  text-white text-shadow-lg shadow-md rounded-lg p-2 m-auto"> Actualizar</button>
+            <article className='flex justify-center  m-auto  border-2 border-color1-nav rounded-md shadow-md shadow-emerald-600'>
+              <button onClick={hola} className="w-full text-center bg-color4-comentarios shadow-black  text-white text-shadow-lg   p-2 m-auto"> Actualizar</button>
             </article>
             
             {allposts?.map((post)=>
-            <article key={post.id} className='  m-auto bg-color3-publicacion  rounded-md shadow-xl shadow-black my-6 relative border-2 border-color1-nav'>
+            <article key={post.id} className='  m-auto bg-color3-publicacion  rounded-md shadow-md shadow-emerald-800 hover:shadow-emerald-500 my-6 relative border-2 border-color1-nav'>
               {post.idUser===auth.user.id&&<div>
-                <button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarPost(post.id)}}>X</button>
-                <button className='absolute top-1 right-6 bg-red-300 text-white  px-2 text-xs rounded-full' onClick={()=>{tomarPost(post.id)}}>editar</button>
+                <button className='absolute top-1 right-1 bg-color7-boton text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarPost(post.id)}}>X</button>
+                <button className='absolute top-1 right-6 bg-color7-boton text-white  px-2 text-xs rounded-md' onClick={()=>{tomarPost(post.id)}}>editar</button>
               </div>}
               
               <div className='flex items-center gap-4 mb-3 justify-between w-full p-2 '>
@@ -544,12 +545,12 @@ allposts.map((a)=>{
                     
                     <AiOutlineLike   className='text-2xl text-blue-400 ' onClick={()=>{like(post.id,post.idUser)}}/>
                     
-                    <p>{post.likes.length}</p>
+                    <p className='text-white'>{post.likes.length}</p>
                   </div> 
                     
                   
                   
-                  <button onClick={()=>{setShowComments(!showComments)}}><FaRegComment className='text-2xl'/></button>
+                  <button onClick={()=>{setShowComments(!showComments)}}><FaRegComment className='text-2xl text-white'/></button>
 
               </article>
               
@@ -606,7 +607,7 @@ allposts.map((a)=>{
                             }
                           })}
                     </div>
-                    <input className='bg-color3-publicacion my-auto py-1 rounded-md w-full border-2 border-emerald-500 ' name="comentario" type="text" placeholder='Deja tu comentario' 
+                    <input className='bg-color3-publicacion my-auto py-1 text-white rounded-md w-full border-2 border-color6-lineas ' name="comentario" type="text" placeholder='Deja tu comentario' 
                     
                     onKeyDown={(event)=>{agregarComentario(post.id,post.idUser,event)}}
                     
@@ -623,14 +624,14 @@ allposts.map((a)=>{
             
           </section>
 
-          <section className='w-1/6    pt-2 rounded-lg shadow-xl md:inline-block sm:hidden phone:hidden flex  flex-col xl:w-3/12 lg:w-3/12 md:hidden'>
+          <section className='w-1/6 h-screen overflow-auto fixed right-3  pt-2 rounded-lg shadow-xl  shadow-emerald-600 sm:hidden phone:hidden flex  flex-col xl:w-2/12 lg:w-3/12 md:hidden'>
             <article className='h-[400px] bg-color3-publicacion overflow-auto p-1'>
-            <h2 className=' px-2 text-gray-600 text-shadow-xl mb-4 border-b-2 text-xl py-1 border-color1-nav xl:text-sm '>Personas que quizás conozcas</h2>
+            <h2 className=' px-2 text-white text-shadow-xl mb-4 border-b-2 text-xl py-1 border-color6-lineas xl:text-sm '>Personas que quizás conozcas</h2>
             
             {users?.map((user)=>{
       
               if(user.id!==auth.user.id){
-                return <article  className='bg-emerald-500 mb-2  flex flex-col rounded-xl shadow-xl'>
+                return <article  className='bg-color5-recuatros m-1 mb-2  flex flex-col rounded-xl shadow-xl'>
               
                   <div className='h-full   flex gap-3  px-2 items-center w-full  pt-2 rounded-md   '>
                     
@@ -650,10 +651,10 @@ allposts.map((a)=>{
             })}
             </article>
             <article className='bg-color3-publicacion h-[400px] overflow-auto p-1 '>
-            <p className='text-xl text-gray-600 text-shadow-xl  my-5 border-b-2 border-color1-nav px-2'>Contactos</p>
+            <p className='text-xl text-white text-shadow-xl  my-5 border-b-2 border-color1-nav px-2'>Contactos</p>
 
-            {friends?.map((friend)=><div key={friend.id} className='bg-emerald-300 p-1 flex rounded-md'>
-              <div className='flex  my-4 items-center justify-between gap-5    ' onClick={()=>{
+            {friends?.map((friend)=><div key={friend.id} className='bg-color5-recuatros  m-1 p-1 flex justify-between  rounded-md'>
+              <div className='flex  items-center justify-between gap-5  w-11/12   ' onClick={()=>{
                 setChat(true)
                 setIdUser(auth.user.id)
                 setIdFriend(friend.id)
@@ -667,12 +668,12 @@ allposts.map((a)=>{
                     
                 }
               })}        
-              <p className=' h-10 text-gray-500 text-shadow-lg w-3/4 text-sm   '>{friend?.name}</p>
+              <p className=' h-10 text-white text-shadow-lg w-3/4 text-sm   '>{friend?.name}</p>
                           
               </div>
                        
               
-              <button className='w-1/4'><RiChat3Fill className='text-emerald-600 text-shadow-xl text-2xl w-1/3   hover:h-8 hover:text-emerald-500' /></button>
+              <button className='w-1/4'><RiChat3Fill className='text-color7-boton text-shadow-xl text-2xl   hover:text-white' /></button>
               </div>
               
                   

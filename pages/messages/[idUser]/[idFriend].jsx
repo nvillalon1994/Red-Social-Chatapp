@@ -92,7 +92,7 @@ export default function Messages() {
         {users.map((user)=>{
                             if(user.id===idFriend){
                                 return <div key={idFriend} className='flex gap-2 justify-start items-center'>
-                                    <div className='bg-green-800 w-full flex gap-2 text-white p-2  items-center shadow-black shadow-md '>
+                                    <div className='bg-color4-comentarios w-full flex gap-2 text-white p-2  items-center shadow-black shadow-md '>
                                         <div className='h-8 w-8 overflow-hidden rounded-full'>
                                             <img className='w-8' src={user.profilePic} alt="" />
                                         </div>
@@ -109,16 +109,15 @@ export default function Messages() {
                         {users.map((user)=>{
                             if(user.id===idUser){
                                 return <div key={idUser} className='flex gap-2 justify-end '>
-                                    <div className='bg-emerald-700 shadow-md shadow-black w-fit flex gap-2 text-white p-2 m-1 rounded-md items-center'>
-                                        <div className='h-6 w-6 rounded-full overflow-hidden flex'>
-                                            <img className='w-6' src={user.profilePic} alt="" />
-                                        </div>
-                                        
-                                        <p>{data.content}</p>
-                                        <button className='  rounded-full text-red-400 text-xl font-bold flex m-auto items-center justify-center'onClick={()=>{deleteMessage(id)}}><TiDelete/> </button>
-                                    </div>
-                                    
-                                </div>
+                                    <div className='bg-color5-recuatros shadow-md shadow-emerald-500 w-fit flex gap-2 text-white p-2 m-2 rounded-md items-center'>
+                                          <div className='h-7 w-7 overflow-hidden rounded-full flex'>
+                                            <img className='w-7' src={user.profilePic} alt="" />
+                                          </div>
+                                          <p>{data.content}</p>
+                                          <button className='  ml-1 flex items-center justify-center text-xs'onClick={()=>{deleteMessage(id)}}> <TiDeleteOutline className='text-color7-boton hover:text-red-500 hover:bg-white rounded-full flex items-center text-xl'/> </button>
+                                      </div>
+                                      
+                                  </div>
                             }
                         })}
                         {/* <img src={user.profilePic} alt="" /> */}
@@ -128,13 +127,13 @@ export default function Messages() {
                         {users.map((user)=>{
                             if(user.id===data.sended){
                                 return <div key={idFriend} className='flex gap-2 justify-start '>
-                                    <div className='bg-green-500 shadow-md shadow-black w-fit flex gap-2 text-white p-2 m-2 rounded-md'>
-                                    <div className='h-6 w-6 rounded-full overflow-hidden flex'>
-                                            <img className='w-6' src={user.profilePic} alt="" />
+                                    <div className='bg-color4-comentarios shadow-md shadow-emerald-500 w-fit flex gap-2 text-white p-2 m-2 rounded-md'>
+                                        <div className='h-7 w-7 overflow-hidden rounded-full flex'>
+                                            <img className='w-7' src={user.profilePic} alt="" />
                                         </div>
                                         <p>{data.content}</p>
-                                    </div>
-                                </div>
+                                      </div>
+                                  </div>
                             }
                         })}
                         
@@ -149,9 +148,9 @@ export default function Messages() {
         {/* <div ref={botton}/> */}
         </ScrollToBottom>
         
-        <div className=' bg-emerald-400 p-2  h-16  w-full flex fixed bottom-0 '>
-            <input ref={messageInput} type="text" className=" outline-none text-black w-4/5" placeholder='Escribe tu mensaje' />
-            <button  className='p-1 bg-color1-nav text-white w-1/5' onClick={(sendMessage)}>Enviar</button>
+        <div className=' bg-color6-lineas py-5 px-2  h-20  w-full flex fixed bottom-0 '>
+            <input ref={messageInput} type="text" className=" outline-none text-black w-4/5 rounded-l-md" placeholder='Escribe tu mensaje' />
+            <button  className='p-1 bg-color1-nav text-white w-1/5 roundedr-md ' onClick={(sendMessage)}>Enviar</button>
         </div>
         </>
     

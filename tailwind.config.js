@@ -6,12 +6,24 @@ module.exports = {
   theme: {
     extend: {
       colors:{
-        'color1-nav':'#2CDCB2',
-        'color2-backg':'#bcffef',
-        // 'color3-publicacion':'#CBF9EE',
-        'color3-publicacion':'#7ffadd',
-        'color4-comentarios':'#54ffd7',
-
+        // 'color1-nav':'#2CDCB2',
+        // 'color2-backg':'#bcffef',
+        // // 'color3-publicacion':'#CBF9EE',
+        // 'color3-publicacion':'#7ffadd',
+        // 'color4-comentarios':'#54ffd7',
+        
+        'color1-nav':'#02253d',
+        'color2-backg':'#021d34',
+          
+        'color3-publicacion':'#02253d',
+        'color4-comentarios':'#012e46',
+        'color5-recuatros':'#557996',
+        'color6-lineas':'#365b77',
+        'color7-boton':'#7498b6',
+        'color8-inputs':'#153f59'
+        
+        
+        
       }
     },
     screens:{
@@ -35,7 +47,8 @@ module.exports = {
     }
   },
   plugins: [
-    require('tailwindcss-textshadow')
+    require('tailwindcss-textshadow'),
+    require('tailwind-scrollbar'),
   ],
   
 }

@@ -332,7 +332,7 @@ export default function Perfil() {
               <img className='w-full  ' src={usuario.portadaPic} alt="" />
             </div>
             
-            <article className='flex gap-3 md:items-center  absolute left-2 bottom-2 md:gap-1'>
+            <article className='flex gap-3 md:items-center items-center absolute left-2 bottom-2 md:gap-1  w-full'>
               
                 {/* <div className='h-40 w-40 rounded-full overflow-hidden bg-black flex justify-center'>
                     <img className=' ' src={usuario?.profilePic}  alt="profilePic" />
@@ -342,7 +342,7 @@ export default function Perfil() {
                           
                           
                 </div>
-                <h1 className='m-auto md:m-0 text-2xl md:text-base font-semibold w-2/4 text-white text-shadow-xl '>{usuario?.name}</h1>
+                <h1 className=' md:m-0 text-2xl md:text-base font-semibold   text-white text-shadow-xl '>{usuario?.name}</h1>
                 {/* <p className='m-auto  text-md text-center mt-2  w-40  overflow-hidden hover:overflow-visible'>{usuario?.email}</p> */}
             </article>
             
@@ -369,14 +369,14 @@ export default function Perfil() {
                 <h3 className=' text-xl text-left mx-3 font-semibold w-40 '>Amigos</h3>
                 <article className='grid grid-cols-5 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 m-3   '>
                   
-                  {friends.map((friend)=><div key={friend.id} href={"/profile/"+friend.id} className='flex items-center h-20 w-20 overflow-hidden relative rounded-md bg-black'>
+                  {friends.map((friend)=><div key={friend.id} href={"/profile/"+friend.id} className='flex  h-20 w-20 overflow-hidden relative rounded-md bg-black'>
                     {allUsers.map((user)=>{
                       if(user.id===friend.id){
                         return <Link href={"/profile/"+friend.id} className=""><img onClick={()=>{
                           dispatch(getUserProfile(friend?.id))
                           dispatch(getUserPosts(friend?.id))
                           dispatch(getUserFriends(friend?.id))
-                        }} className='w-full h-auto '  src={user.profilePic} alt="" /></Link>
+                        }} className='h-20 '  src={user.profilePic} alt="" /></Link>
                       }
                     })}
                     
@@ -438,7 +438,7 @@ export default function Perfil() {
                     <source src={post.img}/>
                   </video>
                 </div>:<div className='bg-black bg-opacity-10 w-full'>
-                  <img className='  m-auto max-h-96 ' src={post.img} alt/>
+                  <img className='  m-auto  ' src={post.img} alt/>
                 </div>}
               
               <article className='flex gap-4 p-2 border-t-2  border-b-2 border-color1-nav '>
