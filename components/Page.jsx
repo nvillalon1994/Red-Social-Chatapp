@@ -70,7 +70,7 @@ export default function Page({children}) {
         
     },[])
   return (
-    <main className='bg-color2-backg  h-full'>
+    <main className='bg-color2-backg  h-full min-h-[94.4vh]'>
         <NavBar/>
         
         <div className='mt-14 '>
