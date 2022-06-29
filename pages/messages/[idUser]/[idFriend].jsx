@@ -14,11 +14,11 @@ export default function Messages() {
     const [messages,setMessages]= useState({})
     const {user2} = useSelector(state=>state.auth)
     const messageInput = useRef()
-    // const botton = useRef()
-    // const baja =()=>{
-    //     console.log("baja")
-    //     botton.current.scrollIntoView()
-    // }
+    const botton = useRef()
+    const baja =()=>{
+        console.log("baja")
+        botton.current.scrollIntoView()
+    }
     const users = useSelector(state=>state.users.allUsers)
     const router = useRouter()
     const {idUser,idFriend} = router.query
@@ -30,23 +30,47 @@ export default function Messages() {
         }
     })
     console.log(idUser,idFriend)
-    const sendMessage =()=>{
-        const dbRef = ref(realTimeDB)
+    const sendMessage =(e)=>{
+        if(e.key==="Enter"){
+            const dbRef = ref(realTimeDB)
         const message = messageInput.current.value
         const id = Date.now()
         set(child(dbRef,`${idUser}/${idFriend}/${id}`),{
-            content:message,
-            sended:idUser,
-            date:new Date().toISOString()
+        content:message,
+        sended:idUser,
+        date:new Date().toISOString()
         })
         set(child(dbRef,`${idFriend}/${idUser}/${id}`),{
-            content:message,
-            sended:idUser,
-            date:new Date().toISOString()
+        content:message,
+        sended:idUser,
+        date:new Date().toISOString()
         })
-        // setTimeout(()=>{baja()},200)  
+        setTimeout(()=>{baja()},500)
+        e.target.value=""
+        }else{
+            if(e==="Enter"){
+                const dbRef = ref(realTimeDB)
+                const message = messageInput.current.value
+                const id = Date.now()
+                set(child(dbRef,`${idUser}/${idFriend}/${id}`),{
+                content:message,
+                sended:idUser,
+                date:new Date().toISOString()
+                })
+                set(child(dbRef,`${idFriend}/${idUser}/${id}`),{
+                content:message,
+                sended:idUser,
+                date:new Date().toISOString()
+                })
+                setTimeout(()=>{baja()},500)
+            }
+            
+            
+        }
+          
         
-    }
+    
+}
     const deleteMessage =(idMessage)=>{
         const dbRef = ref(realTimeDB)
         const message = messageInput.current.value
@@ -91,7 +115,7 @@ export default function Messages() {
         <ScrollToBottom className='h-[82vh]'>
         {users.map((user)=>{
                             if(user.id===idFriend){
-                                return <div key={idFriend} className='flex gap-2 justify-start items-center'>
+                                return <div key={idFriend} className='flex gap-2 justify-start items-center fixed  w-full'>
                                     <div className='bg-color4-comentarios w-full flex gap-2 text-white p-2  items-center shadow-black shadow-md '>
                                         <div className='h-8 w-8 overflow-hidden rounded-full'>
                                             <img className='w-8' src={user.profilePic} alt="" />
@@ -103,7 +127,7 @@ export default function Messages() {
                             }
                         })}
         {Object.entries(messages).map(([id,data])=>(
-            <div key={id} className=" "  >
+            <div key={id} className="mt-14 "  >
                  
                 {data?.sended===idUser?<div className=''>
                         {users.map((user)=>{
@@ -145,12 +169,12 @@ export default function Messages() {
                 
             </div>
         ))}
-        {/* <div ref={botton}/> */}
+        <div ref={botton}/>
         </ScrollToBottom>
         
         <div className=' bg-color6-lineas py-5 px-2  h-20  w-full flex fixed bottom-0 '>
-            <input ref={messageInput} type="text" className=" outline-none text-black w-4/5 rounded-l-md" placeholder='Escribe tu mensaje' />
-            <button  className='p-1 bg-color1-nav text-white w-1/5 roundedr-md ' onClick={(sendMessage)}>Enviar</button>
+            <input ref={messageInput} type="text" className=" outline-none text-black w-4/5 rounded-l-md" placeholder='Escribe tu mensaje' onKeyDown={(e)=>{sendMessage(e)}}/>
+            <button  className='p-1 bg-color1-nav text-white w-1/5 roundedr-md ' onClick={()=>{sendMessage("Enter")}}>Enviar</button>
         </div>
         </>
     

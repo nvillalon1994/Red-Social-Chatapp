@@ -23,6 +23,9 @@ import { TiDeleteOutline } from 'react-icons/ti';
 export default function Home() {
   const [solicitudes2,setSolicitudes2]=useState([])
   const [showComments, setShowComments]=useState(false)
+  const [popDelPost,setDelPost]= useState(false)
+  const [postDel,setPostDel]= useState({})
+
   const auth = useSelector(state=>state.auth)
   console.log(auth)
   // const posts = useSelector(state=>state.posts.items)
@@ -51,7 +54,8 @@ export default function Home() {
   console.log(publicaciones)
   const pending = useSelector(state=>state.friends.pendingFriends)
   
-  
+  const [name,setName]= useState()
+  const [loadingedit, setLoadingEdit]=useState(false)
   const users = useSelector(state=>state.users.usuarios)
   const allUsers = useSelector(state=>state.users.allUsers)
   
@@ -93,6 +97,7 @@ export default function Home() {
     
   }
   console.log(allposts)
+
   const subir =(e)=>{
     e.preventDefault()
     console.log("estas en subir",e.target.files[0])
@@ -180,6 +185,16 @@ export default function Home() {
     }
     
   }
+  const tomarPostDel=(idPost)=>{
+    setDelPost(true)
+    console.log(idPost)
+    allposts.map((post)=>{
+      if(post.id===idPost){
+        setPostDel({...post,idPost})
+      }
+    })
+    
+  }
   const agregarComentario =async(id,idUser,e) =>{
     
     if(e.key === "Enter"){
@@ -223,6 +238,47 @@ export default function Home() {
       dispatch(getAllPosts(auth.user.id))
       e.target.value=""
     }
+    // else {
+    //   if(e==="Enter"){
+    //   const comentario = {
+    //     comentario:e.target.value,
+    //     name:auth.user.name,
+    //     // profilePic:auth.user.profilePic,
+    //     id:auth.user.id,
+    //     date:Date.now()
+
+    //   }
+     
+    //   const col = collection(database,"usuarios",idUser,"posts")
+    //   const snapshot = await  getDocs(col)
+    //   const posts = []
+  
+    //   snapshot.forEach(doc=>{
+    //     posts.push({...doc.data(),id:doc.id})
+    //   })
+
+    //   const comentarios = []
+    //   posts.map((post)=>{
+    //     if(post.id===id){
+          
+    //       post.comments.forEach(element => {
+    //         comentarios.push(element)
+    //       });
+    //       comentarios.push(comentario)
+    //     }
+
+    //   })
+
+    //   const docRef = doc(database,`usuarios/${idUser}/posts/${id}` )
+    //   updateDoc(docRef,{
+    //     comments:comentarios
+        
+    //   })
+    //   dispatch(getAllPosts())
+    //   dispatch(getPosts(auth.user.id))
+    //   dispatch(getAllPosts(auth.user.id))
+      
+    // }}
     
   }
   const eliminarComentario =(idPost,idCom,idUser)=>{
@@ -293,6 +349,8 @@ export default function Home() {
     dispatch(deletePost({idUser:auth.user.id,idPost:idPost}))
     dispatch(getPosts(auth.user.id))
     dispatch(getAllPosts(auth.user.id))
+    setDelPost(false)
+    setPostDel({})
   }
 
 
@@ -300,14 +358,15 @@ export default function Home() {
   const tomarPost=(idPost)=>{
     setopenPost(true)
     console.log(idPost)
-    posts.map((post)=>{
+    allposts.map((post)=>{
       if(post.id===idPost){
         setPost({...post,idPost})
+        setimgpost(post.img)
       }
     })
     
   }
-  console.log(post.comments)
+  console.log(post)
 
   
   const editarPost=(event)=>{
@@ -327,12 +386,67 @@ export default function Home() {
     
     
     dispatch(editePost({idUser:auth.user.id,idPost:idPost,post:posteditado}))
-    dispatch(getPosts(auth.user.id))
+    
     dispatch(getAllPosts(auth.user.id))
+    setPost({})
     setopenPost(false)
+    
   }
-
-console.log(solicitudes)
+  console.log(post)
+  const subir2 =(e)=>{
+    e.preventDefault()
+    console.log("estas en subir",e.target.files[0])
+    const file = e.target.files[0]
+    // console.log(file)
+    uploadFiles2(file)
+    
+    
+    
+  }
+  
+  const uploadFiles2 =(file)=>{
+    console.log("entraste a uploadfile")
+    if(!file)return
+        
+        const storageRef =ref(storage,`/files/${auth.user.id}/images/"${file.name}`)
+        console.log("entraste a uploadfile2")
+        const uploadTask= uploadBytesResumable(storageRef ,file)
+        console.log("entraste a uploadfile3")
+        uploadTask.on("state_changed",(snapshot)=>{
+            const prog = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) *100)
+            setProgress(prog)
+        },(err)=>console.log(err),
+        ()=>{
+            getDownloadURL(uploadTask.snapshot.ref)
+            .then((url)=>{
+              console.log("la url es", url)
+              setimgpost(url)
+              post["img"] = url
+              const newObject ={
+                prop:url
+              }
+              newObject[name]= newObject["prop"]
+              delete newObject["prop"]
+              console.log(newObject)
+              const objeto={...post,...newObject}
+              console.log(objeto)
+              setopenPost(false)
+              setLoadingEdit(true)
+              setPost(objeto)
+              setTimeout(()=>{
+                setLoadingEdit(false)
+                setopenPost(true)
+                
+              },1)
+              
+            })
+        }
+        )
+        
+        
+    
+  }
+console.log(post)
 const router = useRouter()
 
 const [mostrarProg,setMostrarProg]=useState(false)
@@ -373,7 +487,19 @@ allposts.map((a)=>{
 })
   return (
     <main className=' 3xl:max-w-screen px-5  relative bg-color2-backg md:px-1 '>
-        {chat&&<div className='md:hidden bg-emerald-400  text-white fixed bottom-0 right-5 z-20 w-3/12 lg:w-4/12 xl:w-5/12 rounded-md overflow-hidden'>
+      {popDelPost&&<div className='fixed flex justify-center items-center top-0 bg-black bg-opacity-80 w-full h-full  z-30'>
+                <div className='w-1/2 p-2 rounded-md shadow-md shadow-emerald-500 flex flex-col gap-5 bg-color2-backg '>
+                
+                  <p className='text-white text-3xl text-center md:text-xl'>¿Esta seguro que desea borrar esta publicación?</p>
+                  <div className='m-auto md:m-0 flex gap-3'> 
+                    
+                    <button className='text-white md:text-sm bg-color7-boton md:m-0 md:p-1 m-2 p-2 rounded-md hover:bg-color5-recuatros hover:shadow-emerald-500 hover:shadow-md'onClick={()=>{eliminarPost(postDel.id)}}>Sí, borrar publicación</button>
+                    <button className='text-white md:text-sm bg-red-300 hover:bg-red-500 md:m-0 md:p-1 m-2 p-2 rounded-md hover:shadow-emerald-500 hover:shadow-md' onClick={()=>{setDelPost(false)}}>Cancelar</button>
+                  </div>
+                  
+                  </div></div>
+                }
+        {chat&&<div className='md:hidden bg-emerald-400 shadow-lg shadow-emerald-500 text-white fixed bottom-0 right-5 z-20 w-3/12 lg:w-4/12 xl:w-5/12 rounded-md overflow-hidden'>
           <button className='absolute right-1 top-1  flex items-center justify-center rounded-full' onClick={()=>{setChat(false)}}>  <TiDeleteOutline className="text-color7-boton hover:text-red-400 text-2xl" /> </button>
         <ChatWindow idUser={idUser} idFriend={idFriend}/>
           </div>}
@@ -382,45 +508,58 @@ allposts.map((a)=>{
                 <div className="bg-color3-publicacion w-[500px] p-10 fixed left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10 sm:w-[300px]">
                     <button className='absolute right-2 top-2 text-red-300 p-1 h-6 w-6 flex items-center justify-center rounded-md' onClick={cerrarPublicacion}><GiCancel/></button>
                     <form className='flex flex-col p-5' onSubmit={publicar} >
-                        <input autoComplete="off" className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='publicacion' placeholder='Tu publicación' type="text" />
+                        <input autoComplete="off" className='p-4 md:p-2 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='publicacion' placeholder='Tu publicación' type="text" />
                         
                         
-                        {!mostrarProg?<input className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='imagen' placeholder='Image...' type="text" defaultValue={imgpost} />:<input hidden className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='imagen' placeholder='Image...' type="text" defaultValue={imgpost} />}
+                        {!mostrarProg?<input className='p-4 md:p-2 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='imagen' placeholder='Image...' type="text" defaultValue={imgpost} />:<input hidden className='p-4 md:p-2 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='imagen' placeholder='Image...' type="text" defaultValue={imgpost} />}
                         <input hidden className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='name' value={auth.user.name} placeholder='Image...' type="text" />
                         <input hidden className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='profilePic' value={auth.user.profilePic}placeholder='Image...' type="text" />
                         <input hidden className='' name='id' value={auth.user.id} placeholder='' type="text" />
-                        <img src={imgpost}/>
+                        <img className='max-h-60' src={imgpost}/>
+                        {mostrarProg&&<p className=' mt-3 text-white '>Cargando Imagen:{progress}%</p>}
                         <div className="relative h-5">
                             <div className="absolute z-[0] top-[1px] left-[0px] bg-cyan-400 bg-opacity-70 px-2 py-[2px] text-white">Seleccionar archivo</div>
-                            {mostrarProg&&<p className='absolute top-0 left-40'>Cargando Imagen:{progress}%</p>}
-                            <input className=" absolute z-[1] top-[1px] left-[0px] w-40 opacity-0" type="file" onChange={subir} onClick={()=>{setMostrarProg(true)}} />
+                            
+                            <input className=" absolute z-[1] top-[1px] left-[0px] w-40 opacity-0" type="file" onChange={subir} onClick={()=>{setMostrarProg(true);}} />
                         </div>
-                       
-                        <button type='submit' className='bg-color4-comentarios mt-5 py-4 text-xl font-bold text-lavender-100 rounded-md'>Publicar</button>
+                        
+                        <button type='submit' className='bg-color4-comentarios mt-5 py-4 text-xl font-bold text-lavender-100 rounded-md hover:shadow-md hover:shadow-emerald-500 text-white'>Publicar</button>
                     </form>
                 </div>
             </div>}
-            {openpost&&<div className='z-30'>
-                <div className='absolute left-0 top-0 h-screen w-full bg-black bg-opacity-50 z-10' onClick={()=>{setPublicacion(false)}}></div>
-                <div className="bg-color3-publicacion w-[500px] p-10 absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
-                    <h2 className='text-white text-3xl text-center text-shadow-lg '>Edita tu publicación</h2>
+
+            {openpost&&<div className='z-30 '>
+                <div className='fixed left-0 top-0  h-screen w-full bg-black bg-opacity-50 z-10' onClick={()=>{setPublicacion(false)}}></div>
+                <div className="bg-color3-publicacion w-[500px] md:w-4/5 mt-6 md:p-2 p-10 fixed left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
+                    <h2 className='text-white text-3xl text-center text-shadow-lg md:text-2xl'>Edita tu publicación</h2>
                     <button className='absolute right-2 top-2 text-red-300 p-1 h-6 w-6 flex items-center justify-center rounded-md' onClick={()=>{setopenPost(false)}}><GiCancel/></button>
                     <form className='flex flex-col p-5' onSubmit={editarPost} >
-                        <input autoComplete="off" className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='publicacion' placeholder='Tu publicación' type="text" defaultValue={post.text} />
+                        <input autoComplete="off" className='p-4 md:p-2 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='publicacion' placeholder='Tu publicación' type="text" defaultValue={post.text} />
                         
                         
-                        <input className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='imagen' placeholder='Image...' type="text" defaultValue={post.img} />
+                        <input className='p-4 md:p-2 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='imagen' placeholder='Image...' type="text" defaultValue={post.img} />
                         <input hidden className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='name' value={auth.user.name} placeholder='Image...' type="text" />
                         <input hidden className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='profilePic' value={auth.user.profilePic}placeholder='Image...' type="text" />
                         <input hidden className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='id' value={auth.user.id}placeholder='' type="text" />
+                        <img className='max-h-60' src={post.img}/>
+                        {mostrarProg&&<p className=' mt-3 text-white '>Cargando Imagen:{progress}%</p>}
+                        <div className="relative h-5">
+                            <div className="absolute z-[0] top-[1px] left-[0px] bg-cyan-400 bg-opacity-70 px-2 py-[2px] text-white">Seleccionar archivo</div>
+                            
+                            <input className=" absolute z-[1] top-[1px] left-[0px] w-40 opacity-0" type="file" onChange={subir2} onClick={()=>{setMostrarProg(true);setName("img")}} />
+                        </div>
                         <input hidden className='' name='idPost' value={post.idPost} placeholder='' type="text" />
                         <input hidden className='' name='comments' value={post.comments} placeholder='' type="text" />
                         
-                        <button type='submit' className='bg-color4-comentarios mt-5 py-4 text-xl font-bold text-lavender-100 rounded-md'>Publicar</button>
+                        <button type='submit' className='bg-color4-comentarios hover:shadow-md hover:shadow-emerald-500 mt-5 py-4 text-xl font-bold text-lavender-100 rounded-md text-white'>Publicar</button>
                     </form>
                 </div>
             </div>}
-            
+            {loadingedit&&<div className='z-30 '>
+                <div className='fixed left-0 top-0  h-screen w-full bg-black bg-opacity-50 z-10'></div>
+                
+                
+            </div>}
         {auth.logged?
         <section className=' justify-between flex  '>
         
@@ -485,8 +624,16 @@ allposts.map((a)=>{
 
           <section className='pt-4 w-1/3 m-auto 2xl:w-2/4 lg:w-4/6 lg:m-0 md:w-full md:mx-0 '>
             <article className=' mb-6  flex bg-color3-publicacion p-2 py-4 rounded-lg gap-4  shadow-md shadow-emerald-600  border-2 border-color1-nav'>
-              <div className='h-10 w-10 overflow-hidden rounded-full flex '>
-                <img className='h-10' src={auth.user.profilePic} alt="photo" />
+              <div className='h-10 w-10 overflow-hidden rounded-full flex bg-black '>
+              {allUsers.map((user)=>{
+                          if(user.id===auth.user.id){
+                            return <Link href={"/profile/"+user.id}><img onClick={()=>{
+                              dispatch(getUserProfile(user?.id))
+                              dispatch(getUserPosts(user?.id))
+                              dispatch(getUserFriends(user?.id))
+                            }} className='w-full m-auto h-auto' src={user.profilePic}/></Link>
+                          }
+                        })}
               </div>
               
               <button onClick={()=>{setPublicacion(true)}} className='bg-color8-inputs w-full border-2  border-color1-nav text-left  p-3 rounded-lg text-white'> Realiza una publicación</button>
@@ -499,7 +646,7 @@ allposts.map((a)=>{
             {allposts?.map((post)=>
             <article key={post.id} className='  m-auto bg-color3-publicacion  rounded-md shadow-md shadow-emerald-800 hover:shadow-emerald-500 my-6 relative border-2 border-color1-nav'>
               {post.idUser===auth.user.id&&<div>
-                <button className='absolute top-1 right-1 bg-color7-boton text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarPost(post.id)}}>X</button>
+                <button className='absolute top-1 right-1 bg-color7-boton text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{tomarPostDel(post.id)}}>X</button>
                 <button className='absolute top-1 right-6 bg-color7-boton text-white  px-2 text-xs rounded-md' onClick={()=>{tomarPost(post.id)}}>editar</button>
               </div>}
               
@@ -593,7 +740,7 @@ allposts.map((a)=>{
               
               {/* {comentario&& */}
               <article className='bg-color4-comentarios shadow-black shadow-sm rounded-md p-2 m-1'>
-                <article className='flex items-center gap-2 py-2'>
+                <article className='flex items-center gap-2 py-2 w-full'>
                   <div className='h-10 w-10 overflow-hidden rounded-full flex'>
                           {allUsers.map((user)=>{
                             if(user.id===auth.user.id){
@@ -607,11 +754,12 @@ allposts.map((a)=>{
                             }
                           })}
                     </div>
-                    <input className='bg-color3-publicacion my-auto py-1 text-white rounded-md w-full border-2 border-color6-lineas ' name="comentario" type="text" placeholder='Deja tu comentario' 
+                    <input className='bg-color3-publicacion my-auto w-1/3 py-1 text-white rounded-md w-full border-2 border-color6-lineas ' name="comentario" type="text" placeholder='Deja tu comentario' 
                     
                     onKeyDown={(event)=>{agregarComentario(post.id,post.idUser,event)}}
                     
                     />
+                    {/* <button className='text-white bg-color8-inputs p-1 h-8 rounded-full justify-center shadow-sm shadow-emerald-500 hover:shadow-md hover:shadow-emerald-500 w-8 flex items-center' onClick={()=>{agregarComentario(post.id,post.idUser,"Enter")}}> > </button> */}
                     
                 </article>
               </article>
@@ -625,8 +773,9 @@ allposts.map((a)=>{
           </section>
 
           <section className='w-1/6 h-screen overflow-auto fixed right-3  pt-2 rounded-lg shadow-xl  shadow-emerald-600 sm:hidden phone:hidden flex  flex-col xl:w-2/12 lg:w-3/12 md:hidden'>
-            <article className='h-[400px] bg-color3-publicacion overflow-auto p-1'>
-            <h2 className=' px-2 text-white text-shadow-xl mb-4 border-b-2 text-xl py-1 border-color6-lineas xl:text-sm '>Personas que quizás conozcas</h2>
+          <h2 className=' px-2 text-white text-shadow-xl bg-color3-publicacion mb-2 border-b-2 text-xl py-1 border-color6-lineas xl:text-sm '>Personas que quizás conozcas</h2>
+            <article className='h-[400px] bg-color3-publicacion overflow-auto p-1 scrollbar-thin scrollbar-thumb-emerald-300 scrollbar-track-color4-comentarios '>
+            
             
             {users?.map((user)=>{
       

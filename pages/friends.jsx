@@ -40,13 +40,13 @@ export default function Friends() {
   },[auth.user.id])
   return (
     <section className='h-full flex '>
-        <section className='w-2/12 bg-green-300 h-[94vh] md:hidden'>
+        <section className='w-3/12 bg-color4-comentarios h-[94vh] md:hidden border-r-2 border-color6-lineas border-t-2 fixed '>
         {friends?.map((friend)=>
         
           <article className='' key={friend.id}>
-            <article className='flex justify-between items-center gap-2 p-2  m-2  border-2 border-emerald-800 bg-emerald-400'>
+            <article className='flex justify-between items-center gap-0 p-1  m-2  rounded-md shadow-sm hover:shadow-md hover:shadow-emerald-500 shadow-emerald-500   bg-color5-recuatros '>
             
-              <div className='w-2/3 lg:w-3/4 flex justify-center items-center gap-2 lg:gap-0 lg:m-0  m-2'>
+              <div className='w-11/12  lg:w-3/4 flex  items-center  gap-2 lg:gap-0 lg:m-0  m-2'>
               {users.map((user)=>{
                 if(user.id===friend.id){
                   return <div className='rounded-full overflow-hidden w-10 h-10 lg:hidden '>
@@ -54,10 +54,10 @@ export default function Friends() {
                   </div>
                 }
               })}
-              <p className='w-2/3 lg:text-xs'>{friend.name}</p>
+              <p className='w-3/4 lg:text-xs text-white  '>{friend.name}</p>
               </div>
               
-              <RiChat3Fill className='text-emerald-600 text-shadow-xl text-2xl w-1/3   hover:h-8 hover:text-emerald-500' onClick={()=>{tomarAmigo(friend.id)}}/>
+              <RiChat3Fill className='text-emerald-600 text-shadow-xl text-2xl w-1/12   hover:h-8 hover:text-emerald-500' onClick={()=>{tomarAmigo(friend.id)}}/>
               {/* <button className='w-1/3' onClick={()=>{tomarAmigo(friend.id)}}>Enviar Mensaje</button> */}
               {/* <Link href={`/messages/${auth.user.id}/${friend.id}`} className='bg-color1-nav text-white p-3 rounded-md'>Enviar Mensaje</Link> */}
             </article>
@@ -68,12 +68,12 @@ export default function Friends() {
         }
         </section>  
 
-        <section className='w-full h-[94vh] 3xl:hidden md:inline-block flex flex-col'>
+        <section className='w-full h-[94vh] 3xl:hidden md:inline-block flex flex-col '>
         {friends?.map((friend)=>
         
           
             <article key={friend.id} className='flex justify-between gap-4  bg-emerald-500 m-2 rounded-md p-4'>
-              <div className='flex items-center justify-center gap-2 '>
+              <div className='flex items-center  gap-2 w-11/12 '>
               {users.map((user)=>{
                 if(user.id===friend.id){
                   return <div className='rounded-full overflow-hidden h-8 w-8 bg-black flex'>
@@ -81,7 +81,7 @@ export default function Friends() {
                   </div>
                 }
               })}
-                <p className='text-white font-semibold text-shadow-lg'>{friend.name}</p>
+                <p className='text-white text-sm font-semibold text-shadow-lg'>{friend.name}</p>
               </div>
               
               <Link href={`/messages/${auth.user.id}/${friend.id}`} ><RiChat3Fill className='text-emerald-600 text-shadow-xl text-2xl w-1/3   hover:h-8 hover:text-emerald-500' /></Link>
@@ -94,7 +94,7 @@ export default function Friends() {
         }
         </section>  
 
-      {showChat&&<section className='w-10/12 bg-color1-nav h-[90vh] overflow-auto md:hidden'>
+      {showChat&&<section className='w-9/12 bg-color1-nav h-[90vh] overflow-auto md:hidden fixed right-0'>
         <Chats idUser={auth.user.id} idFriend={idFriend}/>
       </section>}
     </section>

@@ -12,32 +12,58 @@ export default function ChatWindow({idUser,idFriend}) {
     const [messages,setMessages]= useState({})
     const {user2} = useSelector(state=>state.auth)
     const messageInput = useRef()
-    // const botton = useRef()
-    // const baja =()=>{
-    //     console.log("baja")
-    //     botton.current.scrollIntoView()
-    // }
+    const botton = useRef()
+    const baja =()=>{
+        console.log("baja")
+        botton.current.scrollIntoView()
+    }
     const users = useSelector(state=>state.users.allUsers)
     const router = useRouter()
     // const {idUser,idFriend} = router.query
     
     console.log(idUser,idFriend)
-    const sendMessage =()=>{
-        const dbRef = ref(realTimeDB)
+    const sendMessage =(e)=>{
+        if(e.key==="Enter"){
+            const dbRef = ref(realTimeDB)
         const message = messageInput.current.value
         const id = Date.now()
         set(child(dbRef,`${idUser}/${idFriend}/${id}`),{
-            content:message,
-            sended:idUser,
-            date:new Date().toISOString()
+        content:message,
+        sended:idUser,
+        date:new Date().toISOString()
         })
         set(child(dbRef,`${idFriend}/${idUser}/${id}`),{
-            content:message,
-            sended:idUser,
-            date:new Date().toISOString()
+        content:message,
+        sended:idUser,
+        date:new Date().toISOString()
         })
-        // setTimeout(()=>{baja()},500)  
-    }
+        setTimeout(()=>{baja()},500)
+        e.target.value=""
+        }
+        else{
+            if(e==="Enter"){
+                const dbRef = ref(realTimeDB)
+                const message = messageInput.current.value
+                const id = Date.now()
+                set(child(dbRef,`${idUser}/${idFriend}/${id}`),{
+                content:message,
+                sended:idUser,
+                date:new Date().toISOString()
+                })
+                set(child(dbRef,`${idFriend}/${idUser}/${id}`),{
+                content:message,
+                sended:idUser,
+                date:new Date().toISOString()
+                })
+                setTimeout(()=>{baja()},500)
+            }
+            
+            
+        }
+          
+        
+    
+}
     const deleteMessage =(idMessage)=>{
         const dbRef = ref(realTimeDB)
         const message = messageInput.current.value
@@ -88,7 +114,7 @@ export default function ChatWindow({idUser,idFriend}) {
                     </div>
                 }
             })}
-        <div className="bg-color2-backg   h-80   relative flex flex-col ">
+        <div className="bg-color4-comentarios    h-80   relative flex flex-col ">
           <div className='h-4/5 overflow-auto scrollbar-thin scrollbar-thumb-emerald-500 scrollbar-track-blue-300 '>
           {Object.entries(messages).map(([id,data])=>(
               <div key={id} className=" " >
@@ -134,10 +160,10 @@ export default function ChatWindow({idUser,idFriend}) {
               </div>
           ))}
           </div>
-          {/* <div ref={botton}/> */}
+          <div ref={botton}/>
           <div className=' bg-emerald-500 p-2 h-14 fixed bottom-0 w-3/12 xl:w-5/12 lg:w-4/12 md:w-4/12  '>
-              <input ref={messageInput} type="text" className=" outline-none text-black w-4/5 p-1" placeholder='Escribe tu mensaje' />
-              <button  className='p-1 bg-color7-boton text-white w-1/5' onClick={(sendMessage)}>Enviar</button>
+              <input ref={messageInput} type="text" className=" outline-none text-black w-4/5 p-1" placeholder='Escribe tu mensaje' onKeyDown={(e)=>{sendMessage(e)}}/>
+              <button  className='p-1 bg-color7-boton text-white w-1/5' onClick={()=>{sendMessage("Enter")}}>Enviar</button>
           </div>
         </div>
     </div>

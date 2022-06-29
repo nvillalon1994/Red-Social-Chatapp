@@ -73,6 +73,15 @@ export const getUserPosts = createAsyncThunk("users/obtenerUsersFriendPost",asyn
     snapshot3.forEach(doc=>{
       posts.push({...doc.data(),id:doc.id})
     })
+    posts.sort((post1,post2)=>{
+        if(post1.date>post2.date){
+            return -1
+          }else if(post1.date < post2.date){
+            return 1
+          }else{
+            return 0
+          }
+    })  
     return posts
     console.log(posts)
 })

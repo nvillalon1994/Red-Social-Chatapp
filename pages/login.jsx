@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import {Formik, Form, Field, ErrorMessage} from 'formik'
 import {signInWithEmailAndPassword, signInWithPopup, GithubAuthProvider, FacebookAuthProvider, GoogleAuthProvider,createUserWithEmailAndPassword,updateProfile} from 'firebase/auth'
 import {addDoc, collection,deleteDoc,doc,getDocs,updateDoc,docs,setDoc, getDoc} from 'firebase/firestore'
-import { auth,database } from '../config/firebase'
+import { auth,database, storage } from '../config/firebase'
 import {useRouter} from 'next/router'
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook ,FaGithub} from 'react-icons/fa';
@@ -10,13 +10,19 @@ import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateData,login } from '../features/auth'
 import { providerLogin, signInMethods } from '../libs/auth'
+import { getDownloadURL, ref , uploadBytesResumable } from 'firebase/storage'
+
 const googleProvider = new GoogleAuthProvider()
 const facebookProvider = new FacebookAuthProvider()
 const githubProvider = new GithubAuthProvider()
 
 export default function Login() {
     const [isLogin,setIsLogin] = useState(true)
-    
+    const [img,setImg]=useState()
+    const [mostrarProg,setMostrarProg]=useState(false)
+    const [show,setShow]=useState(true)
+    const [progress,setProgress]=useState(0)
+
     const router = useRouter()
     
     const dispatch = useDispatch()
@@ -43,10 +49,11 @@ export default function Login() {
             const user1={
                 name:values.name,
                 email:result.user.email,
-                profilePic:values.profilePic,
+                profilePic:img,
                 id:result.user.uid,
                 portadaPic:"https://images.unsplash.com/photo-1616039407041-5ce631b57879?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"    
             }
+            console.log(user1)
         await setDoc(doc(database,`usuarios/${result.user.uid}`),user1)
           
           updateProfile(result.user,{
@@ -144,7 +151,47 @@ export default function Login() {
 
     // Reto: Completar el login con los demás providers
     // Extra: Añadir icono a los botones
-
+    const subir =(e)=>{
+        e.preventDefault()
+        console.log("estas en subir",e.target.files[0])
+        const file = e.target.files[0]
+        // console.log(file)
+        uploadFiles(file)
+        
+        
+        
+      }
+      
+      const uploadFiles =(file)=>{
+        console.log("entraste a uploadfile")
+        if(!file)return
+            
+            const storageRef =ref(storage,`/files/gen/images/"${file.name}`)
+            console.log("entraste a uploadfile2")
+            const uploadTask= uploadBytesResumable(storageRef ,file)
+            console.log("entraste a uploadfile3")
+            uploadTask.on("state_changed",(snapshot)=>{
+                const prog = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) *100)
+                setProgress(prog)
+            },(err)=>console.log(err),
+            ()=>{
+                getDownloadURL(uploadTask.snapshot.ref)
+                .then((url)=>{
+                  setImg(url)
+                  setShow(false)
+                  setTimeout(()=>{
+                    setShow(true)
+                  },10)
+                  
+                  
+                })
+            }
+            )
+            
+            
+        
+      }
+      console.log(img)
   return (
     <section className='  m-auto relative pt-4 bg-color2-backg h-[94.4vh] '>
         
@@ -171,7 +218,14 @@ export default function Login() {
                             <Field className="p-3 rounded-md bg-color8-inputs text-white" placeholder="Email..." type="email" name="email"/>
                             <Field className="p-3 rounded-md bg-color8-inputs text-white" placeholder="Password..." type="password" name="password"/>
                             <Field className="p-3 rounded-md bg-color8-inputs text-white" placeholder="Nombre..." type="text" name="name"/>
-                            <Field className="p-3 rounded-md bg-color8-inputs text-white" placeholder="Foto de Perfil..." type="text" name="profilePic"/>
+                            {/* {show&&<Field className="p-3 rounded-md bg-color8-inputs text-white" defaultValue={img} placeholder="Foto de Perfil..." type="text" name="profilePic"/>} */}
+                            {mostrarProg&&<img src={img} alt="FOTO" className='max-h-40' />}
+                            {mostrarProg&&<p className=' mt-3 text-white '>Cargando Imagen:{progress}%</p>}
+                        <div className="relative h-5">
+                            <div className="absolute z-[0] top-[1px] left-[0px] bg-cyan-400 bg-opacity-70 px-2 py-[2px] text-white">Seleccionar archivo</div>
+                            
+                            <input className=" absolute z-[1] top-[1px] left-[0px] w-40 opacity-0" type="file" onChange={subir} onClick={()=>{setMostrarProg(true);}} />
+                        </div>
                             <button className={`bg-color4-comentarios p-3 rounded-md text-white hover:shadow-md hover:shadow-emerald-500 ${isSubmitting&&"bg-red-500"}`}>Registrar cuenta!</button>
                             <p className='text-center'>¿Ya tienes cuenta?<button onClick={()=>{setIsLogin(!isLogin)}} className="hover:text-emerald-200 mx-2 text-emerald-400">Inicia Sesión</button> </p>
                             

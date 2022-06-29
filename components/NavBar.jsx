@@ -178,7 +178,7 @@ export default function Navbar() {
       {config && (
         <div className="absolute  bg-color1-nav w-60 z-40  shadow-sm shadow-black p-2 flex flex-col gap-3 top-14 right-2 ">
           <div
-            className="flex items-center gap-4 text-white text-shadow-md text-lg bg-color4-comentarios p-2"
+            className="flex items-center gap-4 text-white text-shadow-md text-lg bg-color4-comentarios shadow-sm shadow-emerald-600 p-2 hover:shadow-md hover:shadow-emerald-500"
             onClick={() => {
               dispatch(getUserProfile(auth2.user.id));
               dispatch(getUserPosts(auth2.user.id));
@@ -186,11 +186,11 @@ export default function Navbar() {
               setConfig(false)
             }}
           >
-            <BsFillPersonFill className="bg-emerald-400 shadow-sm shadow-black  rounded-full hover:shadow-md hover:shadow-white h-7 w-7 p-1" />
+            <BsFillPersonFill className="bg-emerald-400 shadow-sm shadow-black  rounded-full hover:shadow-md hover:shadow-emerald-500 h-7 w-7 p-1" />
             <Link href={"/profile/" + auth2.user.id}>Ir a tu perfil</Link>
           </div>
           <div
-            className="flex items-center gap-4 text-white text-shadow-md text-lg bg-color4-comentarios p-2"
+            className="flex items-center gap-4 text-white text-shadow-md text-lg bg-color4-comentarios  shadow-sm shadow-emerald-600 p-2 hover:shadow-md hover:shadow-emerald-500"
             onClick={logout2}
           >
             <BiLogOutCircle className=" bg-emerald-400 shadow-sm shadow-white  rounded-full hover:shadow-lg hover:shadow-white h-7 w-7 p-1" />
@@ -226,7 +226,7 @@ export default function Navbar() {
                     </p>
                     <div className="flex gap-2   w-1/3">
                       <button
-                        className="bg-cyan-400 p-1 rounded-sm m-auto text-white shadow-md  hover:shadow-black text-shadow-md "
+                        className="bg-cyan-400 p-1 rounded-md m-auto text-white shadow-md  hover:shadow-emerald-500 text-shadow-md "
                         onClick={() => {
                           aceptarSolicitud(
                             e.idFriend,
@@ -239,7 +239,7 @@ export default function Navbar() {
                         Aceptar
                       </button>
                       <button
-                        className="bg-red-200 p-1 rounded-md m-auto text-white shadow-md  hover:shadow-black text-shadow-md"
+                        className="bg-red-200 p-1 rounded-md m-auto text-white shadow-md  hover:shadow-emerald-500 text-shadow-md"
                         onClick={() => {
                           eliminarSolicitud(e.idFriend, e.id);
                         }}

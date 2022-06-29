@@ -22,21 +22,46 @@ export default function Chats({idUser,idFriend}) {
     // const {idUser,idFriend} = router.query
     
     console.log(idUser,idFriend)
-    const sendMessage =()=>{
-        const dbRef = ref(realTimeDB)
-        const message = messageInput.current.value
-        const id = Date.now()
-        set(child(dbRef,`${idUser}/${idFriend}/${id}`),{
+    const sendMessage =(e)=>{
+            if(e.key==="Enter"){
+                const dbRef = ref(realTimeDB)
+            const message = messageInput.current.value
+            const id = Date.now()
+            set(child(dbRef,`${idUser}/${idFriend}/${id}`),{
             content:message,
             sended:idUser,
             date:new Date().toISOString()
-        })
-        set(child(dbRef,`${idFriend}/${idUser}/${id}`),{
+            })
+            set(child(dbRef,`${idFriend}/${idUser}/${id}`),{
             content:message,
             sended:idUser,
             date:new Date().toISOString()
-        })
-        setTimeout(()=>{baja()},500)  
+            })
+            setTimeout(()=>{baja()},500)
+            e.target.value=""
+            }else{
+                if(e==="Enter"){
+                    const dbRef = ref(realTimeDB)
+                    const message = messageInput.current.value
+                    const id = Date.now()
+                    set(child(dbRef,`${idUser}/${idFriend}/${id}`),{
+                    content:message,
+                    sended:idUser,
+                    date:new Date().toISOString()
+                    })
+                    set(child(dbRef,`${idFriend}/${idUser}/${id}`),{
+                    content:message,
+                    sended:idUser,
+                    date:new Date().toISOString()
+                    })
+                    setTimeout(()=>{baja()},500)
+                }
+                
+                
+            }
+              
+            
+        
     }
     const deleteMessage =(idMessage)=>{
         const dbRef = ref(realTimeDB)
@@ -80,7 +105,7 @@ export default function Chats({idUser,idFriend}) {
         
             {users.map((user)=>{
                 if(user.id===idFriend){
-                    return <div className='flex gap-4 items-center p-4 bg-emerald-700 text-white w-full'>
+                    return <div className='flex gap-4 items-center p-4 bg-color8-inputs border-y-2 border-color6-lineas text-white w-full fixed top-14'>
                         <div className='h-8 w-8 rounded-full overflow-hidden bg-black flex'>
                             <img className='w-8' src={user.profilePic} alt="" />
                         </div>
@@ -89,8 +114,8 @@ export default function Chats({idUser,idFriend}) {
                 }
             })}
         
-        <div className="bg-color1-nav h-full max-h-full  ">
-          <div className=' h-full overflow-auto'>
+        <div className="bg-color1-nav h-full max-h-full   ">
+          <div className=' h-full overflow-auto mt-20 mb-12  '>
           {Object.entries(messages).map(([id,data])=>(
               <div key={id} className="h-full overflow-auto " >
                 
@@ -98,7 +123,7 @@ export default function Chats({idUser,idFriend}) {
                           {users.map((user)=>{
                               if(user.id===idUser){
                                   return <div key={idUser} className='flex  justify-end '>
-                                      <div className='bg-emerald-700 w-fit flex gap-2 text-white p-2 m-2 rounded-md items-center'>
+                                      <div className='bg-color5-recuatros shadow-md shadow-emerald-500 w-fit flex gap-2 text-white p-2 m-2 rounded-md items-center'>
                                         <div className='h-6 w-6 rounded-full overflow-hidden flex'>
                                             <img className='w-6' src={user.profilePic} alt="" />
                                         </div>
@@ -116,7 +141,7 @@ export default function Chats({idUser,idFriend}) {
                           {users.map((user)=>{
                               if(user.id===data.sended){
                                   return <div key={idFriend} className='flex gap-2 justify-start '>
-                                      <div className='bg-green-500 w-fit flex gap-2 text-white p-2 m-2 rounded-md'>
+                                      <div className='bg-color4-comentarios shadow-md shadow-emerald-500 w-fit flex gap-2 text-white p-2 m-2 rounded-md'>
                                       <div className='h-6 w-6 rounded-full overflow-hidden flex'>
                                             <img className='w-6' src={user.profilePic} alt="" />
                                         </div>
@@ -136,9 +161,9 @@ export default function Chats({idUser,idFriend}) {
           ))}
           </div>
           <div ref={botton}/>
-          <div className=' bg-emerald-400 p-2 fixed bottom-0  w-10/12 '>
-              <input ref={messageInput} type="text" className=" outline-none text-black w-4/5" placeholder='Escribe tu mensaje' />
-              <button  className='p-1 bg-color1-nav text-white w-1/5' onClick={(sendMessage)}>Enviar</button>
+          <div className=' bg-emerald-400 p-2 fixed bottom-0  w-9/12 '>
+              <input ref={messageInput} type="text" className=" outline-none p-1 text-black w-4/5" onKeyDown={(e)=>{sendMessage(e)}} placeholder='Escribe tu mensaje' />
+              <button  className='p-1 bg-color1-nav text-white w-1/5' onClick={()=>{sendMessage("Enter")}} >Enviar</button>
           </div>
         </div>
     </div>

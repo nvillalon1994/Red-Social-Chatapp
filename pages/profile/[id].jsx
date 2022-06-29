@@ -19,10 +19,16 @@ export default function Perfil() {
       const usuario = useSelector(state=>state.users.usuario.usuario)
       const posts = useSelector(state=>state.users.usuario.posts)
       const [publicacion,setPublicacion]= useState(false)
+      const [popDelPost,setDelPost]= useState(false)
+      const [popDelCom,setdDelCom]= useState(false)
+      const [popDelFriend,setdDelFriend]= useState(false)
       const [openpost,setopenPost]= useState(false)
       const [imgpost,setimgpost]= useState()
       const [progress,setProgress]= useState(0)
       const [post,setPost]= useState({})
+      const [postDel,setPostDel]= useState({})
+      const [name,setName]= useState()
+      const [loadingedit, setLoadingEdit]=useState(false)
       const allUsers = useSelector(state=>state.users.allUsers)
       console.log(allUsers)
       console.log(friends)
@@ -172,55 +178,6 @@ export default function Perfil() {
         setPublicacion(false)
         dispatch(getUserPosts(auth.user.id))
       }
-
-      const eliminarPost=(idPost)=>{
-        dispatch(deletePost({idUser:auth.user.id,idPost:idPost}))
-        dispatch(getUserPosts(id))
-        
-      }
-      const eliminarAmigo=(idFriend)=>{
-        dispatch(deleteFriend(idFriend))
-        dispatch(getUserFriends(id))
-        // location.reload()
-      }
-
-      const tomarPost=(idPost)=>{
-        setopenPost(true)
-        console.log(idPost)
-        posts.map((post)=>{
-          if(post.id===idPost){
-            setPost({...post,idPost})
-          }
-        })
-        
-      }
-      const editarPost=(event)=>{
-        event.preventDefault()
-        const posteditado={
-          text:event.target.publicacion.value,
-          img:event.target.imagen.value,
-          name:event.target.name.value,
-          profilePic:event.target.profilePic.value,
-          
-          idUser:event.target.id.value,
-          
-          
-        }
-        
-        const idPost=event.target.idPost.value
-        
-        
-        dispatch(editePost({idUser:id,idPost:idPost,post:posteditado}))
-        dispatch(getUserPosts(id))
-        setopenPost(false)
-      }
-      const h=()=>{
-        console.log("id:",id)
-          dispatch(getUserProfile(id))
-          dispatch(getUserPosts(id))
-          dispatch(getUserFriends(id))
-      }
-
       const subir =(e)=>{
         e.preventDefault()
         console.log("estas en subir",e.target.files[0])
@@ -259,6 +216,118 @@ export default function Perfil() {
             
         
       }
+      const eliminarPost=(idPost)=>{
+        dispatch(deletePost({idUser:auth.user.id,idPost:idPost}))
+        dispatch(getUserPosts(id))
+        setPostDel({})
+        setDelPost(false)
+      }
+      const eliminarAmigo=(idFriend)=>{
+        dispatch(deleteFriend(idFriend))
+        dispatch(getUserFriends(id))
+        // location.reload()
+      }
+
+      const tomarPost=(idPost)=>{
+        setopenPost(true)
+        console.log(idPost)
+        posts.map((post)=>{
+          if(post.id===idPost){
+            setPost({...post,idPost})
+          }
+        })
+        
+      }
+      const tomarPostDel=(idPost)=>{
+        setDelPost(true)
+        console.log(idPost)
+        posts.map((post)=>{
+          if(post.id===idPost){
+            setPostDel({...post,idPost})
+          }
+        })
+        
+      }
+      const editarPost=(event)=>{
+        event.preventDefault()
+        const posteditado={
+          text:event.target.publicacion.value,
+          img:event.target.imagen.value,
+          name:event.target.name.value,
+          profilePic:event.target.profilePic.value,
+          
+          idUser:event.target.id.value,
+          comments:[],
+          likes:[]
+          
+        }
+        
+        const idPost=event.target.idPost.value
+        
+        
+        dispatch(editePost({idUser:id,idPost:idPost,post:posteditado}))
+        dispatch(getUserPosts(id))
+        setopenPost(false)
+      }
+      const h=()=>{
+        console.log("id:",id)
+          dispatch(getUserProfile(id))
+          dispatch(getUserPosts(id))
+          dispatch(getUserFriends(id))
+      }
+      const subir2 =(e)=>{
+        e.preventDefault()
+        console.log("estas en subir",e.target.files[0])
+        const file = e.target.files[0]
+        // console.log(file)
+        uploadFiles2(file)
+        
+        
+      }
+      
+      const uploadFiles2 =(file)=>{
+        console.log("entraste a uploadfile")
+        if(!file)return
+            
+            const storageRef =ref(storage,`/files/${auth.user.id}/images/"${file.name}`)
+            console.log("entraste a uploadfile2")
+            const uploadTask= uploadBytesResumable(storageRef ,file)
+            console.log("entraste a uploadfile3")
+            uploadTask.on("state_changed",(snapshot)=>{
+                const prog = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) *100)
+                setProgress(prog)
+            },(err)=>console.log(err),
+            ()=>{
+                getDownloadURL(uploadTask.snapshot.ref)
+                .then((url)=>{
+                  console.log("la url es", url)
+                  setimgpost(url)
+                  post["img"] = url
+                  const newObject ={
+                    prop:url
+                  }
+                  newObject[name]= newObject["prop"]
+                  delete newObject["prop"]
+                  console.log(newObject)
+                  const objeto={...post,...newObject}
+                  console.log(objeto)
+                  setopenPost(false)
+                  setLoadingEdit(true)
+                  setPost(objeto)
+                  setTimeout(()=>{
+                    setLoadingEdit(false)
+                    setopenPost(true)
+                    
+                  },1)
+                  
+                })
+            }
+            )
+            
+            
+        
+      }
+      
       const [mostrarProg,setMostrarProg]=useState(false)
       console.log(usuario)
       const cerrarPublicacion=()=>{
@@ -280,50 +349,74 @@ export default function Perfil() {
       },[router.isReady])
       // const profilePic = usuario.profilePic
   return (
-    <section className=' m-auto flex flex-col justify-center items-center md:px-1  '>
+    <section className=' m-auto flex flex-col justify-center items-center md:px-2  '>
+              {popDelPost&&<div className='fixed flex justify-center items-center top-0 bg-black bg-opacity-80 w-full h-full  z-30'>
+                <div className='w-1/2 p-2 rounded-md shadow-md shadow-emerald-500 flex flex-col gap-5 bg-color2-backg '>
+                
+                  <p className='text-white text-3xl text-center md:text-xl'>¿Esta seguro que desea borrar esta publicación?</p>
+                  <div className='m-auto md:m-0 flex gap-3'> 
+                    
+                    <button className='text-white md:text-sm bg-color7-boton md:m-0 md:p-1 m-2 p-2 rounded-md hover:bg-color5-recuatros hover:shadow-emerald-500 hover:shadow-md'onClick={()=>{eliminarPost(postDel.id)}}>Sí, borrar publicación</button>
+                    <button className='text-white md:text-sm bg-red-300 hover:bg-red-500 md:m-0 md:p-1 m-2 p-2 rounded-md hover:shadow-emerald-500 hover:shadow-md' onClick={()=>{setDelPost(false)}}>Cancelar</button>
+                  </div>
+                  
+                  </div></div>
+                }
              {publicacion&&<div className='z-30'>
                 <div className='fixed left-0 top-0 h-screen w-full bg-black bg-opacity-50 z-10' onClick={()=>{setPublicacion(false)}}></div>
-                <div className="bg-color3-publicacion w-[500px]  p-10 fixed left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
+                <div className="bg-color3-publicacion w-[500px] p-10 fixed left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10 sm:w-[300px]">
                     <button className='absolute right-2 top-2 text-red-300 p-1 h-6 w-6 flex items-center justify-center rounded-md' onClick={cerrarPublicacion}><GiCancel/></button>
                     <form className='flex flex-col p-5' onSubmit={publicar} >
-                        <input autoComplete="off" className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='publicacion' placeholder='Tu publicación' type="text" />
+                        <input autoComplete="off" className='p-4 md:p-2 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='publicacion' placeholder='Tu publicación' type="text" />
                         
                         
-                        <input className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='imagen' placeholder='Imagen...' type="text" defaultValue={imgpost} />
+                        {!mostrarProg?<input className='p-4 md:p-2 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='imagen' placeholder='Image...' type="text" defaultValue={imgpost} />:<input hidden className='p-4 md:p-2  bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='imagen' placeholder='Image...' type="text" defaultValue={imgpost} />}
                         <input hidden className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='name' value={auth.user.name} placeholder='Image...' type="text" />
-                        <input hidden className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='profilePic' value={auth.user.profilePic} placeholder='Image...' type="text" />
+                        <input hidden className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='profilePic' value={auth.user.profilePic}placeholder='Image...' type="text" />
                         <input hidden className='' name='id' value={auth.user.id} placeholder='' type="text" />
-                        <img src={imgpost}/>
+                        <img className='max-h-60' src={imgpost}/>
+                        {mostrarProg&&<p className=' mt-3 text-white '>Cargando Imagen:{progress}%</p>}
                         <div className="relative h-5">
-                            <div className="absolute z-[0] top-[1px] left-[0px] bg-cyan-400 bg-opacity-70 px-2 py-[2px] text-white" >Seleccionar archivo</div>
-                            {mostrarProg&&<p className='absolute top-0 left-40'>Cargando Imagen:{progress}%</p>}
-                            <input className=" absolute z-[1] top-[1px] left-[0px] w-40 opacity-0" type="file" onChange={subir} onClick={()=>{setMostrarProg(true)}} />
+                            <div className="absolute z-[0] top-[1px] left-[0px] bg-cyan-400 bg-opacity-70 px-2 py-[2px] text-white">Seleccionar archivo</div>
+                            
+                            <input className=" absolute z-[1] top-[1px] left-[0px] w-40 opacity-0" type="file" onChange={subir} onClick={()=>{setMostrarProg(true);}} />
                         </div>
-                        
                        
-                        <button type='submit' className='bg-color4-comentarios mt-5 py-4 text-xl font-bold text-lavender-100 rounded-md'>Publicar</button>
+                        <button type='submit' className='bg-color4-comentarios mt-5 py-4 text-xl font-bold text-lavender-100 rounded-md hover:shadow-md hover:shadow-emerald-500 text-white'>Publicar</button>
                     </form>
                 </div>
             </div>}
-            {openpost&&<div className='z-30'>
-                <div className='absolute left-0 top-0 h-screen w-full bg-black bg-opacity-50 z-10' onClick={()=>{setPublicacion(false)}}></div>
-                <div className="bg-color3-publicacion w-[500px]  p-10 absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
-                    <h2 className='text-white text-3xl text-center text-shadow-lg '>Edita tu publicación</h2>
+            {openpost&&<div className='z-30 '>
+                <div className='fixed left-0 top-0  h-screen w-full bg-black bg-opacity-50 z-10' onClick={()=>{setPublicacion(false)}}></div>
+                <div className="bg-color3-publicacion w-[500px] md:w-4/5 md:mt-4 md:p-2 mt-6 p-10 fixed left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
+                    <h2 className='text-white text-3xl text-center text-shadow-lg md:text-2xl '>Edita tu publicación</h2>
                     <button className='absolute right-2 top-2 text-red-300 p-1 h-6 w-6 flex items-center justify-center rounded-md' onClick={()=>{setopenPost(false)}}><GiCancel/></button>
                     <form className='flex flex-col p-5' onSubmit={editarPost} >
-                        <input autoComplete="off" className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='publicacion' placeholder='Tu publicación' type="text" defaultValue={post.text} />
+                        <input autoComplete="off" className='p-4 md:p-2 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='publicacion' placeholder='Tu publicación' type="text" defaultValue={post.text} />
                         
                         
-                        <input className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='imagen' placeholder='Image...' type="text" defaultValue={post.img} />
+                        <input className='p-4 md:p-2 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='imagen' placeholder='Image...' type="text" defaultValue={post.img} />
                         <input hidden className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='name' value={auth.user.name} placeholder='Image...' type="text" />
                         <input hidden className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='profilePic' value={auth.user.profilePic}placeholder='Image...' type="text" />
                         <input hidden className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='id' value={auth.user.id}placeholder='' type="text" />
+                        <img className='max-h-60' src={post.img}/>
+                        {mostrarProg&&<p className=' mt-3 text-white '>Cargando Imagen:{progress}%</p>}
+                        <div className="relative h-5">
+                            <div className="absolute z-[0] top-[1px] left-[0px] bg-cyan-400 bg-opacity-70 px-2 py-[2px] text-white">Seleccionar archivo</div>
+                            
+                            <input className=" absolute z-[1] top-[1px] left-[0px] w-40 opacity-0" type="file" onChange={subir2} onClick={()=>{setMostrarProg(true);setName("img")}} />
+                        </div>
                         <input hidden className='' name='idPost' value={post.idPost} placeholder='' type="text" />
                         <input hidden className='' name='comments' value={post.comments} placeholder='' type="text" />
                         
                         <button type='submit' className='bg-color4-comentarios mt-5 py-4 text-xl font-bold text-lavender-100 rounded-md'>Publicar</button>
                     </form>
                 </div>
+            </div>}
+            {loadingedit&&<div className='z-30 '>
+                <div className='fixed left-0 top-0  h-screen w-full bg-black bg-opacity-50 z-10'></div>
+                
+                
             </div>}
         <section className=' flex flex-col items-center bg-color3-publicacion shadow-md shadow-emerald-500 rounded-lg  gap-2 pt-5 min-h-[450px] md:min-h-[120px] h-fit md:h-48 relative w-3/4 md:w-full '>
             <div className='h-80 w-full overflow-hidden '>
@@ -400,10 +493,11 @@ export default function Perfil() {
               </article>}
               {/* <section className='pt-4 w-1/3 m-auto 2xl:w-2/4 lg:w-4/6 md:w-full md:mx-0 '> */}
               {posts?.map((post)=>
-            <article key={post.id} className='  m-auto bg-color3-publicacion  rounded-md shadow-md shadow-emerald-500 my-6 relative border-2 border-color1-nav'>
+            <article key={post.id} className='  m-auto bg-color3-publicacion  rounded-md shadow-md shadow-emerald-500 my-6 relative border-2 border-color1-nav '>
               {post.idUser===auth.user.id&&<div>
-                <button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarPost(post.id)}}>X</button>
-                <button className='absolute top-1 right-6 bg-red-300 text-white  px-2 text-xs rounded-full' onClick={()=>{tomarPost(post.id)}}>editar</button>
+                {/* <button className='absolute top-1 right-1 bg-color7-boton text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarPost(post.id)}}>X</button> */}
+                <button className='absolute top-1 right-1 bg-color7-boton text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{tomarPostDel(post.id)}}>X</button>
+                <button className='absolute top-1 right-6 bg-color7-boton text-white  px-2 text-xs rounded-md' onClick={()=>{tomarPost(post.id)}}>editar</button>
               </div>}
               
               <div className='flex items-center gap-4 mb-3 justify-between w-full p-2 '>
@@ -448,12 +542,12 @@ export default function Perfil() {
                     
                     <AiOutlineLike   className='text-2xl text-blue-400 ' onClick={()=>{like(post.id,post.idUser)}}/>
                     
-                    <p>{post.likes.length}</p>
+                    <p className='text-white'>{post.likes.length}</p>
                   </div> 
                     
                   
                   
-                  <button onClick={()=>{setShowComments(!showComments)}}><FaRegComment className='text-2xl'/></button>
+                  <button onClick={()=>{setShowComments(!showComments)}}><FaRegComment className='text-2xl text-white'/></button>
 
               </article>
               
@@ -478,8 +572,8 @@ export default function Perfil() {
                     
                       <div className='w-full relative'>
                         <div className='bg-color4-comentarios  shadow-black shadow-sm rounded-sm p-1'>
-                          <p className='text-xs '>{comment.name}</p>
-                          <p className='ml-2 '>{comment.comentario}</p>
+                          <p className='text-xs text-white '>{comment.name}</p>
+                          <p className='ml-2 text-white '>{comment.comentario}</p>
                         </div>
                         
                         {/* <p className='ml-2 '>{Date(comment.date)}</p> */}
@@ -510,7 +604,7 @@ export default function Perfil() {
                             }
                           })}
                     </div>
-                    <input className='bg-color3-publicacion my-auto py-1 rounded-md w-full border-2 border-emerald-500 ' name="comentario" type="text" placeholder='Deja tu comentario' 
+                    <input className='bg-color3-publicacion text-white my-auto py-1 rounded-md w-full border-2 border-emerald-500 ' name="comentario" type="text" placeholder='Deja tu comentario' 
                     
                     onKeyDown={(event)=>{agregarComentario(post.id,post.idUser,event)}}
                     
