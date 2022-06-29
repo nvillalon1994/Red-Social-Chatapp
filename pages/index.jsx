@@ -454,7 +454,7 @@ allposts.map((a)=>{
           <article className='bg-color3-publicacion h-[400px] px-3 xl:px-1 shadow-md shadow-emerald-600 '>
               
             <p className='text-xl px-2 text-white py-1 text-shadow-xl border-b-2 border-color6-lineas lg:text-sm '>Amigos</p>
-              {friends?.map((friend)=><Link href={"/profile/"+friend?.id} key={friend.id} className=''>
+              {friends?.map((friend)=><Link href={"/profile/"+friend?.id} key={auth.user.id} className=''>
                 <a className='flex my-4 items-center gap-2 bg-color5-recuatros p-1 rounded-md shadow-sm shadow-black' onClick={()=>{
                   dispatch(getUserProfile(friend?.id))
                   dispatch(getUserPosts(friend?.id))
@@ -653,7 +653,7 @@ allposts.map((a)=>{
             <article className='bg-color3-publicacion h-[400px] overflow-auto p-1 '>
             <p className='text-xl text-white text-shadow-xl  my-5 border-b-2 border-color1-nav px-2'>Contactos</p>
 
-            {friends?.map((friend)=><div key={friend.id} className='bg-color5-recuatros  m-1 p-1 flex justify-between  rounded-md'>
+            {friends?.map((friend)=><div key={auth.user.id} className='bg-color5-recuatros  m-1 p-1 flex justify-between  rounded-md'>
               <div className='flex  items-center justify-between gap-5  w-11/12   ' onClick={()=>{
                 setChat(true)
                 setIdUser(auth.user.id)
@@ -668,7 +668,7 @@ allposts.map((a)=>{
                     
                 }
               })}        
-              <p className=' h-10 text-white text-shadow-lg w-3/4 text-sm   '>{friend?.name}</p>
+              <p className=' h-10 text-white text-shadow-lg w-3/4 text-sm overflow-hidden  '>{friend?.name}</p>
                           
               </div>
                        

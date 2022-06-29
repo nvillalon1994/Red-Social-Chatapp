@@ -178,7 +178,7 @@ export default function Navbar() {
       {config && (
         <div className="absolute  bg-color1-nav w-60 z-40  shadow-sm shadow-black p-2 flex flex-col gap-3 top-14 right-2 ">
           <div
-            className="flex items-center gap-4 text-white text-shadow-md text-lg bg-emerald-300 p-2"
+            className="flex items-center gap-4 text-white text-shadow-md text-lg bg-color4-comentarios p-2"
             onClick={() => {
               dispatch(getUserProfile(auth2.user.id));
               dispatch(getUserPosts(auth2.user.id));
@@ -186,14 +186,14 @@ export default function Navbar() {
               setConfig(false)
             }}
           >
-            <BsFillPersonFill className="bg-color4-comentarios shadow-sm shadow-black  rounded-full hover:shadow-md hover:shadow-white h-7 w-7 p-1" />
+            <BsFillPersonFill className="bg-emerald-400 shadow-sm shadow-black  rounded-full hover:shadow-md hover:shadow-white h-7 w-7 p-1" />
             <Link href={"/profile/" + auth2.user.id}>Ir a tu perfil</Link>
           </div>
           <div
-            className="flex items-center gap-4 text-white text-shadow-md text-lg bg-emerald-300 p-2"
+            className="flex items-center gap-4 text-white text-shadow-md text-lg bg-color4-comentarios p-2"
             onClick={logout2}
           >
-            <BiLogOutCircle className=" bg-color4-comentarios shadow-sm shadow-white  rounded-full hover:shadow-lg hover:shadow-white h-7 w-7 p-1" />
+            <BiLogOutCircle className=" bg-emerald-400 shadow-sm shadow-white  rounded-full hover:shadow-lg hover:shadow-white h-7 w-7 p-1" />
             Cerrar Sesión
           </div>
         </div>
