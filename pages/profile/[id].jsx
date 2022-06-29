@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { database } from '../../config/firebase' 
 import {collection,doc,getDocs,getDoc,updateDoc, addDoc} from 'firebase/firestore'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,12 +12,14 @@ import { useRouter } from 'next/router';
 import { getAllUsers, getUserFriends, getUserPosts, getUserProfile } from '../../features/users';
 import { getDownloadURL, ref , uploadBytesResumable } from 'firebase/storage'
 import { storage } from '../../config/firebase';
+import { MdArrowForwardIos } from 'react-icons/md';
 
 
 export default function Perfil() {
       const friends = useSelector(state=>state.users.usuario.friends)
       const usuario = useSelector(state=>state.users.usuario.usuario)
       const posts = useSelector(state=>state.users.usuario.posts)
+      const comentario22 = useRef()
       const [publicacion,setPublicacion]= useState(false)
       const [popDelPost,setDelPost]= useState(false)
       const [popDelCom,setdDelCom]= useState(false)
@@ -125,7 +127,39 @@ export default function Perfil() {
             e.target.value=""
             
             // location.reload()
-          }
+          }else {
+            if(e==="Enter"){
+              const comentario = {
+                comentario:comentario22.current.value,
+                name:auth.user.name,
+                // profilePic:auth.user.profilePic,
+                date:Date.now(),
+                id:auth.user.id
+  
+              }
+              const comentarios = []
+              posts.map((post)=>{
+                if(post.id===id2){
+                  
+                  post.comments.forEach(element => {
+                    comentarios.push(element)
+                  });
+                  comentarios.push(comentario)
+                }
+                
+        
+              })
+  
+        
+              const docRef = doc(database,`usuarios/${idUser}/posts/${id2}` )
+              updateDoc(docRef,{
+                comments:comentarios
+                
+              })
+              
+              dispatch(getUserPosts(id))
+            
+          }}
           
         }
 
@@ -591,25 +625,27 @@ export default function Perfil() {
               {/* {comentario&& */}
               <article className='bg-color4-comentarios shadow-black shadow-sm rounded-md p-2 m-1'>
                 <article className='flex items-center gap-2 py-2'>
-                  <div className='h-10 w-10 overflow-hidden rounded-full flex'>
-                          {allUsers.map((user)=>{
-                            if(user.id===auth.user.id){
-                              return <div className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
-                                <img onClick={()=>{
-                            dispatch(getUserProfile(user?.id))
-                            dispatch(getUserPosts(user?.id))
-                            dispatch(getUserFriends(user?.id))
-                          }} className=' h-10' src={user.profilePic} alt="" /> 
-                                </div>
-                            }
-                          })}
+                <div className="w-1/12 md:w-2/12">
+                    <div className='h-10 w-10 overflow-hidden rounded-full flex'>
+                            {allUsers.map((user)=>{
+                              if(user.id===auth.user.id){
+                                return <div className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
+                                  <img onClick={()=>{
+                              dispatch(getUserProfile(user?.id))
+                              dispatch(getUserPosts(user?.id))
+                              dispatch(getUserFriends(user?.id))
+                            }} className=' h-10' src={user.profilePic} alt="" /> 
+                                  </div>
+                              }
+                            })}
+                      </div>
                     </div>
-                    <input className='bg-color3-publicacion text-white my-auto py-1 rounded-md w-full border-2 border-emerald-500 ' name="comentario" type="text" placeholder='Deja tu comentario' 
+                    <input ref={comentario22} className='bg-color3-publicacion my-auto w-11/12  py-1 text-white rounded-md border-2 border-color6-lineas ' name="comentario" type="text" placeholder='Deja tu comentario' 
                     
                     onKeyDown={(event)=>{agregarComentario(post.id,post.idUser,event)}}
                     
                     />
-                    
+                    <button className='w-1/6 text-white bg-color8-inputs h-9  rounded-md justify-center hover:shadow-md hover:shadow-emerald-500  flex items-center' onClick={()=>{agregarComentario(post.id,post.idUser,"Enter")}}><MdArrowForwardIos/></button>
                 </article>
               </article>
             {/* } */}
