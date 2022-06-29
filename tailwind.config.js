@@ -7,21 +7,31 @@ module.exports = {
     extend: {
       colors:{
         'color1-nav':'#2CDCB2',
-        'color2-backg':'#E1FEF7',
-        'color3-publicacion':'#CBF9EE',
-        'color4-comentarios':'#7AF6D9',
+        'color2-backg':'#bcffef',
+        // 'color3-publicacion':'#CBF9EE',
+        'color3-publicacion':'#7ffadd',
+        'color4-comentarios':'#54ffd7',
 
       }
     },
     screens:{
-      '2xl':{'min':'1536px'},
-      'xl':{'min':'1280px'},
-      'lg':{'min':'1024px'},
-      'md':{'min':'760px'},
-      'md2':{'max':'760px'},
-      'sm2':{'min':'640px'},
+      // '2xl':{'min':'1536px'},
+      // 'xl':{'min':'1280px'},
+      // 'lg':{'min':'1024px'},
+      // 'md':{'min':'760px'},
+      // 'md2':{'max':'760px'},
+      // 'sm2':{'min':'640px'},
+      // 'sm':{'max':'640px'},
+      // 'phone': {'max':'360px'}
+      '3xl':{'max':'1936px'},
+      '2xl':{'max':'1536px'},
+      'xl':{'max':'1280px'},
+      'lg':{'max':'1024px'},
+      'md':{'max':'760px'},
+      
       'sm':{'max':'640px'},
-      'phone': {'max':'360px'}
+      
+      
     }
   },
   plugins: [

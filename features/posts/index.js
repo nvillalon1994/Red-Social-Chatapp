@@ -17,7 +17,7 @@ export const getPosts = createAsyncThunk("posts/obtenerPost",async (data,thunkAP
     snapshot.forEach(doc=>{
       posts.push({...doc.data(),id:doc.id})
     })
-    console.log("posts",posts)
+    // console.log("posts",posts)
     
     return posts
 })
@@ -34,7 +34,7 @@ export const editePost = createAsyncThunk("posts/editarPosts",async (data,thunkA
     const idUser=data.idUser
     const idPost = data.idPost
     const editedPost =data.post
-    console.log(data)
+    // console.log(data)
     // const col = collection(database,"usuarios",idUser,"posts")
     
     updateDoc(doc(database,"usuarios/"+idUser+"/posts",idPost),editedPost)
@@ -45,25 +45,58 @@ export const editePost = createAsyncThunk("posts/editarPosts",async (data,thunkA
 
 
 export const getAllPosts = createAsyncThunk("cart/obtenerPost2",async (data,thunkAPI)=>{
+    const idUser=data
+    console.log("data",data)
+    const col = collection(database,"usuarios",idUser,"posts")
     
+    
+    
+    const posts =[]
+    const snapshot = await getDocs(col)
+    
+    snapshot.forEach(doc=>{
+      posts.push({...doc.data(),id:doc.id})
+    })
+    console.log(posts)
     const state = thunkAPI.getState()
+    
     const friends = state.friends.friends
     const array =[]
+    
+  
     for(const f in friends){
-        
+        // onSnapshot(collection(database,"usuarios/"+authResult.uid+"/solicitudes"),(snapshot)=>{
+        //     const solicitudes =[]
+        //     snapshot.docs.map((doc)=>solicitudes.push({...doc.data(),id:doc.id}))
+           
+        //     dispatch(getSolicitud(solicitudes))
+        // })
         const col = collection(database,"usuarios",friends[f].id,"posts")
         const snapshot = await getDocs(col)
         snapshot.forEach(doc=>{
         // console.log({...doc.data(),id:doc.id})
         array.push({...doc.data(),id:doc.id})
+        
         })
         
         
     }
-    
+    posts.map((e)=>{
+        array.push(e)
+    })
+    array.sort((post1,post2)=>{
+        if(post1.date>post2.date){
+            return -1
+          }else if(post1.date < post2.date){
+            return 1
+          }else{
+            return 0
+          }
+    })  
     return array
     
 })
+
 
 
 const postsSlice = createSlice({
@@ -101,7 +134,9 @@ const postsSlice = createSlice({
         })
         builder.addCase(getAllPosts.rejected,(state,action)=>{
             state.loading = false
-        })
+        })    
+
+       
 
     }
 

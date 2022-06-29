@@ -146,7 +146,7 @@ export default function Login() {
     // Extra: Añadir icono a los botones
 
   return (
-    <section className=' max-w-6xl m-auto relative pt-4 '>
+    <section className='  m-auto relative pt-4 bg-color2-backg h-[94.4vh] '>
         
         <Formik 
             initialValues={{
@@ -158,22 +158,22 @@ export default function Login() {
         >
             {({errors,isSubmitting})=>{
                 return <section >
-                    <Form className=' bg-white w-11/12 md:w-1/2 p-5 md:p-10 mx-auto mt-16 shadow-xl shadow-black rounded-t-lg'>
-                        {isLogin?<h2 className=' text-center font-bold text-4xl mb-10'>Inicia sesión</h2>:<h2 className=' text-center font-bold text-4xl mb-10'>Registrate</h2>}
-                        {isLogin?<div className='flex flex-col md:w-1/2 mx-auto gap-5'>
+                    <Form className=' bg-white 3xl:w-1/4 2xl:w-2/5 xl:w-5/12 lg:w-1/2 md:w-11/12  p-5  md:p-4 mx-auto mt-16 shadow-xl shadow-black rounded-t-lg'>
+                        {isLogin?<h2 className=' text-center font-bold text-4xl mb-10 md:mb-7 md:text-3xl'>Inicia sesión</h2>:<h2 className=' text-center font-bold text-4xl mb-10 md:mb-7 md:text-3xl'>Registrate</h2>}
+                        {isLogin?<div className='flex flex-col  mx-auto   gap-5 md:gap-3'>
                             <Field className="p-3 rounded-md bg-color2-backg" placeholder="Email..." type="email" name="email"/>
                             <Field className="p-3 rounded-md bg-color2-backg" placeholder="Password..." type="password" name="password"/>
                             <button type='submit' className={`bg-color1-nav p-3 rounded-md text-white hover:text-shadow-lg hover:shadow-lg hover:bg-color4-comentarios ${isSubmitting&&"bg-red-500"}`}>Iniciar sesión</button>
-                            <p className='text-center'>¿No tienes cuenta?<button onClick={()=>{setIsLogin(!isLogin)}} className="hover:text-color1-nav">Registrate</button> </p>
+                            <p className='text-center '>¿No tienes cuenta?<button onClick={()=>{setIsLogin(!isLogin)}} className="hover:text-color1-nav text-emerald-700">Registrate</button> </p>
                             
 
-                        </div>:<div className='flex flex-col md:w-1/2 mx-auto gap-5'>
+                        </div>:<div className='flex flex-col  mx-auto  gap-5 md:gap-3'>
                             <Field className="p-3 rounded-md bg-color2-backg" placeholder="Email..." type="email" name="email"/>
                             <Field className="p-3 rounded-md bg-color2-backg" placeholder="Password..." type="password" name="password"/>
                             <Field className="p-3 rounded-md bg-color2-backg" placeholder="Nombre..." type="text" name="name"/>
                             <Field className="p-3 rounded-md bg-color2-backg" placeholder="Foto de Perfil..." type="text" name="profilePic"/>
-                            <button className={`bg-color1-nav p-3 rounded-md text-indigo-900 hover:bg-indigo-400 ${isSubmitting&&"bg-red-500"}`}>Registrar cuenta!</button>
-                            <p className='text-center'>¿Ya tienes cuenta?<button onClick={()=>{setIsLogin(!isLogin)}} className="hover:text-color1-nav">Inicia Sesión</button> </p>
+                            <button className={`bg-color1-nav p-3 rounded-md text-white hover:bg-color1-nav ${isSubmitting&&"bg-red-500"}`}>Registrar cuenta!</button>
+                            <p className='text-center'>¿Ya tienes cuenta?<button onClick={()=>{setIsLogin(!isLogin)}} className="hover:text-color1-nav text-emerald-700">Inicia Sesión</button> </p>
                             
                             
 
@@ -181,7 +181,7 @@ export default function Login() {
 
                     </Form>
                     {errors&&<div className='absolute top-4 m-auto  bg-color2-backg h-fit transition ease-in-out delay-150  p-2 rounded  text-black '>{errors.credentials}</div>}
-                    {isLogin&&<div className=' bg-color1-nav  w-11/12 md:w-1/2  md:p-10 mx-auto shadow-xl shadow-black rounded-b-lg'>
+                    {isLogin&&<div className=' bg-color1-nav  3xl:w-1/4 2xl:w-2/5 xl:w-5/12 lg:w-1/2 md:w-11/12  mx-auto shadow-xl shadow-black rounded-b-lg'>
                     <p className='text-center pb-4 text-white'>O inicia sesión con redes</p>
                     <div className='flex justify-center gap-10 pb-4 '>
                         

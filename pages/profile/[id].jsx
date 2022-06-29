@@ -163,7 +163,8 @@ export default function Perfil() {
           profilePic:event.target.profilePic.value,
           comments:[],
           idUser:event.target.id.value,
-          likes:[]
+          likes:[],
+          date:new Date()
           
         }
         const col = collection(database,`usuarios/${auth.user.id}/posts/`)
@@ -279,10 +280,10 @@ export default function Perfil() {
       },[router.isReady])
       // const profilePic = usuario.profilePic
   return (
-    <section className='xl:max-w-6xl 2xl:max-w-screen-2xl m-auto flex flex-col justify-center items-center   '>
+    <section className=' m-auto flex flex-col justify-center items-center md:px-1  '>
              {publicacion&&<div className='z-30'>
                 <div className='fixed left-0 top-0 h-screen w-full bg-black bg-opacity-50 z-10' onClick={()=>{setPublicacion(false)}}></div>
-                <div className="bg-color3-publicacion w-[500px] sm:w-[300px] p-10 fixed left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
+                <div className="bg-color3-publicacion w-[500px]  p-10 fixed left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
                     <button className='absolute right-2 top-2 text-red-300 p-1 h-6 w-6 flex items-center justify-center rounded-md' onClick={cerrarPublicacion}><GiCancel/></button>
                     <form className='flex flex-col p-5' onSubmit={publicar} >
                         <input autoComplete="off" className='p-4 bg-lavender-100 outline-none border focus:border-lavender-600 my-5 rounded-md' name='publicacion' placeholder='Tu publicación' type="text" />
@@ -306,7 +307,7 @@ export default function Perfil() {
             </div>}
             {openpost&&<div className='z-30'>
                 <div className='absolute left-0 top-0 h-screen w-full bg-black bg-opacity-50 z-10' onClick={()=>{setPublicacion(false)}}></div>
-                <div className="bg-color3-publicacion w-[500px] sm:w-[300px] p-10 absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
+                <div className="bg-color3-publicacion w-[500px]  p-10 absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-lg z-10">
                     <h2 className='text-white text-3xl text-center text-shadow-lg '>Edita tu publicación</h2>
                     <button className='absolute right-2 top-2 text-red-300 p-1 h-6 w-6 flex items-center justify-center rounded-md' onClick={()=>{setopenPost(false)}}><GiCancel/></button>
                     <form className='flex flex-col p-5' onSubmit={editarPost} >
@@ -324,51 +325,51 @@ export default function Perfil() {
                     </form>
                 </div>
             </div>}
-        <section className=' flex flex-col items-center bg-color3-publicacion shadow-xl shadow-black rounded-lg  gap-2 pt-5 min-h-[450px] sm:min-h-fit sm:h-[265px] h-fit relative w-3/4 sm:w-11/12'>
+        <section className=' flex flex-col items-center bg-color3-publicacion shadow-xl shadow-black rounded-lg  gap-2 pt-5 min-h-[450px] md:min-h-[120px] h-fit md:h-48 relative w-3/4 md:w-full '>
             <div className='h-80 w-full overflow-hidden '>
               
               {/* <img className='w-full  ' src={"https://images.unsplash.com/photo-1616039407041-5ce631b57879?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"} alt="" /> */}
-              <img className='w-full sm:mb-20 ' src={usuario.portadaPic} alt="" />
+              <img className='w-full  ' src={usuario.portadaPic} alt="" />
             </div>
             
-            <article className='flex gap-3 absolute left-2 bottom-2 2xl:left-4 2xl:bottom-4'>
+            <article className='flex gap-3 md:items-center  absolute left-2 bottom-2 md:gap-1'>
               
                 {/* <div className='h-40 w-40 rounded-full overflow-hidden bg-black flex justify-center'>
                     <img className=' ' src={usuario?.profilePic}  alt="profilePic" />
                 </div> */}
-                <div  href={"/profile/"+post.idUser}  className="flex  relative w-40 h-40 sm:w-20 sm:h-20 overflow-hidden rounded-full bg-black ">
-                          <img className='w-full h-auto m-auto' src={usuario.profilePic} alt="" />
+                <div  href={"/profile/"+post.idUser}  className="flex   w-40 h-40 md:w-20 md:h-20 overflow-hidden rounded-full bg-black ">
+                          <img className='h-40 md:h-20' src={usuario.profilePic} alt="" />
                           
                           
                 </div>
-                <h1 className='m-auto  text-2xl sm:text-sm font-semibold w-fit text-white text-shadow-xl 2xl:text-4xl'>{usuario?.name}</h1>
+                <h1 className='m-auto md:m-0 text-2xl md:text-base font-semibold w-2/4 text-white text-shadow-xl '>{usuario?.name}</h1>
                 {/* <p className='m-auto  text-md text-center mt-2  w-40  overflow-hidden hover:overflow-visible'>{usuario?.email}</p> */}
             </article>
             
             
         </section>
-        <section className='flex gap-7 justify-between  w-3/4 sm:w-11/12  '>
+        <section className='flex gap-7 justify-between  w-3/4  md:w-full  '>
 
-            <section className='flex flex-col bg-color3-publicacion  shadow-xl shadow-black rounded-lg  gap-2 mt-6 pt-7 min-h-[450px] w-1/3 h-fit  2xl:w-2/5 sm:hidden'>
+            <section className='flex flex-col bg-color3-publicacion  shadow-xl shadow-black rounded-lg  gap-2 mt-6 pt-7 min-h-[450px] w-2/5 h-fit  md:hidden'>
               <h3 className='mx-3  text-xl text-left  font-semibold w-40'>Fotos</h3>
-                <article className='mx-3'>
+                <article className='mx-0'>
                 
-                    <article className='grid grid-cols-3'>
+                    <article className='grid 3xl:grid-cols-4 2xl:grid-cols-3 xl:grid-cols-2 lg:grid-cols-2  px-3'>
                         {posts.map((post)=>
-                        <article>
+                        <article className=' w-24  overflow-hidden'>
                           
-                          {post.img!==""&&<div className='w-20 h-16 lg:w-16 lg:h-12 mb-2 overflow-hidden rounded-md flex items-center bg-black  '>
-                                <img className='max-h-40 h-20 mx-auto ' src={post.img}  alt="profilePic" />
+                          {post.img!==""&&<div className=' h-24  mb-2 overflow-hidden rounded-md flex items-center bg-black  '>
+                                <img className=' ' src={post.img}  alt="profilePic" />
                                 
                             </div>}
                         </article>)}
                     </article>
                 </article>
                 
-                <h3 className=' text-xl text-left mx-3 font-semibold w-40 bottom-24'>Amigos</h3>
-                <article className='grid grid-cols-3 m-3   h-fit'>
+                <h3 className=' text-xl text-left mx-3 font-semibold w-40 '>Amigos</h3>
+                <article className='grid grid-cols-5 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 m-3   '>
                   
-                  {friends.map((friend)=><div href={"/profile/"+friend.id} className='flex items-center xl:w-20 xl:h-20 lg:w-16 lg:h-16 md:h- overflow-hidden relative rounded-md bg-black'>
+                  {friends.map((friend)=><div href={"/profile/"+friend.id} className='flex items-center h-20 w-20 overflow-hidden relative rounded-md bg-black'>
                     {allUsers.map((user)=>{
                       if(user.id===friend.id){
                         return <Link href={"/profile/"+friend.id} className=""><img onClick={()=>{
@@ -391,97 +392,136 @@ export default function Perfil() {
                 </article> 
             </section>
 
-            <section className='w-full'>
-              {usuario.id===auth.user.id&&<article className='max-w-xl m-auto bg-color3-publicacion p-5 rounded-lg shadow-xl shadow-black my-6'>
+            <section className='pt-1 w-3/4  2xl:w-2/4 lg:w-4/6 md:w-full md:mx-0'>
+              {usuario.id===auth.user.id&&<article className=' m-auto bg-color3-publicacion p-5 rounded-lg shadow-xl shadow-black my-6'>
                 
                 <button onClick={()=>{setPublicacion(true)}} className='bg-color4-comentarios w-full text-left  p-2 rounded-lg text-gray-400'> Realiza una publicación</button>
                 
               </article>}
-            {posts.map((post)=>
-              <article className='max-w-xl m-auto  bg-color3-publicacion p-5 rounded-lg shadow-xl shadow-black my-6 relative '>
-                {post.idUser===auth.user.id&&<div>
-                  <button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarPost(post.id)}}>X</button>
-                  <button className='absolute top-1 right-6 bg-red-300 text-white  px-2 text-xs rounded-full' onClick={()=>{tomarPost(post.id)}}>editar</button>
-                </div>}
-                
-                <div className='flex items-center gap-2 mb-3  '>
-                  <div className='w-14 h-14 flex items-center relative overflow-hidden rounded-full bg-black'>
-                    <Link href={"/profile/"+post.idUser}  className=''>
-                          {usuario.id===post.idUser?<a><img className='w-full m-auto h-auto ' src={usuario.profilePic} alt="" /></a>:<a><img className='w-full m-auto h-auto' src={post.profilePic} alt="" /></a>}
-                          
-                          
-                    </Link>
+              {/* <section className='pt-4 w-1/3 m-auto 2xl:w-2/4 lg:w-4/6 md:w-full md:mx-0 '> */}
+              {posts?.map((post)=>
+            <article className='  m-auto bg-color3-publicacion  rounded-md shadow-xl shadow-black my-6 relative border-2 border-color1-nav'>
+              {post.idUser===auth.user.id&&<div>
+                <button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarPost(post.id)}}>X</button>
+                <button className='absolute top-1 right-6 bg-red-300 text-white  px-2 text-xs rounded-full' onClick={()=>{tomarPost(post.id)}}>editar</button>
+              </div>}
+              
+              <div className='flex items-center gap-4 mb-3 justify-between w-full p-2 '>
+                  <div className='flex items-center gap-2 mb-2'>
+                    <div className='w-12 h-12 flex  relative overflow-hidden rounded-full bg-black'>
+                      
+                      {allUsers.map((user)=>{
+                          if(user.id===post.idUser){
+                            return <Link href={"/profile/"+user.id}><img onClick={()=>{
+                              dispatch(getUserProfile(user?.id))
+                              dispatch(getUserPosts(user?.id))
+                              dispatch(getUserFriends(user?.id))
+                            }} className='w-full m-auto h-auto' src={user.profilePic}/></Link>
+                          }
+                        })}
+                    </div>
+                  <div>
+                  <p className='text-md text-white text-bold text-shadow-lg'>{post.name}</p>
+                  <p className='text-sm  text-gray-500'>{`${post.date.toDate().toLocaleDateString()} a las ${post.date.toDate().getHours()}:${post.date.toDate().getMinutes()}hs`}</p>
                   </div>
                   
-                  <p className='text-sm'>{post.name}</p>
-                  
-                  
-                  {/* <p className='text-gray-500 text-sm'>9h</p> */}
-                  
-                </div>
-                <p className='mb-2 '>{post.text}</p>
+                  </div>
                 
-                {(post.img.includes("mp4"))?<div className='bg-black bg-opacity-10'>
+                
+                
+                
+                
+              </div>
+              <p className='mb-2 px-3 py-1 text-white text-shadow-lg'>{post.text}</p>
+              {(post.img.includes("mp4"))?<div className='bg-black bg-opacity-10 w-full'>
                   <video className='rounded-md  m-auto max-h-96 w-full'controls>
                     <source src={post.img}/>
                   </video>
-                </div>:<div className='bg-black bg-opacity-10'>
-                  <img className='rounded-md  m-auto max-h-96 ' src={post.img} alt/>
+                </div>:<div className='bg-black bg-opacity-10 w-full'>
+                  <img className='  m-auto max-h-96 ' src={post.img} alt/>
                 </div>}
-                <article className='flex gap-4 m-2'>
-                  <div className='flex'><AiOutlineLike className='text-2xl text-red-500'onClick={()=>{like(post.id,post.idUser)}}/>{post.likes.length}</div>
+              
+              <article className='flex gap-4 p-2 border-t-2  border-b-2 border-color1-nav '>
+ 
+                  <div className='flex'>
+                    
+                    
+                    <AiOutlineLike   className='text-2xl text-blue-400 ' onClick={()=>{like(post.id,post.idUser)}}/>
+                    
+                    <p>{post.likes.length}</p>
+                  </div> 
+                    
+                  
+                  
                   <button onClick={()=>{setShowComments(!showComments)}}><FaRegComment className='text-2xl'/></button>
-                </article>
-                
-                {post.comments?.map((comment)=>
-                  <article className='bg-color4-comentarios rounded-md p-2 mb-2'>
-                    <article className='flex items-center gap-2 mb-2'>
-                      
-                     
-                        
+
+              </article>
+              
+              
+              {post.comments?.map((comment)=>
+                <article className=' rounded-sm shadow-sm shadow-black p-2 mb-2 m-1'>
+                  <article className='flex items-center gap-2 mb-2'>
+                        <div className='h-10 w-10 overflow-hidden rounded-full flex'>
                         {allUsers.map((user)=>{
                           if(user.id===comment.id){
-                            return  <Link href={"/profile/" + comment.id} className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
-                              <img className='w-10 h-auto rounded-full' src={user.profilePic} onClick={()=>{
-                                dispatch(getUserProfile(comment?.id))
-                                dispatch(getUserPosts(comment?.id))
-                                dispatch(getUserFriends(comment?.id))
-                              }}/>
-                            </Link>
+                            return <Link href={"/profile/" + comment.id} className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
+                              <img onClick={()=>{
+                          dispatch(getUserProfile(user?.id))
+                          dispatch(getUserPosts(user?.id))
+                          dispatch(getUserFriends(user?.id))
+                        }} className=' h-10' src={user.profilePic} alt="" /> 
+                              </Link>
                           }
                         })}
+                        </div>
                         
-                      
-                      
-                        
-                        <div className='w-full relative'>
+                    
+                      <div className='w-full relative'>
+                        <div className='bg-color4-comentarios  shadow-black shadow-sm rounded-sm p-1'>
                           <p className='text-xs '>{comment.name}</p>
                           <p className='ml-2 '>{comment.comentario}</p>
-                          
-                          
-                          {comment.id===auth.user.id&&
-                          <button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarComentario(post.id,comment.date,post.idUser)}}>X</button>
-                          } 
                         </div>
-                    </article>
-                </article>
-                )}
-                
-                {/* {comentario&& */}
-                <article className='bg-color4-comentarios rounded-md p-2 mb-2'>
-                  <article className='flex items-center gap-2 py-2'>
-                      <input className='bg-color3-publicacion my-auto py-1 rounded-md w-full' name="comentario" type="text" placeholder='Deja tu comentario' 
-                      
-                      onKeyDown={(event)=>{agregarComentario(post.id,post.idUser,event)}}
-                      
-                      />
-                      
+                        
+                        {/* <p className='ml-2 '>{Date(comment.date)}</p> */}
+                        {/* <button className='ml-2 text-xs text-shadow-sm   text-white w-16 rounded-sm' onClick={()=>{setRespuesta(!respuesta)}}>Responder</button>
+                        {respuesta&&
+                          <div className="">
+                            <input  className='w-2/3 ml-5 ' type="text" placeholder='Escribe tu respuesta'/>
+                          </div>} */}
+                        {comment.id===auth.user.id&&<button className='absolute top-1 right-1 bg-red-300 text-white  h-4 w-4 text-xs rounded-full' onClick={()=>{eliminarComentario(post.id,comment.date,post.idUser)}}>X</button>}
+                      </div>
                   </article>
+              </article>
+              )}
+              
+              {/* {comentario&& */}
+              <article className='bg-color4-comentarios shadow-black shadow-sm rounded-md p-2 m-1'>
+                <article className='flex items-center gap-2 py-2'>
+                  <div className='h-10 w-10 overflow-hidden rounded-full flex'>
+                          {allUsers.map((user)=>{
+                            if(user.id===auth.user.id){
+                              return <div className='w-10 h-10 overflow-hidden rounded-full flex items-center '>
+                                <img onClick={()=>{
+                            dispatch(getUserProfile(user?.id))
+                            dispatch(getUserPosts(user?.id))
+                            dispatch(getUserFriends(user?.id))
+                          }} className=' h-10' src={user.profilePic} alt="" /> 
+                                </div>
+                            }
+                          })}
+                    </div>
+                    <input className='bg-color3-publicacion my-auto py-1 rounded-md w-full border-2 border-emerald-500 ' name="comentario" type="text" placeholder='Deja tu comentario' 
+                    
+                    onKeyDown={(event)=>{agregarComentario(post.id,post.idUser,event)}}
+                    
+                    />
+                    
                 </article>
-              {/* } */}
-                
-              </article>)
-              }
+              </article>
+            {/* } */}
+              
+            </article>)
+            }
             </section>
         </section>
         

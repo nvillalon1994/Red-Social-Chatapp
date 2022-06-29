@@ -1,207 +1,262 @@
-import React from 'react'
-import Link from 'next/link'
-import { useDispatch, useSelector } from 'react-redux'
-import { auth } from '../config/firebase'
-import {signOut} from 'firebase/auth'
-import { BiLogOutCircle } from 'react-icons/bi';
-import { AiFillBell,AiFillHome } from 'react-icons/ai';
-import { FaUserFriends } from 'react-icons/fa';
-import { ImEnters } from 'react-icons/im';
-import {useRouter} from 'next/router'
-import { useState } from 'react'
-import { acceptFriend, addFriend, declineFriend } from '../features/friends/solicitudes'
-import { getUserFriends, getUserPosts, getUserProfile, getUsers } from '../features/users'
-import { getAllPosts } from '../features/posts'
-import { logout } from '../features/auth'
+import React from "react";
+import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { auth } from "../config/firebase";
+import { signOut } from "firebase/auth";
+import { BiLogOutCircle } from "react-icons/bi";
+import { BsFillPersonFill } from "react-icons/bs";
+import { MdOutlineOndemandVideo } from "react-icons/md";
+import { IoStorefront } from "react-icons/IO";
+
+import { AiFillBell, AiFillHome, AiFillWechat,AiOutlineLogin } from "react-icons/ai";
+import { SiSquare } from "react-icons/si";
+import { FaUserFriends, FaUsers, FaStoreAlt } from "react-icons/fa";
+import { ImEnters } from "react-icons/im";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import {
+  acceptFriend,
+  addFriend,
+  declineFriend,
+} from "../features/friends/solicitudes";
+import {
+  getUserFriends,
+  getUserPosts,
+  getUserProfile,
+  getUsers,
+} from "../features/users";
+import { getAllPosts } from "../features/posts";
+import { logout } from "../features/auth";
 export default function Navbar() {
-    const auth2 = useSelector(state=>state.auth)
-    const solicitudes = useSelector(state=>state.friends.solicitudes)
-    const friends = useSelector(state=>state.friends.friends)
-    const allUsers = useSelector(state=>state.users.allUsers)
-    const [open,setOpen]=useState(false)
-    const [open2,setOpen2]=useState(false)
-    const [openFriends,setOpenFriends]=useState(false)
-    const users = useSelector(state=>state.users.usuarios)
-    console.log(users)
-    console.log(openFriends)
-    const router = useRouter()
-    const logout2=()=>{
-      dispatch(logout())
-      signOut(auth)
-      
-      router.replace("/login")
-    }
+  const auth2 = useSelector((state) => state.auth);
+  const solicitudes = useSelector((state) => state.friends.solicitudes);
+  const friends = useSelector((state) => state.friends.friends);
+  const allUsers = useSelector((state) => state.users.allUsers);
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  
+  const users = useSelector((state) => state.users.usuarios);
+  const [config, setConfig] = useState(false);
+  const router = useRouter();
+  const logout2 = () => {
+    dispatch(logout());
+    signOut(auth);
+    setConfig(false);
     
-    console.log(auth2.user.name)
-    const dispatch= useDispatch()
-    const agregarAmigo=(idFriend)=>{
-      // console.log(idFriend)
-      dispatch(addFriend(idFriend))
-      // dispatch(getSolicitud(auth.user.id))
-      // dispatch(getFriends(auth.user.id))
-      // dispatch(getUsersSolicitud(idFriend))
+    router.replace("/login");
+  };
+
+  const dispatch = useDispatch();
+  const agregarAmigo = (idFriend) => {
+    // console.log(idFriend)
+    dispatch(addFriend(idFriend));
+    // dispatch(getSolicitud(auth.user.id))
+    // dispatch(getFriends(auth.user.id))
+    // dispatch(getUsersSolicitud(idFriend))
     //   setTimeout(()=>{
     //     dispatch(getUsers())
-    // },900) 
-    }
-    const aceptarSolicitud=(idFriend,idSolicitud,name)=>{
-      // console.log(idFriend,idSolicitud,name,profilePic)
-      dispatch(acceptFriend({idUser:auth2.user.id,idFriend:idFriend,idFriend,idSolicitud,name}))
-      // dispatch(getFriends(auth.user.id))
-      // dispatch(getSolicitud(auth.user.id))
-       setTimeout(()=>{dispatch(getUsers())},400)  
-      
-    }
-    const eliminarSolicitud=(idFriend,idSolicitud)=>{
-      // console.log(idFriend,idSolicitud,name,profilePic)
-      dispatch(declineFriend({idFriend,idSolicitud}))
-      // dispatch(getFriends(auth.user.id))
-      // dispatch(getSolicitud(auth.user.id))
-      dispatch(getAllPosts())
-      
-    }
+    // },900)
+  };
+  const aceptarSolicitud = (idFriend, idSolicitud, name) => {
+    // console.log(idFriend,idSolicitud,name,profilePic)
+    dispatch(
+      acceptFriend({
+        idUser: auth2.user.id,
+        idFriend: idFriend,
+        idFriend,
+        idSolicitud,
+        name,
+      })
+    );
+    // dispatch(getFriends(auth.user.id))
+    // dispatch(getSolicitud(auth.user.id))
+    setTimeout(() => {
+      dispatch(getUsers());
+    }, 400);
+  };
+  const eliminarSolicitud = (idFriend, idSolicitud) => {
+    // console.log(idFriend,idSolicitud,name,profilePic)
+    dispatch(declineFriend({ idFriend, idSolicitud }));
+    // dispatch(getFriends(auth.user.id))
+    // dispatch(getSolicitud(auth.user.id))
+    dispatch(getAllPosts());
+  };
+  
+  
+  
+  return (
+    <nav className="bg-color1-nav w-full  3xl:p-3 lg:px-1 fixed top-0 z-50
+    
+       ">
+      <ul className=" flex justify-between text-white   ">
+        <li className="logo 3xl:w-1/6 lg:w-1/2 p-1  ">
+          <Link href="/">Insta-book</Link>
+        </li>
+        {!auth2.logged && (
+          <li>
+            <Link href="/login"><AiOutlineLogin className="text-2xl bg-emerald-400 shadow-sm shadow-black rounded-full hover:shadow-md hover:shadow-white h-8 w-8 p-1 mr-1 "/></Link>
+          </li>
+        )}
+        {auth2.logged && (
+          <ul className="flex lg:w-2/3 w-4/6 justify-center gap-24 lg:gap-16 md:gap-3 md:ml-5 md:w-1/4 ">
+            <li>
+              {" "}
+              <Link href={"/"}>
+                <AiFillHome className="text-2xl bg-emerald-400 shadow-sm shadow-black rounded-full hover:shadow-md hover:shadow-white h-8 w-8 p-1" />
+              </Link>
+            </li>
+            <li className="md:hidden">
+              <MdOutlineOndemandVideo className="text-2xl bg-emerald-400 shadow-sm shadow-black rounded-full hover:shadow-md hover:shadow-white h-8 w-8 p-1" />
+            </li>
+            <li className="md:hidden">
+              <FaStoreAlt className="text-2xl bg-emerald-400 shadow-sm shadow-black rounded-full hover:shadow-md hover:shadow-white h-8 w-8 p-1" />
+            </li>
+            <Link href={"/friends2"}
+              
+            >
+              <FaUsers className="text-2xl bg-emerald-400 shadow-sm shadow-black rounded-full hover:shadow-md hover:shadow-white h-8 w-8 p-1" />
+            </Link>
 
-    return (
-        <nav className='bg-color1-nav p-5  shadow-lg  min-h-16 md:h-16 '>
-            
-            <ul className='nav1 md:flex   md2:flex sm:flex phone:flex   items-center gap-5 text-white justify-between max-w-6xl 2xl:max-w-screen-2xl  m-auto  '>
-                <li className='logo'><Link href="/" >Insta-book</Link></li>
-                {!auth2.logged&&<li><Link href="/login">Login</Link></li>}
-                {auth2.logged&&
-                <div className='flex gap-3 items-center sm:flex '>
-                  <div className='relative '>
-                    < AiFillBell className='text-2xl' onClick={()=>{setOpen(!open)}}/>
-                    {solicitudes?.map((e)=>{
-                    if(e.solicitud==="recibida"){
-                      return <div className='absolute  top-0 right-[-7px] bg-red-300 h-4 w-4 text-white text-shadow-lg text-center rounded-full text-xs'>{solicitudes.length}
-                      </div>}})}
-                    
-                  </div>
-                  
-                  <div className='flex gap-3 items-center w-8 h-8 rounded-full overflow-hidden bg-black'>
-                 
-                      
-                    
-                    
-                    {allUsers.map((user)=>{
-                        if(user.id===auth2.user.id){
-                          return  <Link href={"/profile/" + auth2.user.id} className="flex  relative w-40 h-40 overflow-hidden rounded-full bg-black" ><img className='w-full h-auto m-auto' src={user.profilePic} alt=""onClick={()=>{setOpenFriends(false)
-                            dispatch(getUserProfile(auth2.user.id))
-                            dispatch(getUserPosts(auth2.user.id))
-                            dispatch(getUserFriends(auth2.user.id))}}/></Link>
+            <li className="md:hidden">
+              <SiSquare className="text-2xl bg-emerald-400 shadow-sm shadow-black rounded-full hover:shadow-md hover:shadow-white h-8 w-8 p-1" />
+            </li>
+          </ul>
+        )}
+        {auth2.logged && (
+          <div className="flex gap-2 text-white 3xl:w-1/6 lg:w-1/2 justify-end">
+            <div className=" relative">
+              <AiFillBell
+                className="text-xl bg-emerald-400 shadow-sm shadow-black rounded-full hover:shadow-md hover:shadow-white h-8 w-8 p-1"
+                onClick={() => {
+                  setOpen(!open);
+                  setConfig(false);
+                }}
+              />
+
+              {solicitudes?.map((e) => {
+                if (e.solicitud === "recibida") {
+                  return (
+                    <div className="absolute  top-0 right-[-7px] bg-red-300 h-4 w-4 text-white text-shadow-lg text-center rounded-full text-xs">
+                      {solicitudes.length}
+                    </div>
+                  );
+                }
+              })}
+            </div>
+
+            <Link href={"/friends"}>
+              <AiFillWechat className="text-2xl bg-emerald-400 shadow-sm shadow-black rounded-full hover:shadow-md hover:shadow-white h-8 w-8 p-1" />
+            </Link>
+            <div className="flex gap-3 items-center w-8 h-8 rounded-full overflow-hidden bg-black">
+              {allUsers.map((user) => {
+                if (user.id === auth2.user.id) {
+                  return (
+                    <div
+                      onClick={() => {
+                        setConfig(!config);
+                        setOpen(false);
+                      }}
+                      href={"/profile/" + auth2.user.id}
+                      className="flex relative w-40 h-40 overflow-hidden rounded-full bg-black"
+                    >
+                      <img
+                        className="w-full h-auto m-auto "
+                        src={user.profilePic}
+                        alt=""
+                        onClick={() => {
+                          dispatch(getUserProfile(auth2.user.id));
+                          dispatch(getUserPosts(auth2.user.id));
+                          dispatch(getUserFriends(auth2.user.id));
+                        }}
+                      />
+                    </div>
+                  );
+                }
+              })}
+            </div>
+          </div>
+        )}
+      </ul>
+
+      
+      {config && (
+        <div className="absolute  bg-color1-nav w-60 z-40  shadow-sm shadow-black p-2 flex flex-col gap-3 top-14 right-2 ">
+          <div
+            className="flex items-center gap-4 text-white text-shadow-md text-lg bg-emerald-300 p-2"
+            onClick={() => {
+              setConfig(false);
+              
+            }}
+          >
+            <BsFillPersonFill className="bg-emerald-400 shadow-sm shadow-black  rounded-full hover:shadow-md hover:shadow-white h-7 w-7 p-1" />
+            <Link href={"/profile/" + auth2.user.id}>Ir a tu perfil</Link>
+          </div>
+          <div
+            className="flex items-center gap-4 text-white text-shadow-md text-lg bg-emerald-300 p-2"
+            onClick={logout2}
+          >
+            <BiLogOutCircle className=" bg-emerald-400 shadow-sm shadow-white  rounded-full hover:shadow-lg hover:shadow-white h-7 w-7 p-1" />
+            Cerrar Sesión
+          </div>
+        </div>
+      )}
+      {open && (
+        <div className="absolute right-1 top-14 z-40  w-80  bg-color1-nav shadow-sm rounded-md shadow-black ">
+          {solicitudes.length === 0 && (
+            <h1 className="text-white p-2 shadow-sm shadow-black rounded-sm">
+              No tienes notificaciónes
+            </h1>
+          )}
+          {solicitudes?.map((e) => {
+            if (e.solicitud === "recibida") {
+              return (
+                <div className=" m-1 ">
+                  <div className="  flex items-center p-1 gap-1 bg-emerald-300  m-2">
+                    <div className="">
+                      {allUsers.map((user) => {
+                        if (user.id === e.idFriend) {
+                          return (
+                            <div className="w-10 h-10 rounded-full overflow-hidden bg-black">
+                              <img className="h-10 " src={user.profilePic} />
+                            </div>
+                          );
                         }
                       })}
-                        
+                    </div>
+                    <p className="text-xs  w-1/3 text-white text-shadow-lg">
+                      {e.name}
+                    </p>
+                    <div className="flex gap-2   w-1/3">
+                      <button
+                        className="bg-cyan-400 p-1 rounded-sm m-auto text-white shadow-md  hover:shadow-black text-shadow-md "
+                        onClick={() => {
+                          aceptarSolicitud(
+                            e.idFriend,
+                            e.id,
+                            e.name,
+                            e.profilePic
+                          );
+                        }}
+                      >
+                        Aceptar
+                      </button>
+                      <button
+                        className="bg-red-200 p-1 rounded-md m-auto text-white shadow-md  hover:shadow-black text-shadow-md"
+                        onClick={() => {
+                          eliminarSolicitud(e.idFriend, e.id);
+                        }}
+                      >
+                        Rechazar
+                      </button>
+                    </div>
                   </div>
-                  
-                  
-                  
-                  
-                  
-                  < BiLogOutCircle onClick={logout2} className='text-2xl'/>
-                  
-                  
-                  
-                  
-                </div>}
-
-            </ul>
-            
-            <ul className='relative md:hidden  flex items-center gap-5 text-white justify-around max-w-6xl 2xl:max-w-screen-2xl  m-auto py-3'>
-            <Link href={"/"}>< AiFillHome className='text-2xl' 
-            onClick={()=>{setOpen(false);setOpenFriends(false)}}
-            /></Link>
-            < FaUserFriends className='text-2xl ' onClick={()=>{setOpenFriends(true)}}/>
-            
-                  
-            
-            </ul>
-
-            {open&&<div className='absolute md:top-16 2xl:right-48 xl:right-24 lg:right-16 md:right-8 sm:right-4 sm:top-32 z-20  w-60 text-center'>
-              {solicitudes?.map((e)=>{
-              if(e.solicitud==="recibida"){
-                return <div className='bg-color4-comentarios p-3 flex flex-col justify-center items-center'>
-                <div className='flex '>
-                    <div className='flex gap-2 justify-between items-center mb-2 '>
-                    {allUsers.map((user)=>{
-                      if(user.id===e.idFriend){
-                        return <div className='h-20 w-20 overflow-hidden rounded-full'>
-                          <img className='h-20 w-auto ' src={user.profilePic}/>
-                          </div>
-                      }
-                    })}
-                    <p className='text-white text-shadow-lg'>{e.name}</p>
-                    
-                    </div>
-                  
-                  
                 </div>
-                
-                <div className='flex gap-2'>
-                  <button className='bg-cyan-400 p-2 rounded-md m-auto ' onClick={()=>{aceptarSolicitud(e.idFriend,e.id,e.name,e.profilePic)}}>Aceptar</button>
-                  <button className='bg-red-300 p-2 rounded-md m-auto'onClick={()=>{eliminarSolicitud(e.idFriend,e.id)}}>Rechazar</button>
-                </div>
-                
-              </div>
-              }})}
-            </div>}
-            {openFriends&&<section className='absolute top-32 right-0 z-10  w-screen h-screen text-center bg-color2-backg flex justify-center gap-10 md:hidden sm:flex'>
-              <article className='flex justify-around w-full'>
-                  <article className='border-color1-nav w-1/2 p-2 '>
-                  <p className='text-xl text-gray-600 text-shadow-xl  mb-5 sm:text-md'>Amigos</p>
-                  {friends?.map((friend)=><Link href={"/profile/"+friend?.id} className=''>
-                    <a className='flex my-4 items-center gap-2 ' onClick={()=>{setOpenFriends(false)
-                    dispatch(getUserProfile(friend?.id))
-                    dispatch(getUserPosts(friend?.id))
-                    dispatch(getUserFriends(friend?.id))
-                    }}>
-                    <div className='w-20 h-20 overflow-hidden bg-black rounded-full  flex items-center'>
-                    {allUsers.map((user)=>{
-                      if(user.id===friend?.id){
-                        return <img className='w-20 h-auto  ' src={user.profilePic} alt="" />
-                      }
-                    })}        
-                    
-                                
-                    </div>
-                            
-                    <p className=' h-fit text-gray-500 text-shadow-lg text-3xl sm:text-xs w-1/3'>{friend?.name}</p>
-                    </a>
-                  
-                        
-                  </Link>)}
-                  
-                  
-                </article>
-                <article className='  border-l-2 w-1/2 border-color1-nav p-2   '>
-                      <h2 className='text-xl  text-gray-600 text-shadow-xl mb-5 sm:text-sm'>Personas que quizás conozcas</h2>
-                      {users?.map((user)=>{
-                
-                        if(user.id!==auth2.user.id){
-                          return <article  className='bg-white mb-2 p-1 flex flex-col rounded-md shadow-xl'>
-                    
-                        <Link href={"/otherProfile/"+user.id} className='h-full   flex gap-3   items-center w-full  p-1 rounded-md   '>
-                          <a className='flex  items-center gap-4 sm:gap-0  w-full '>
-                                <div className='w-14 h-14 overflow-hidden bg-black rounded-full flex items-center m-2 sm:m-0'>
-                                  
-                                  <img className='w-14 h-auto  ' src={user.profilePic} alt="" />
-                                  
-                                </div>
-                              
-                                <p className=' h-fit w-24  '>{user.name}</p>
-                          </a>
-                        </Link>
-                        <button className='bg-cyan-400 xl:text-md  rounded-md m-auto my-2 text-white p-3 text-shadow shadow-lg lg:text-sm md:text-xs sm:text-[12px]' onClick={()=>{agregarAmigo(user.id)}}>Agregar a mis amigos</button>
-                  </article>
-                  }
-          
-                  })}
-                  
-                </article>
-              </article>
-            </section>}
-            
-            
-        </nav>
-  )
+              );
+            }
+          })}
+        </div>
+      )}
+      
+    </nav>
+  );
 }
